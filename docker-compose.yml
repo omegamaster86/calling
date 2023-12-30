@@ -1,0 +1,54 @@
+version: '3.7'
+
+services: 
+  db:
+    image: mysql:8.0
+    # platform: linux/arm64/v8
+    # command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: portfolio_db
+    environment:
+    # 環境変数で置き換える（password）
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: sample
+      MYSQL_PASSWORD: password
+    ports:
+      - 4306:3306
+    volumes:
+      - mysql-db:/var/lib/mysql
+  api:
+    tty: true
+    depends_on:
+      - db
+    build:
+      context: ./api/
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./api:/app
+    command: rails server -b 0.0.0.0
+    image: portfolio_api_image
+    container_name: portfolio_api
+  front: 
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    volumes:
+      - ./front:/front
+      # - /front/node_modules
+    command: 'yarn dev'
+    image: portfolio_front_image
+    container_name: portfolio_front
+    ports:
+      - "8000:3000"
+volumes:
+  mysql-db:
+    driver: local
+
+# MySQLサーバを起動するときに使用されるコマンドを指定しています。
+# - --character-set-server=utf8mb4 は、MySQLサーバが使用するデフォルトのキャラクターセットをutf8mb4に設定します。
+# utf8mb4はユニコード(emojiも含む)全体を表現できるように4バイトまでの文字をサポートします。
+# - --collation-server=utf8mb4_unicode_ci は、MySQLサーバが使用するデフォルトの照合順序
+# （文字列の比較やソートのためのルール）をutf8mb4_unicode_ci に設定します。この照合順序は、大小文字を区別せず、アクセント記号も無視する照合順序です。
+# よって、このコマンドはデータベースサーバの文字セットと照合順序を設定する役割を持っています。
