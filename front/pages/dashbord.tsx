@@ -1,6 +1,6 @@
 import { Header } from "./components/Header";
 import { Filter } from "./components/Filter";
-import { AttackStatus } from "./components/AttackStatus";
+import { CompanyList } from "./components/CompanyList";
 import { AttackLog } from "./components/AttackLog";
 
 export default function Dashbord(){
@@ -8,7 +8,7 @@ export default function Dashbord(){
         <div>
             <Header/>
             <Filter/>
-            <AttackStatus/>
+            <CompanyList/>
             <AttackLog/>
         </div>
     )
