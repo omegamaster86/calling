@@ -2,7 +2,7 @@
 
 export const AttackLogRight = () => {
   return (
-    <div className='mt-5'>
+    <div className='mt-5 mx-auto'>
         <h2 className='mx-9 font-extrabold border-l-4 border-sky-400 border-b-2 pb-2 pl-2'>架電履歴</h2>
         <div style={{ height: '700px', width: '700px', overflowX: 'auto', overflowY: 'auto' }}>
         <table className='mx-9 mt-8'>

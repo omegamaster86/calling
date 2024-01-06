@@ -3,7 +3,7 @@ import { Textarea } from '@chakra-ui/react'
 
 export const AttackLogLeft = () => {
   return (
-    <div className='mt-5'>
+    <div className='mt-5 mx-auto'>
         <h2 className='mx-9 font-extrabold border-l-4 border-sky-400 border-b-2 pb-2 pl-2'>法人情報</h2>
         <form className='w-1/2 mx-9 mt-5 '>
             <div className='flex mx-auto'>
@@ -115,6 +115,12 @@ export const AttackLogLeft = () => {
                     <label className=" text-sm font-semibold leading-6 text-sky-400">対話内容</label>
                     <div className="w-64 border-b-2">
                         <Textarea className="outline-none block rounded-md px-3.5 py-2 text-gray-900 sm:text-sm sm:leading-6"/>
+                    </div>
+                </div>
+                <div className='ml-12 items-center grid'>
+                  <div className=" bg-emerald-500 w-24 flex items-center rounded-md py-2 px-5 mx-2 text-white font-semibold">
+                        {/* <ArrowLeftIcon color="white.500"/> */}
+                        <div className="pl-3">登録</div>
                     </div>
                 </div>
             </div>
