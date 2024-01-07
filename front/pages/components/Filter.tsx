@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Select, Input, Stack } from '@chakra-ui/react'
+import Link from 'next/link';
+import { Select, Input, Stack, Button } from '@chakra-ui/react'
 
 export const Filter = () => {
     const [selectedCompany, setSelectedCompany] = useState('');
@@ -48,6 +49,10 @@ export const Filter = () => {
                         <option value='option2'>オメガマスター</option>
                         <option value='option3'>正俊</option>
                     </Select>
+
+                    <Button colorScheme='blue' ml='14' type="submit" px="90">
+                        <Link href={'/companyresister'}>企業登録フォームへ</Link>
+                    </Button>
                     {/* <div>
                         {selectedCompany && filteredCompanies.map((company, index) => (
                             <div key={index}>{company}</div>
