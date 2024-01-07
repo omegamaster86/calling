@@ -13,7 +13,7 @@ class UsersController < ApplicationController
     render json: user
   end
 
-  def current
+  def getLoginUserName
     render json: current_user
   end
 
@@ -39,31 +39,6 @@ class UsersController < ApplicationController
     render json: { error: e.message }, status: :internal_server_error
   end
 
-#   def destroy
-#     user = User.find_by(email: params[:email])
-#     if user
-#       user.destroy
-#     else
-#       render json: { error: "ユーザーが見つかりませんでした" }, status: :not_found
-#     end
-#   rescue StandardError => e
-#     render json: { error: e.message }, status: :internal_server_error
-#   end
-
-  # PATCH/PUT /users/1
-#   def update
-#     if @user.update(user_params)
-#       render json: @user
-#     else
-#       render json: @user.errors, status: :unprocessable_entity
-#     end
-#   end
-
-  # DELETE /users/1
-#   def destroy
-#     @user.destroy
-#   end
-
   private
 
     # Use callbacks to share common setup or constraints between actions.
@@ -76,8 +51,4 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :password)
     end
 
-    # def user_params
-    #   # 適切なパラメータのストロングパラメーター
-    #   params.require(:user).permit(:username, :email, :password, :password_confirmation)
-    # end
 end
