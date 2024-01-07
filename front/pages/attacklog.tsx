@@ -1,5 +1,5 @@
-import { AttackLogLeft } from "../pages/components/AttackLogLeft";
-import { AttackLogRight } from "../pages/components/AttackLogRight";
+import { AttackLogInfo } from "./components/AttackLogInfo";
+import { AttackLogCallHistory } from "./components/AttackLogCallHistory";
 import { ArrowLeftIcon, ArrowRightIcon, CloseIcon } from '@chakra-ui/icons';
 
 export default function AttackLog(){
@@ -24,8 +24,8 @@ export default function AttackLog(){
                 </div>
             </div>
             <div className="flex">
-                <AttackLogLeft/>
-                <AttackLogRight/>
+                <AttackLogInfo/>
+                <AttackLogCallHistory/>
             </div>
         </div>
     )
