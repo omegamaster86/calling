@@ -6,7 +6,7 @@ export const Header = () => {
     const [userName, setUserName] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:3000/users'
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`
         )
         .then(response => {
           setUserName(response.data[0].name);
