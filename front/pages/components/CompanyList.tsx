@@ -1,6 +1,11 @@
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import Link from 'next/link';
+// import { useRouter } from 'next/router';
 
   export const CompanyList = () => {
+    // const router = useRouter();
+    // const { company } = router.query;
+    
     return (
      
     <div style={{ height: '700px', width: '100%', overflowX: 'auto', overflowY: 'auto' }}>
@@ -27,7 +32,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
               <td className='border-2'>結果 {index + 1}</td>
               <td className='border-2'>予定日 {index + 1}</td>
               <td className='border-2'>優先度 {index + 1}</td>
-              <td className='border-2'>会社名 {index + 1}</td>
+              <td className='border-2'><Link href={`/attacklog?company=${index + 1}`}>会社名 {index + 1}</Link></td>
               <td className='border-2'>業界 {index + 1}</td>
               <td className='border-2'>名前 {index + 1}</td>
               <td className='border-2'>部署 {index + 1}</td>
