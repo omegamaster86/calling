@@ -13,7 +13,7 @@ class UsersController < ApplicationController
     render json: user
   end
 
-  def getLoginUserName
+  def get_login_user_name
     render json: current_user
   end
 
