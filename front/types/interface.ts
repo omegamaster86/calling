@@ -17,7 +17,7 @@ export interface FormValues {
 export interface CompanyResisterFormState {
     companyName: string;
     address: string;
-    phoneNumber: string;
+    telephoneNumber: string;
     companyWebsite: string;
     department: string;
     post: string;

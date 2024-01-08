@@ -1,15 +1,16 @@
 import * as yup from 'yup';
-import { useState, ChangeEvent, FormEvent  } from 'react';
+import { useState, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { Input, FormControl, FormLabel, FormErrorMessage, Button } from '@chakra-ui/react';
 import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/interface';
+import axios from 'axios';
 
     const RegistrationForm: React.FC = () => {
 
     const formSchema = yup.object().shape({
         companyName: yup.string().required('記入漏れです'),
         address: yup.string().required('記入漏れです'),
-        phoneNumber: yup.string().required('記入漏れです'),
+        telephoneNumber: yup.string().required('記入漏れです'),
         companyWebsite: yup.string().url('有効なURLを入力してください'),
         department: yup.string(),
         post: yup.string(),
@@ -20,7 +21,7 @@ import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/in
     const [formState, setFormState] = useState<CompanyResisterFormState>({
         companyName: '',
         address: '',
-        phoneNumber: '',
+        telephoneNumber: '',
         companyWebsite: '',
         department: '',
         post: '',
@@ -29,20 +30,20 @@ import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/in
     });
     const [errors, setErrors] = useState<CompanyResisterFormErrors>({});
     
-    const validate = async (values: CompanyResisterFormState): Promise<boolean> => {
-        try {
-        await formSchema.validate(values, { abortEarly: false });
-        setErrors({});
-        return true;
-        } catch (yupErrors) {
-        const newErrors = (yupErrors as yup.ValidationError).inner.reduce((acc: CompanyResisterFormErrors, err: yup.ValidationError) => {
-            acc[err.path!] = err.message;
-            return acc;
-        }, {});
-        setErrors(newErrors);
-        return false;
-        }
-    };
+    // const validate = async (values: CompanyResisterFormState): Promise<boolean> => {
+    //     try {
+    //     await formSchema.validate(values, { abortEarly: false });
+    //     setErrors({});
+    //     return true;
+    //     } catch (yupErrors) {
+    //     const newErrors = (yupErrors as yup.ValidationError).inner.reduce((acc: CompanyResisterFormErrors, err: yup.ValidationError) => {
+    //         acc[err.path!] = err.message;
+    //         return acc;
+    //     }, {});
+    //     setErrors(newErrors);
+    //     return false;
+    //     }
+    // };
       
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormState({
@@ -51,11 +52,18 @@ import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/in
         });
     };
     
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        const isValid = await validate(formState);
-        if (isValid) {
-        // フォームの送信ロジックをここに記述
+    const handleSubmit = async () => {
+        try {
+          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/companies`,{
+            company: {
+              company_name: formState.companyName,
+              address: formState.address,
+              telephone_number: formState.telephoneNumber,
+              website: formState.companyWebsite 
+            }
+          });
+        } catch (error) {
+          console.error(error);
         }
     };
   
@@ -73,10 +81,10 @@ import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/in
           <FormErrorMessage>{errors.address}</FormErrorMessage>
         </FormControl>
 
-        <FormControl isInvalid={!!errors.phoneNumber} mb={5}>
-          <FormLabel htmlFor='phoneNumber'>電話番号</FormLabel>
-          <Input id='phoneNumber' name='phoneNumber' type='text' onChange={handleChange} />
-          <FormErrorMessage>{errors.phoneNumber}</FormErrorMessage>
+        <FormControl isInvalid={!!errors.telephoneNumber} mb={5}>
+          <FormLabel htmlFor='telephoneNumber'>電話番号</FormLabel>
+          <Input id='telephoneNumber' name='telephoneNumber' type='text' onChange={handleChange} />
+          <FormErrorMessage>{errors.telephoneNumber}</FormErrorMessage>
         </FormControl>
 
         <FormControl isInvalid={!!errors.companyWebsite} mb={5}>
