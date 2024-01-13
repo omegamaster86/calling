@@ -1,7 +1,13 @@
+import { Header } from "./components/Header";
+import { Filter } from "./components/Filter";
+import { CompanyList } from "./components/CompanyList";
 
 export default function Dashbord(){
     return(
-        <h1>ようこそ</h1>
+        <div>
+            <Header/>
+            <Filter/>
+            <CompanyList/>
+        </div>
     )
-
 }
