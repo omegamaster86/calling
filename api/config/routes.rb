@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   resources :companies, only: [:index, :show, :create, :update, :destroy]
   post '/companyregister', to: 'companies#create'
 
+  resources :key_persons, only: [:index, :show, :create, :update, :destroy]
+  post '/keypersonresister', to: 'key_persons#create'
+
   resources :todos, except: [:new, :edit]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

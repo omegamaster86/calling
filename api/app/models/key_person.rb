@@ -1,0 +1,2 @@
+class KeyPerson < ApplicationRecord
+end
