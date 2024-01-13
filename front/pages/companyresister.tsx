@@ -12,6 +12,10 @@ import axios from 'axios';
         address: yup.string().required('記入漏れです'),
         telephoneNumber: yup.string().required('記入漏れです'),
         companyWebsite: yup.string().url('有効なURLを入力してください'),
+        department: yup.string(),
+        post: yup.string(),
+        name: yup.string(),
+        email: yup.string().email('有効なメールアドレスを入力してください'),
     });
       
     const [formState, setFormState] = useState<CompanyResisterFormState>({
@@ -19,6 +23,10 @@ import axios from 'axios';
         address: '',
         telephoneNumber: '',
         companyWebsite: '',
+        department: '',
+        post: '',
+        name: '',
+        email: '',
     });
     const [errors, setErrors] = useState<CompanyResisterFormErrors>({});
       
@@ -30,18 +38,39 @@ import axios from 'axios';
     };
     
     const handleSubmit = async () => {
-        try {
-          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/companies`,{
-            company: {
-              company_name: formState.companyName,
-              address: formState.address,
-              telephone_number: formState.telephoneNumber,
-              website: formState.companyWebsite 
-            }
-          });
-        } catch (error) {
-          console.error(error);
-        }
+      try {
+         await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
+          company: {
+            company_name: formState.companyName,
+            address: formState.address,
+            telephone_number: formState.telephoneNumber,
+            website: formState.companyWebsite ,
+          },
+          key_person: {
+            department: formState.department,
+            post: formState.post,
+            name: formState.name,
+            email: formState.email
+          }
+        });
+    
+        // 会社情報の送信に成功した場合、キーパーソン情報を送信
+        // if (companyResponse.data && companyResponse.data.companyId) {
+        //   const receivedCompanyId = companyResponse.data.companyId;
+    
+        //   await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/key_person`, {
+        //     key_person: { 
+        //       department: formState.department,
+        //       post: formState.post,
+        //       name: formState.name,
+        //       email: formState.email,
+        //       company_id: receivedCompanyId // 会社IDを追加
+        //     }
+        //   });
+        // }
+      } catch (error) {
+        console.error(error);
+      }
     };
   
     return (
@@ -69,10 +98,29 @@ import axios from 'axios';
           <Input id='companyWebsite' name='companyWebsite' type='text' onChange={handleChange} />
         </FormControl>
 
+         <FormControl isInvalid={!!errors.department} mb={5}>
+           <FormLabel htmlFor='department'>部署</FormLabel>
+           <Input id='department' name='department' type='text' onChange={handleChange} />
+         </FormControl>
+
+         <FormControl isInvalid={!!errors.companyWebsite} mb={5}>
+           <FormLabel htmlFor='post'>役職</FormLabel>
+           <Input id='post' name='post' type='text' onChange={handleChange} />
+         </FormControl>
+
+         <FormControl isInvalid={!!errors.name} mb={5}>
+           <FormLabel htmlFor='name'>氏名</FormLabel>
+           <Input id='name' name='name' type='text' onChange={handleChange} />
+         </FormControl>
+
+         <FormControl isInvalid={!!errors.email} mb={5}>
+           <FormLabel htmlFor='email'>メールアドレス</FormLabel>
+           <Input id='email' name='email' type='text' onChange={handleChange} />
+         </FormControl>
+
         <Button mt={4} colorScheme='blue' type="submit">登録</Button>
         <Button mt={4} ml={6} colorScheme='blue' type="submit">
            <Link href={'/dashbord'}>ダッシュボード</Link>
-           <Link href={'/keypersonresister'}>キーパーソンの登録へ</Link>
         </Button>
       </form>
     );
