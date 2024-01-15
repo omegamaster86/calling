@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
     before_action :set_user, only: [:show, :update, :destroy]
+    # before_action :authenticate_user
 
   # GET /users
   def index
@@ -9,12 +10,15 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    user = User.find(params[:id])
-    render json: user
+    render json: current_user
   end
 
-  def get_login_user_name
-    render json: current_user
+  def current
+    if current_user
+      render json: current_user
+    else
+      render json: { error: "未ログインです" }, status: :unauthorized
+    end
   end
 
   # POST /users
@@ -43,12 +47,21 @@ class UsersController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:email])
+      @user = User.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def user_params
       params.require(:user).permit(:name, :email, :password)
+    end
+
+    def authenticate_user
+      unless session[:user_id] && current_user
+      end
+    end
+
+    def current_user
+      @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
     end
 
 end
