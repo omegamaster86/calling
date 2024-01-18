@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'user', to: 'users#show'
   get '/current_user', to: 'users#current'
   post '/login', to: 'authentication#login'
+  get '/dashbord', to: 'dashbords#index'
 
   resources :companies, only: [:index, :show, :update, :destroy]
   post '/companies', to: 'companies#create_with_key_person'

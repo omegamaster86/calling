@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { Input, FormControl, FormLabel, FormErrorMessage, Button } from '@chakra-ui/react';
 import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/interface';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
     const RegistrationForm: React.FC = () => {
-
+      const router = useRouter();
+    
     const formSchema = yup.object().shape({
         companyName: yup.string().required('記入漏れです'),
         address: yup.string().required('記入漏れです'),
@@ -37,9 +39,10 @@ import axios from 'axios';
         });
     };
     
-    const handleSubmit = async () => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
       try {
-         await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
+         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
           company: {
             company_name: formState.companyName,
             address: formState.address,
@@ -53,23 +56,11 @@ import axios from 'axios';
             email: formState.email
           }
         });
-    
-        // 会社情報の送信に成功した場合、キーパーソン情報を送信
-        // if (companyResponse.data && companyResponse.data.companyId) {
-        //   const receivedCompanyId = companyResponse.data.companyId;
-    
-        //   await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/key_person`, {
-        //     key_person: { 
-        //       department: formState.department,
-        //       post: formState.post,
-        //       name: formState.name,
-        //       email: formState.email,
-        //       company_id: receivedCompanyId // 会社IDを追加
-        //     }
-        //   });
-        // }
+        if (response.status === 200) {
+          router.push('/dashbord');
+        } 
       } catch (error) {
-        console.error(error);
+        console.error("失敗",error);
       }
     };
   

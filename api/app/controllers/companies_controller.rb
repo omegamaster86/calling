@@ -15,15 +15,6 @@ class CompaniesController < ApplicationController
       render json: @company
     end
   
-    # def create
-    #   @company = Company.new(company_params)
-    
-    #   if @company.save
-    #     render json: @company, status: :created, location: @company
-    #   else
-    #     render json: @company.errors, status: :unprocessable_entity
-    #   end
-    # end
     def create_with_key_person
       Rails.logger.debug "Received params: #{params.inspect}"
       Company.transaction do
@@ -33,11 +24,20 @@ class CompaniesController < ApplicationController
         @key_person = @company.key_people.build(key_person_params)
         @key_person.save!
       end
-    
-      render json: { company: @company, key_person: @key_person }, status: :created
-    rescue ActiveRecord::RecordInvalid => e
-      render json: e.record.errors, status: :unprocessable_entity
+
+      if @company.persisted? && @key_person.persisted?
+        render json: { success: true }, status: :ok
+      else
+        render json: { success: false }, status: :unprocessable_entity
+      end
+      # redirect_to "http://localhost:8000/dashbord"
     end
+    
+    # def create
+    #   render json: { company: @company, key_person: @key_person }, status: :created
+    # rescue ActiveRecord::RecordInvalid => e
+    #   render json: e.record.errors, status: :unprocessable_entity
+    # end
   
     def edit
       @company = Company.find(params[:id])
@@ -68,5 +68,5 @@ class CompaniesController < ApplicationController
       # 必要なパラメータを許可
       params.require(:key_person).permit(:department, :post, :name, :email, :company_id)
     end
-  end
+end
   
