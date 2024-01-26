@@ -8,13 +8,14 @@ import { useRouter } from 'next/router';
 
     const RegistrationForm: React.FC = () => {
       const router = useRouter();
-    
+    // TODO: バリデーションの修正
     const formSchema = yup.object().shape({
         companyName: yup.string().required('記入漏れです'),
         address: yup.string().required('記入漏れです'),
         telephoneNumber: yup.string().required('記入漏れです'),
         companyWebsite: yup.string().url('有効なURLを入力してください'),
         department: yup.string(),
+        industry: yup.string(),
         post: yup.string(),
         name: yup.string(),
         email: yup.string().email('有効なメールアドレスを入力してください'),
@@ -22,6 +23,7 @@ import { useRouter } from 'next/router';
       
     const [formState, setFormState] = useState<CompanyResisterFormState>({
         companyName: '',
+        industry: '',
         address: '',
         telephoneNumber: '',
         companyWebsite: '',
@@ -45,6 +47,7 @@ import { useRouter } from 'next/router';
          const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
           company: {
             company_name: formState.companyName,
+            industry: formState.industry,
             address: formState.address,
             telephone_number: formState.telephoneNumber,
             website: formState.companyWebsite ,
@@ -63,13 +66,19 @@ import { useRouter } from 'next/router';
         console.error("失敗",error);
       }
     };
-  
+    
     return (
       <form className='mt-16 mx-80' onSubmit={handleSubmit}>
         <FormControl isInvalid={!!errors.companyName} mb={5}>
           <FormLabel htmlFor='companyName'>会社名</FormLabel>
           <Input id='companyName' name='companyName' type='text' onChange={handleChange} />
           <FormErrorMessage>{errors.companyName}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.industry} mb={5}>
+          <FormLabel htmlFor='industry'>業界</FormLabel>
+          <Input id='industry' name='industry' type='text' onChange={handleChange} />
+          <FormErrorMessage>{errors.industry}</FormErrorMessage>
         </FormControl>
 
         <FormControl isInvalid={!!errors.address} mb={5}>

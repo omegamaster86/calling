@@ -16,6 +16,7 @@ export interface FormValues {
 // CompanyRegister.tsxで使用
 export interface CompanyResisterFormState {
     companyName: string;
+    industry: string;
     address: string;
     telephoneNumber: string;
     companyWebsite: string;
