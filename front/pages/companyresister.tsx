@@ -11,14 +11,9 @@ import { useRouter } from 'next/router';
     // TODO: バリデーションの修正
     const formSchema = yup.object().shape({
         companyName: yup.string().required('記入漏れです'),
+        industry: yup.string().required('記入漏れです'),
         address: yup.string().required('記入漏れです'),
         telephoneNumber: yup.string().required('記入漏れです'),
-        companyWebsite: yup.string().url('有効なURLを入力してください'),
-        department: yup.string(),
-        industry: yup.string(),
-        post: yup.string(),
-        name: yup.string(),
-        email: yup.string().email('有効なメールアドレスを入力してください'),
     });
       
     const [formState, setFormState] = useState<CompanyResisterFormState>({
@@ -44,6 +39,7 @@ import { useRouter } from 'next/router';
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       try {
+        await formSchema.validate(formState, { abortEarly: false });
          const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
           company: {
             company_name: formState.companyName,
@@ -62,8 +58,20 @@ import { useRouter } from 'next/router';
         if (response.status === 200) {
           router.push('/dashbord');
         } 
-      } catch (error) {
-        console.error("失敗",error);
+      } catch (validationError) {
+        if (validationError instanceof yup.ValidationError) {
+          // バリデーションエラーを処理
+          const newErrors = validationError.inner.reduce<{ [key: string]: string }>((acc, error) => {
+            if (error.path) {
+              acc[error.path] = error.message;
+            }
+            return acc;
+          }, {});
+          setErrors(newErrors);
+        } else {
+          // その他のエラーを処理
+          console.error("失敗", validationError);
+        }
       }
     };
     
