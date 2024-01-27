@@ -15,15 +15,15 @@ export interface FormValues {
 
 // CompanyRegister.tsxで使用
 export interface CompanyResisterFormState {
-    companyName: string;
-    industry: string;
-    address: string;
-    telephoneNumber: string;
-    companyWebsite: string;
-    department: string;
-    post: string;
-    name: string;
-    email: string;
+  companyName: string | null;
+  industry: string | null;
+  address: string | null;
+  telephoneNumber: string | null;
+  companyWebsite: string | null;
+  department: string | null;
+  post: string | null;
+  name: string | null;
+  email: string | null;
   }
 
 // CompanyRegister.tsxで使用
