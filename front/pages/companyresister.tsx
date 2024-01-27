@@ -1,15 +1,18 @@
 import * as yup from 'yup';
-import { useState, ChangeEvent, FormEvent  } from 'react';
+import { useState, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { Input, FormControl, FormLabel, FormErrorMessage, Button } from '@chakra-ui/react';
 import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/interface';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
     const RegistrationForm: React.FC = () => {
-
+      const router = useRouter();
+    
     const formSchema = yup.object().shape({
         companyName: yup.string().required('記入漏れです'),
         address: yup.string().required('記入漏れです'),
-        phoneNumber: yup.string().required('記入漏れです'),
+        telephoneNumber: yup.string().required('記入漏れです'),
         companyWebsite: yup.string().url('有効なURLを入力してください'),
         department: yup.string(),
         post: yup.string(),
@@ -20,7 +23,7 @@ import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/in
     const [formState, setFormState] = useState<CompanyResisterFormState>({
         companyName: '',
         address: '',
-        phoneNumber: '',
+        telephoneNumber: '',
         companyWebsite: '',
         department: '',
         post: '',
@@ -28,21 +31,6 @@ import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/in
         email: '',
     });
     const [errors, setErrors] = useState<CompanyResisterFormErrors>({});
-    
-    const validate = async (values: CompanyResisterFormState): Promise<boolean> => {
-        try {
-        await formSchema.validate(values, { abortEarly: false });
-        setErrors({});
-        return true;
-        } catch (yupErrors) {
-        const newErrors = (yupErrors as yup.ValidationError).inner.reduce((acc: CompanyResisterFormErrors, err: yup.ValidationError) => {
-            acc[err.path!] = err.message;
-            return acc;
-        }, {});
-        setErrors(newErrors);
-        return false;
-        }
-    };
       
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormState({
@@ -51,16 +39,33 @@ import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/in
         });
     };
     
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        const isValid = await validate(formState);
-        if (isValid) {
-        // フォームの送信ロジックをここに記述
-        }
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      try {
+         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
+          company: {
+            company_name: formState.companyName,
+            address: formState.address,
+            telephone_number: formState.telephoneNumber,
+            website: formState.companyWebsite ,
+          },
+          key_person: {
+            department: formState.department,
+            post: formState.post,
+            name: formState.name,
+            email: formState.email
+          }
+        });
+        if (response.status === 200) {
+          router.push('/dashbord');
+        } 
+      } catch (error) {
+        console.error("失敗",error);
+      }
     };
   
     return (
-      <form className='mt-5 mx-80' onSubmit={handleSubmit}>
+      <form className='mt-16 mx-80' onSubmit={handleSubmit}>
         <FormControl isInvalid={!!errors.companyName} mb={5}>
           <FormLabel htmlFor='companyName'>会社名</FormLabel>
           <Input id='companyName' name='companyName' type='text' onChange={handleChange} />
@@ -73,10 +78,10 @@ import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/in
           <FormErrorMessage>{errors.address}</FormErrorMessage>
         </FormControl>
 
-        <FormControl isInvalid={!!errors.phoneNumber} mb={5}>
-          <FormLabel htmlFor='phoneNumber'>電話番号</FormLabel>
-          <Input id='phoneNumber' name='phoneNumber' type='text' onChange={handleChange} />
-          <FormErrorMessage>{errors.phoneNumber}</FormErrorMessage>
+        <FormControl isInvalid={!!errors.telephoneNumber} mb={5}>
+          <FormLabel htmlFor='telephoneNumber'>電話番号</FormLabel>
+          <Input id='telephoneNumber' name='telephoneNumber' type='text' onChange={handleChange} />
+          <FormErrorMessage>{errors.telephoneNumber}</FormErrorMessage>
         </FormControl>
 
         <FormControl isInvalid={!!errors.companyWebsite} mb={5}>
@@ -84,25 +89,25 @@ import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/in
           <Input id='companyWebsite' name='companyWebsite' type='text' onChange={handleChange} />
         </FormControl>
 
-        <FormControl isInvalid={!!errors.department} mb={5}>
-          <FormLabel htmlFor='department'>部署</FormLabel>
-          <Input id='department' name='department' type='text' onChange={handleChange} />
-        </FormControl>
+         <FormControl isInvalid={!!errors.department} mb={5}>
+           <FormLabel htmlFor='department'>部署</FormLabel>
+           <Input id='department' name='department' type='text' onChange={handleChange} />
+         </FormControl>
 
-        <FormControl isInvalid={!!errors.companyWebsite} mb={5}>
-          <FormLabel htmlFor='post'>役職</FormLabel>
-          <Input id='post' name='post' type='text' onChange={handleChange} />
-        </FormControl>
+         <FormControl isInvalid={!!errors.companyWebsite} mb={5}>
+           <FormLabel htmlFor='post'>役職</FormLabel>
+           <Input id='post' name='post' type='text' onChange={handleChange} />
+         </FormControl>
 
-        <FormControl isInvalid={!!errors.name} mb={5}>
-          <FormLabel htmlFor='name'>氏名</FormLabel>
-          <Input id='name' name='name' type='text' onChange={handleChange} />
-        </FormControl>
+         <FormControl isInvalid={!!errors.name} mb={5}>
+           <FormLabel htmlFor='name'>氏名</FormLabel>
+           <Input id='name' name='name' type='text' onChange={handleChange} />
+         </FormControl>
 
-        <FormControl isInvalid={!!errors.email} mb={5}>
-          <FormLabel htmlFor='email'>メールアドレス</FormLabel>
-          <Input id='email' name='email' type='text' onChange={handleChange} />
-        </FormControl>
+         <FormControl isInvalid={!!errors.email} mb={5}>
+           <FormLabel htmlFor='email'>メールアドレス</FormLabel>
+           <Input id='email' name='email' type='text' onChange={handleChange} />
+         </FormControl>
 
         <Button mt={4} colorScheme='blue' type="submit">登録</Button>
         <Button mt={4} ml={6} colorScheme='blue' type="submit">
