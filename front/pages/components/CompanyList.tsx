@@ -62,7 +62,7 @@ import { FilterSalesman } from './FilterComponents/FilterSalesman';
       filterCompanyName === '' || company.company_name.toLowerCase().includes(filterCompanyName.toLowerCase()) 
     )
     .filter(company =>
-      filterCompanyNumber === '' || company.telephone_number.toString().includes(filterCompanyNumber)
+      filterCompanyNumber === '' || company.telephone_number === parseInt(filterCompanyNumber, 10)
     )
     // nullが入っている場合、下記のようにする
     .filter(company =>
