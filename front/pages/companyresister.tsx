@@ -8,27 +8,24 @@ import { useRouter } from 'next/router';
 
     const RegistrationForm: React.FC = () => {
       const router = useRouter();
-    
+    // TODO: バリデーションの修正
     const formSchema = yup.object().shape({
         companyName: yup.string().required('記入漏れです'),
+        industry: yup.string().required('記入漏れです'),
         address: yup.string().required('記入漏れです'),
         telephoneNumber: yup.string().required('記入漏れです'),
-        companyWebsite: yup.string().url('有効なURLを入力してください'),
-        department: yup.string(),
-        post: yup.string(),
-        name: yup.string(),
-        email: yup.string().email('有効なメールアドレスを入力してください'),
     });
       
     const [formState, setFormState] = useState<CompanyResisterFormState>({
-        companyName: '',
-        address: '',
-        telephoneNumber: '',
-        companyWebsite: '',
-        department: '',
-        post: '',
-        name: '',
-        email: '',
+        companyName: null,
+        industry: null,
+        address: null,
+        telephoneNumber: null,
+        companyWebsite: null,
+        department: null,
+        post: null,
+        name: null,
+        email: null,
     });
     const [errors, setErrors] = useState<CompanyResisterFormErrors>({});
       
@@ -42,9 +39,11 @@ import { useRouter } from 'next/router';
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       try {
+        await formSchema.validate(formState, { abortEarly: false });
          const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
           company: {
             company_name: formState.companyName,
+            industry: formState.industry,
             address: formState.address,
             telephone_number: formState.telephoneNumber,
             website: formState.companyWebsite ,
@@ -59,17 +58,35 @@ import { useRouter } from 'next/router';
         if (response.status === 200) {
           router.push('/dashbord');
         } 
-      } catch (error) {
-        console.error("失敗",error);
+      } catch (validationError) {
+        if (validationError instanceof yup.ValidationError) {
+          // バリデーションエラーを処理
+          const newErrors = validationError.inner.reduce<{ [key: string]: string }>((acc, error) => {
+            if (error.path) {
+              acc[error.path] = error.message;
+            }
+            return acc;
+          }, {});
+          setErrors(newErrors);
+        } else {
+          // その他のエラーを処理
+          console.error("失敗", validationError);
+        }
       }
     };
-  
+    
     return (
       <form className='mt-16 mx-80' onSubmit={handleSubmit}>
         <FormControl isInvalid={!!errors.companyName} mb={5}>
           <FormLabel htmlFor='companyName'>会社名</FormLabel>
           <Input id='companyName' name='companyName' type='text' onChange={handleChange} />
           <FormErrorMessage>{errors.companyName}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.industry} mb={5}>
+          <FormLabel htmlFor='industry'>業界</FormLabel>
+          <Input id='industry' name='industry' type='text' onChange={handleChange} />
+          <FormErrorMessage>{errors.industry}</FormErrorMessage>
         </FormControl>
 
         <FormControl isInvalid={!!errors.address} mb={5}>

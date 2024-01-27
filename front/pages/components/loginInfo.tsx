@@ -43,10 +43,8 @@ export const LoginInfo = () => {
       console.log(response.data); 
       // 認証成功のレスポンスを確認
       if (response.data.token) {
-        // 認証が成功した場合はダッシュボードにリダイレクト
         router.push('/dashbord');
       } else {
-        // 認証に失敗した場合の処理
         setFormErrors({ server: "認証に失敗しました。" });
       }
     } catch (error) {
