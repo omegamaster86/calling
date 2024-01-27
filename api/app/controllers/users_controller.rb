@@ -9,7 +9,12 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @users
+    user = User.find(params[:id])
+    render json: user
+  end
+
+  def get_login_user_name
+    render json: current_user
   end
 
   # POST /users
@@ -47,8 +52,4 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :password)
     end
 
-    # def user_params
-    #   # 適切なパラメータのストロングパラメーター
-    #   params.require(:user).permit(:username, :email, :password, :password_confirmation)
-    # end
 end
