@@ -22,15 +22,15 @@ import { useRouter } from 'next/router';
     });
       
     const [formState, setFormState] = useState<CompanyResisterFormState>({
-        companyName: '',
-        industry: '',
-        address: '',
-        telephoneNumber: '',
-        companyWebsite: '',
-        department: '',
-        post: '',
-        name: '',
-        email: '',
+        companyName: null,
+        industry: null,
+        address: null,
+        telephoneNumber: null,
+        companyWebsite: null,
+        department: null,
+        post: null,
+        name: null,
+        email: null,
     });
     const [errors, setErrors] = useState<CompanyResisterFormErrors>({});
       
