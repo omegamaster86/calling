@@ -15,7 +15,7 @@ export const Header = () => {
       return <div>ローディング中...</div>;
     }
 
-    const userName = data[0].name;
+    const userName = data.name;
 
     // useEffect(() => {
     //     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`
