@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-    before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /users
   def index
@@ -18,16 +18,36 @@ class UsersController < ApplicationController
   end
 
   # POST /users
-  # def create
-  #   @users = User.new(user_params)
+  def create
+    user = User.new(user_params)
+    if user.save
+      render json: user, status: :created
+    else
+      logger.error(user.errors.full_messages.to_sentence)
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
 
-  #   if @users.save
-  #     render json: @users, status: :created, location: @users
+  # def create
+  #   # 既存のユーザーを検索 Google認証用
+  #   user = User.find_by(email: params[:email])
+  
+  #   # 既存のユーザーが見つかった場合は、そのユーザーでログイン処理を行う
+  #   if user
+  #     render json: user, status: :OK
   #   else
-  #     render json: @users.errors, status: :unprocessable_entity
+  #     # 新規ユーザーの作成処理
+  #     user = User.new(user_params)
+  #     if user.save
+  #       render json: user, status: :created
+        
+  #     else
+  #       logger.error(user.errors.full_messages.to_sentence)
+  #       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+  #     end
   #   end
   # end
-
+  
   def search
     user = User.find_by(email: params[:email])
     if user
@@ -39,17 +59,16 @@ class UsersController < ApplicationController
     render json: { error: e.message }, status: :internal_server_error
   end
 
-
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:email])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:email])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def user_params
-      params.require(:user).permit(:name, :email, :password)
-    end
-
+  # Only allow a trusted parameter "white list" through.
+  def user_params
+    params.require(:user).permit(:name, :email, :password)
+  end
 end
+>>>>>>> b415fbb (認証用に編集したファイル)

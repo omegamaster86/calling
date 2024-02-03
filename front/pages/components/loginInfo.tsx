@@ -35,20 +35,27 @@ export const LoginInfo = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data); 
+      console.log(data);
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         email: data.email,
         password: data.password,
+      }, {
+        withCredentials: true // セッションCookieをリクエストに含める
       });
-      console.log(response.data); 
-      // 認証成功のレスポンスを確認
-      if (response.data.token) {
-        router.push('/dashbord');
-      } else {
-        setFormErrors({ server: "認証に失敗しました。" });
-      }
+      router.push('/dashbord');
+      // console.log(response.data);
+      console.log(response);
+      // if (response.data.logged_in) {
+      //   console.log("できてるやん");
+      //   router.push('/dashbord');
+      // } else {
+      //   console.log("失敗");
+      //   setFormErrors({ server: "認証に失敗しました。" });
+      // }
     } catch (error) {
-      setFormErrors({ server: error.response.data.message });
+      console.log("とても失敗");
+      const errorMessage = error.response && error.response.data && error.response.data.error ? error.response.data.error : '認証に失敗しました。';
+      setFormErrors({ server: errorMessage });
     }
   };
 

@@ -40,9 +40,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
     const onSubmit = async (data) => {
       try {
         await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
-          name: data.name,
-          email: data.email,
-          password: data.password,
+          user: {
+            name: data.name,
+            email: data.email,
+            password: data.password
+          }
         });
         router.push('/dashbord');
       } catch (error) {

@@ -15,12 +15,12 @@ export default NextAuth ({
   callbacks: {
     async signIn({ user, account, profile }) {
       const provider = account.provider
-      const uid = account.sub
+      const uid = profile.sub
       const name = user.name
       const email = user.email
 
       try {
-        const response = await axios.post('http://host.docker.internal:8000/api/auth/callback/google', {
+        const response = await axios.post(`http://api:3000/auth/${provider}/callback`, {
           provider,
           uid,
           name,
@@ -37,6 +37,5 @@ export default NextAuth ({
         return false
       }
     },
-
   },
 })
