@@ -10,24 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_01_26_132722) do
+ActiveRecord::Schema.define(version: 2024_02_04_101049) do
 
   create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "company_name"
-    t.string "address"
-    t.integer "telephone_number"
-    t.string "website"
-    t.string "industry"
+    t.string "company_name", null: false, comment: "会社名"
+    t.string "address", null: false, comment: "住所"
+    t.string "telephone_number", null: false, comment: "電話番号"
+    t.string "website", comment: "ウェブサイトURL"
+    t.string "industry", null: false, comment: "業界"
   end
 
   create_table "key_people", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "department"
-    t.string "post"
-    t.string "name"
-    t.string "email"
+    t.string "department", comment: "部署名"
+    t.string "post", comment: "役職"
+    t.string "name", comment: "名前"
+    t.string "email", comment: "メールアドレス"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "company_id", null: false
+    t.bigint "company_id", null: false, comment: "会社ID"
     t.index ["company_id"], name: "index_key_people_on_company_id"
   end
 
@@ -41,14 +41,13 @@ ActiveRecord::Schema.define(version: 2024_01_26_132722) do
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
-    t.string "password"
+    t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "provider", default: "email", null: false
-    t.string "uid", default: "", null: false
+    t.string "provider"
+    t.string "uid"
     t.text "tokens"
     t.string "encrypted_password"
-    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
   add_foreign_key "key_people", "companies"

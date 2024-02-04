@@ -1,63 +1,36 @@
 class CompaniesController < ApplicationController
     def index
       @companies = Company.includes(:key_people).all
-      @companies = Company.all
       render json: @companies
     end
   
-    def show
-      @company = Company.find(params[:id])
-      render json: @company
-    end
-  
-    def new
-      @company = Company.new
-      render json: @company
-    end
-  
     def create_with_key_person
-      Rails.logger.debug "Received params: #{params.inspect}"
-      Company.transaction do
-        @company = Company.new(company_params)
-        @company.save!
-    
-        @key_person = @company.key_people.build(key_person_params)
-        @key_person.save!
-      end
-
-      if @company.persisted? && @key_person.persisted?
+      begin
+        Company.transaction do
+          @company = Company.new(company_params)
+          @company.save!
+        
+          @key_person = @company.key_people.build(key_person_params)
+          @key_person.save!
+        end
+        # 例外が発生しなかった場合、成功レスポンスを返す
         render json: { success: true }, status: :ok
-      else
-        render json: { success: false }, status: :unprocessable_entity
+        # 例外が発生した場合の処理をeに格納
+        rescue => e
+        # 例外が発生した場合、エラーレスポンスを返す、{e.message}"は、エラーメッセージをRailsのログに記録
+        # status: :unprocessable_entityはHTTPステータスコード422を指定
+        Rails.logger.error "Error creating company or key person: #{e.message}"
+        render json: { success: false, error: e.message }, status: :unprocessable_entity
       end
-      # redirect_to "http://localhost:8000/dashbord"
     end
-    
-    # def create
-    #   render json: { company: @company, key_person: @key_person }, status: :created
-    # rescue ActiveRecord::RecordInvalid => e
-    #   render json: e.record.errors, status: :unprocessable_entity
+
+    # dashbordのcompany情報を更新する時に使用、現時点で使わないが、後々使用するので残しておく
+    # privateメソッドとして定義する。個人用notionにやり方記載済み
+    # def edit
+    #   @company = Company.find(params[:id])
+    # 　render json: @company
     # end
-  
-    def edit
-      @company = Company.find(params[:id])
-    end
-  
-    def update
-      @company = Company.find(params[:id])
-      if @company.update(company_params)
-        redirect_to @company
-      else
-        render :edit
-      end
-    end
-  
-    def destroy
-      @company = Company.find(params[:id])
-      @company.destroy
-      redirect_to companies_url
-    end
-  
+    
     private
   
     def company_params

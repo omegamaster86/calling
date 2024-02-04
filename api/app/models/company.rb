@@ -4,7 +4,5 @@ class Company < ApplicationRecord
     validates :company_name, presence: { message: '記入漏れです' }
     validates :industry, presence: { message: '記入漏れです' }
     validates :address, presence: { message: '記入漏れです' }
-    validates :telephone_number, presence: { message: '記入漏れです' },
-      numericality: { only_integer: true, message: '有効な数値を入力してください' }
-    # telephone_numberはinteger型で定義されているので、上記のような書き方
+    validates :telephone_number, presence: { message: '記入漏れです' }, format: { with: /\A\d{10,11}\z|\A\d{2,4}-\d{2,4}-\d{4}\z/, message: "有効な形式で入力してください" }
 end

@@ -4,16 +4,6 @@ class KeyPersonsController < ApplicationController
         render json: @key_person
     end
     
-    def show
-        @key_person = KeyPerson.find(params[:id])
-        render json: @key_person
-    end
-    
-    def new
-        @key_person = KeyPerson.new
-        render json: @key_person
-    end
-    
     def create
         @key_person = KeyPerson.new(key_person_params)
       
@@ -23,25 +13,11 @@ class KeyPersonsController < ApplicationController
           render json: @key_person.errors, status: :unprocessable_entity
         end
     end
-    
-    def edit
-        @key_person = KeyPerson.find(params[:id])
-    end
-    
-    def update
-        @key_person = KeyPerson.find(params[:id])
-        if @key_person.update(company_params)
-          redirect_to @key_person
-        else
-          render :edit
-        end
-    end
-    
-    def destroy
-        @key_person = KeyPerson.find(params[:id])
-        @key_person.destroy
-        redirect_to companies_url
-    end
+
+    # アタックログで使用する可能性があるので、一旦後回し
+    # def edit
+    #     @key_person = KeyPerson.find(params[:id])
+    # end
 
     private
 
