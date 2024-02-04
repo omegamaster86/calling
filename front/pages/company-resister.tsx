@@ -10,10 +10,17 @@ import { useRouter } from 'next/router';
       const router = useRouter();
     // TODO: バリデーションの修正
     const formSchema = yup.object().shape({
-        companyName: yup.string().required('記入漏れです'),
-        industry: yup.string().required('記入漏れです'),
-        address: yup.string().required('記入漏れです'),
-        telephoneNumber: yup.string().required('記入漏れです'),
+        companyName: yup.string().required('記入漏れです')
+        .min(1, '内容は1文字以上50文字以下で入力してください')
+        .max(50, '内容は1文字以上50文字以下で入力してください'),
+        industry: yup.string().required('記入漏れです')
+        .min(1, '内容は1文字以上50文字以下で入力してください')
+        .max(50, '内容は1文字以上50文字以下で入力してください'),
+        address: yup.string().required('記入漏れです')
+        .min(1, '内容は1文字以上50文字以下で入力してください')
+        .max(50, '内容は1文字以上50文字以下で入力してください'),
+        telephoneNumber: yup.string().required('記入漏れです')
+        .matches(/^(\d{10,11}|\d{2,4}-\d{2,4}-\d{4})$/, '有効な形式で入力してください'), // 電話番号の形式を検証
     });
       
     const [formState, setFormState] = useState<CompanyResisterFormState>({

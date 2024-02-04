@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { TodoType } from '../../types/Todo';
+import { TodoType } from '../types/Todo';
 import Todo from './Todo';
 import Link from 'next/link';
 
