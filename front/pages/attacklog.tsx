@@ -1,5 +1,5 @@
-import { AttackLogInfo } from "./components/AttackLogInfo";
-import { AttackLogCallHistory } from "./components/AttackLogCallHistory";
+import { AttackLogInfo } from "../components/AttackLogInfo";
+import { AttackLogCallHistory } from "../components/AttackLogCallHistory";
 import { ArrowLeftIcon, ArrowRightIcon, CloseIcon } from '@chakra-ui/icons';
 
 export default function AttackLog(){

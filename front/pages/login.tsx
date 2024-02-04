@@ -1,8 +1,8 @@
 import Email from "next-auth/providers/email";
 import Head from "next/head";
 import Link from "next/link";
-import { Layout } from "./components/layout";
-import { LoginInfo } from "./components/LoginInfo"
+import { Layout } from "../components/Layout";
+import { LoginInfo } from "../components/LoginInfo"
 import Image from "next/image";
 import { signIn } from "next-auth/react"
 

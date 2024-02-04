@@ -1,7 +1,7 @@
 import Head from "next/head"
-import { Layout } from "./components/layout";
+import { Layout } from "../components/Layout";
 import Link from "next/link";
-import { EmailPassword } from "./components/RegisterInfo"
+import { EmailPassword } from "../components/RegisterInfo"
 
 export default function Register(){
 
