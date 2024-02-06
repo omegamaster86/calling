@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { useState, ChangeEvent } from 'react';
 import Link from 'next/link';
-import { Input, FormControl, FormLabel, FormErrorMessage, Button } from '@chakra-ui/react';
+import { Input, FormControl, FormLabel, FormErrorMessage, Button, Text } from '@chakra-ui/react';
 import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/interface';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -10,10 +10,17 @@ import { useRouter } from 'next/router';
       const router = useRouter();
     // TODO: バリデーションの修正
     const formSchema = yup.object().shape({
-        companyName: yup.string().required('記入漏れです'),
-        industry: yup.string().required('記入漏れです'),
-        address: yup.string().required('記入漏れです'),
-        telephoneNumber: yup.string().required('記入漏れです'),
+        companyName: yup.string().required('記入漏れです')
+        .min(1, '内容は1文字以上50文字以下で入力してください')
+        .max(50, '内容は1文字以上50文字以下で入力してください'),
+        industry: yup.string().required('記入漏れです')
+        .min(1, '内容は1文字以上50文字以下で入力してください')
+        .max(50, '内容は1文字以上50文字以下で入力してください'),
+        address: yup.string().required('記入漏れです')
+        .min(1, '内容は1文字以上50文字以下で入力してください')
+        .max(50, '内容は1文字以上50文字以下で入力してください'),
+        telephoneNumber: yup.string().required('記入漏れです')
+        .matches(/^(\d{10,11}|\d{2,4}-\d{2,4}-\d{4})$/, '有効な形式で入力してください'), // 電話番号の形式を検証
     });
       
     const [formState, setFormState] = useState<CompanyResisterFormState>({
@@ -78,25 +85,25 @@ import { useRouter } from 'next/router';
     return (
       <form className='mt-16 mx-80' onSubmit={handleSubmit}>
         <FormControl isInvalid={!!errors.companyName} mb={5}>
-          <FormLabel htmlFor='companyName'>会社名</FormLabel>
+          <FormLabel htmlFor='companyName'>会社名<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
           <Input id='companyName' name='companyName' type='text' onChange={handleChange} />
           <FormErrorMessage>{errors.companyName}</FormErrorMessage>
         </FormControl>
 
         <FormControl isInvalid={!!errors.industry} mb={5}>
-          <FormLabel htmlFor='industry'>業界</FormLabel>
+          <FormLabel htmlFor='industry'>業界<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
           <Input id='industry' name='industry' type='text' onChange={handleChange} />
           <FormErrorMessage>{errors.industry}</FormErrorMessage>
         </FormControl>
 
         <FormControl isInvalid={!!errors.address} mb={5}>
-          <FormLabel htmlFor='address'>住所</FormLabel>
+          <FormLabel htmlFor='address'>住所<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
           <Input id='address' name='address' type='text' onChange={handleChange} />
           <FormErrorMessage>{errors.address}</FormErrorMessage>
         </FormControl>
 
         <FormControl isInvalid={!!errors.telephoneNumber} mb={5}>
-          <FormLabel htmlFor='telephoneNumber'>電話番号</FormLabel>
+          <FormLabel htmlFor='telephoneNumber'>電話番号<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
           <Input id='telephoneNumber' name='telephoneNumber' type='text' onChange={handleChange} />
           <FormErrorMessage>{errors.telephoneNumber}</FormErrorMessage>
         </FormControl>

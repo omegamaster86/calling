@@ -1,4 +1,4 @@
-import { TodoType } from '../../types/Todo';
+import { TodoType } from '../types/Todo';
 
 // Todo一つを表示するコンポーネント
 const Todo = ({ todo }: { todo: TodoType }) => {

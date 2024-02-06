@@ -1,5 +1,5 @@
 import Todos from "./Todos";
-import CreateTodoForm from "../components/CreateTodoForm"
+import CreateTodoForm from "./CreateTodoForm"
 
 interface Props {
     children: React.ReactNode

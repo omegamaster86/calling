@@ -89,7 +89,7 @@ import { FilterSalesman } from './FilterComponents/FilterSalesman';
             <FilterIndustryCompany onCompanyIndustryChange={handleIndustryChange}/>
             <FilterSalesman onCompanySalesmanChange={handleSalesmanChange}/>
             <Button colorScheme='blue' mx='5' type="submit" px="90">
-              <Link href={'/companyresister'}>企業登録フォームへ</Link>
+              <Link href={'/company-resister'}>企業登録フォームへ</Link>
             </Button>
           </div>
         </div>

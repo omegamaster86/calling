@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import EditTodoForm from '../../components/EditTodoForm';
+import EditTodoForm from '../../../components/EditTodoForm';
 
 const EditTodoPage = () => {
   // Next.js の useRouter を使って、URLのクエリパラメータを取得します
