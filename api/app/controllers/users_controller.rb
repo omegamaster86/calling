@@ -71,4 +71,4 @@ class UsersController < ApplicationController
     params.require(:user).permit(:name, :email, :password)
   end
 end
->>>>>>> b415fbb (認証用に編集したファイル)
+
