@@ -8,6 +8,5 @@ class SessionsController < ApplicationController
       else
         render json: { error: 'Invalid email or password' }, status: :unauthorized
       end
-      render json: { logged_in: true }, status: :ok
     end
 end
