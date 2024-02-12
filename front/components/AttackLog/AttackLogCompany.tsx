@@ -28,11 +28,11 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
     );
 };
 
-export const AttackLogCompany = () => {
+export const AttackLogCompany = ({ onInputChange }) => {
     const [companies, setCompanies] = useState([]);
     const router = useRouter();
     const company = router.query.company as string | string[] | undefined;
-    const [nameCompanyName, setCompanyName] = useState('');
+    const [companyName, setCompanyName] = useState('');
     const [address, setAddress] = useState('');
     const [website, setWebsite] = useState('');
     const [telephoneNumber, setTelephoneNumber] = useState('');
@@ -65,27 +65,36 @@ export const AttackLogCompany = () => {
                 setAddress(selectedCompany.address); 
                 setWebsite(selectedCompany.website);
                 setTelephoneNumber(selectedCompany.telephone_number);
-                }
+                
+                onInputChange('companyName', selectedCompany.company_name);
+                onInputChange('address', selectedCompany.address);
+                onInputChange('companyWebsite', selectedCompany.website);
+                onInputChange('telephoneNumber', selectedCompany.telephone_number);
+              }
             } catch (error) {
                 console.error('Error fetching data:', error);
             } 
         };
         fetchData();
-      }, [company]);
+      }, [company, onInputChange]);
 
       // 会社名、住所、会社サイト、登記電話番号の入力値を更新する関数
 
       const handleNameInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCompanyName(e.target.value);
+        onInputChange('companyName', e.target.value);
       };
       const handleAddressInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setAddress(e.target.value);
+        onInputChange('address', e.target.value);
       };
       const handleWebsiteInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setWebsite(e.target.value);
+        onInputChange('companyWebsite', e.target.value);
       };
       const handleTelephoneNumberInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTelephoneNumber(e.target.value);
+        onInputChange('telephoneNumber', e.target.value);
       };
 
   return (
@@ -93,7 +102,7 @@ export const AttackLogCompany = () => {
         <h2 className='mx-9 font-extrabold border-l-4 border-sky-400 border-b-2 pb-2 pl-2'>法人情報</h2>
         <div className='w-1/2 mx-9 mt-5 '>
             <div className='flex mx-auto'>
-                    <InputField label="会社名" name="company-name" id="company-name" value={nameCompanyName} onChange={handleNameInputChange} />
+                    <InputField label="会社名" name="company-name" id="company-name" value={companyName} onChange={handleNameInputChange} />
                 <div className='ml-12'>
                     <InputField label="住所" name="address" id="address" value={address} onChange={handleAddressInputChange} />
                 </div>

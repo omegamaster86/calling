@@ -29,7 +29,7 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
     );
 };
 
-export const AttackLogCallResult = () => {
+export const AttackLogCallResult = ({ onInputChange }) => {
     const [companies, setCompanies] = useState([]);
     const router = useRouter();
     const company = router.query.company as string | string[] | undefined;
@@ -69,31 +69,44 @@ export const AttackLogCallResult = () => {
                 setNextCallDay(selectedCompany.next_call_day);
                 setSalseman(selectedCompany.salseman);
                 setCallContent(selectedCompany.call_content);
+
+                onInputChange('callingDay', selectedCompany.calling_day);
+                onInputChange('callingStart',selectedCompany.calling_start);
+                onInputChange('callResult',selectedCompany.call_result);
+                onInputChange('nextCallDay',selectedCompany.next_call_day);
+                onInputChange('salseman',selectedCompany.salseman);
+                onInputChange('callContent',selectedCompany.call_content);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
             } 
         };
         fetchData();
-      }, [company]);
+      }, [company, onInputChange]);
 
       const handleCallingDayInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCallingDay(e.target.value);
+        onInputChange('callingDay', e.target.value);
       };
       const handleCallingStartInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCallingStart(e.target.value);
+        onInputChange('callingStart', e.target.value);
       };
       const handleCallResultInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCallResult(e.target.value);
+        onInputChange('callResult', e.target.value);
       };
       const handleNextCallDayInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setNextCallDay(e.target.value);
+        onInputChange('nextCallDay', e.target.value);
       };
       const handleSalsemanInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSalseman(e.target.value);
+        onInputChange('salseman', e.target.value);
       };
       const handleCallContentTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setCallContent(e.target.value);
+        onInputChange('callContent', e.target.value);
       };
 
     return (

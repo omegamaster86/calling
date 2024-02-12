@@ -30,3 +30,27 @@ export interface CompanyResisterFormState {
 export interface CompanyResisterFormErrors {
     [key: string]: string;
 }
+
+export interface AttackLogFormErrors {
+    [key: string]: string;
+}
+
+export interface AttackLogFormState {
+    companyId: string | null;
+    companyName: string | null;
+    address: string | null;
+    telephoneNumber: string | null;
+    companyWebsite: string | null;
+    department: string | null;
+    post: string | null;
+    name: string | null;
+    number: string | null;
+    email: string | null;
+    note: string | null;
+    callingDay: string | null;
+    callingStart: string | null;
+    callResult: string | null;
+    nextCallDay: string | null;
+    salseman: string | null;
+    callContent: string | null;
+}

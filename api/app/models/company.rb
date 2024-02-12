@@ -1,5 +1,6 @@
 class Company < ApplicationRecord
   has_many :key_people
+  has_many :attack_logs
 
   validates :telephone_number, presence: { message: '記入漏れです' }, format: { with: /\A\d{10,11}\z|\A\d{2,4}-\d{2,4}-\d{4}\z/, message: "有効な形式で入力してください" }
 

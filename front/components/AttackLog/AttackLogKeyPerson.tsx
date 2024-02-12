@@ -29,7 +29,7 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
 };
 
 
-export const AttackLogKeyPerson = () => {
+export const AttackLogKeyPerson = ({ onInputChange }) => {
     const [companies, setCompanies] = useState([]);
     const router = useRouter();
     const company = router.query.company as string | string[] | undefined;
@@ -69,6 +69,13 @@ export const AttackLogKeyPerson = () => {
                 setTelephoneNumber(selectedCompany.keyPerson.telephone_number);
                 setEmail(selectedCompany.keyPerson.email);
                 setNote(selectedCompany.keyPerson.note);
+
+                onInputChange('department', selectedCompany.keyPerson.department); // 見つかったらその名前を設定
+                onInputChange('post', selectedCompany.keyPerson.post); 
+                onInputChange('name', selectedCompany.keyPerson.name);
+                onInputChange('number', selectedCompany.keyPerson.telephone_number);
+                onInputChange('email', selectedCompany.keyPerson.email);
+                onInputChange('note', selectedCompany.keyPerson.note);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -79,21 +86,27 @@ export const AttackLogKeyPerson = () => {
 
       const handleDepartmentInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setDepartment(e.target.value);
+        onInputChange('department', e.target.value);
       };
       const handlePostInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPost(e.target.value);
+        onInputChange('post', e.target.value);
       };
       const handleNameInputChange = (e: ChangeEvent<HTMLInputElement>) => {
          setName(e.target.value);
+         onInputChange('name', e.target.value);
       };
       const handleTelephoneNumberInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTelephoneNumber(e.target.value);
+        onInputChange('number', e.target.value);
       };
       const handleEmailInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
+        onInputChange('email', e.target.value);
       };
       const handleNoteInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setNote(e.target.value);
+        onInputChange('note', e.target.value);
       };
       
 

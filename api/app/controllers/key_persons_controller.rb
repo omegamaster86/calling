@@ -23,6 +23,6 @@ class KeyPersonsController < ApplicationController
 
     def key_person_params
       # 必要なパラメーターを許可
-      params.require(:key_person).permit(:department, :post, :name, :email, :company_id)
+      params.require(:key_person).permit(:department, :post, :name, :email, :company_id, :telephone_number, :note)
     end
 end
