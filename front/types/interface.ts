@@ -54,3 +54,32 @@ export interface AttackLogFormState {
     salseman: string | null;
     callContent: string | null;
 }
+
+export interface Company {
+    id?: number;
+    company_name: string;
+    industry: string;
+    address: string;
+    telephone_number: string;
+    company_website: string;
+}
+
+export interface KeyPerson {
+    company_id?: bigint;
+    department: string;
+    post: string;
+    name: string;
+    email: string;
+    telephone_number: string;
+    note: string;
+}
+
+export interface AttackLog {
+    company_id?: bigint;
+    calling_day: string;
+    calling_start: string;
+    call_result: string;
+    call_content: string;
+    next_call_day: string;
+    salseman: string;
+}

@@ -87,6 +87,9 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   }
 };
 
+  const handleReload = () => {
+    router.reload();
+  };
 
   return (
     <div className='mt-5 mx-auto'>
@@ -94,7 +97,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         <AttackLogCompany onInputChange={handleInputChange}/>
         <AttackLogKeyPerson onInputChange={handleInputChange}/>
         <AttackLogCallResult onInputChange={handleInputChange}/>
-        <Button colorScheme='blue' type="submit" size='lg' ml='32'>登録</Button>
+        <Button colorScheme='blue' type="submit" size='lg' ml='32' onClick={handleReload}>登録</Button>
       </form>
     </div>
   );

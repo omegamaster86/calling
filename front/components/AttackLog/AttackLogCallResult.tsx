@@ -111,7 +111,7 @@ export const AttackLogCallResult = ({ onInputChange }) => {
 
     return (
         <div>
-            <h2 className=' mt-9 mx-9 font-extrabold border-l-4 border-sky-400 border-b-2 pb-2 pl-2'>アタックログ</h2>
+            <h2 className=' mt-9 mx-9 font-extrabold border-l-4 border-sky-400 border-b-2 pb-2 pl-2'>アタックログ<span className=' ml-4 text-red-600'>必須項目</span></h2>
             <div className='w-1/2 mx-9 my-5'>
                 <div className='flex mx-auto'>
                     <div>

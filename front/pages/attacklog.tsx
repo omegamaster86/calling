@@ -1,6 +1,7 @@
 import { AttackLogInfo } from "../components/AttackLogInfo";
-import { AttackLogCallHistory } from "../components/AttackLogCallHistory";
+import { AttackLogCallHistory } from "../components/AttackLog/AttackLogCallHistory/AttackLogCallHistory";
 import { ArrowLeftIcon, ArrowRightIcon, CloseIcon } from '@chakra-ui/icons';
+
 
 export default function AttackLog(){
 
@@ -24,7 +25,7 @@ export default function AttackLog(){
                 </div>
             </div>
             <div className="flex">
-                <AttackLogInfo/>
+                <AttackLogInfo onSubmit={() => {}}/>
                 <AttackLogCallHistory/>
             </div>
         </div>
