@@ -6,7 +6,7 @@ import { FilterCompany } from '../FilterComponents/FilterCompany';
 import { FilterCompanyNumber } from '../FilterComponents/FilterCompanyNumber';
 import { FilterIndustryCompany } from '../FilterComponents/FilterCompanyIndustry';
 import { FilterSalesman } from '../FilterComponents/FilterSalesman';
-import { useCompanyAndKeyPersonsData } from './useSWR';
+import { useCompanyAndKeyPersonsData } from './useSWRCompanyList';
 import { Company } from '../../types/interface';
 
   export const CompanyList = () => {
