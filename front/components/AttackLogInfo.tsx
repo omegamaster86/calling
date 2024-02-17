@@ -2,7 +2,7 @@ import React, { FC, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { Button, Stack, Alert, AlertIcon } from '@chakra-ui/react';
-import { AttackLogFormState, AttackLogFormErrors } from '../types/interface';
+import { AttackLogFormState } from '../types/interface';
 import { AttackLogCompany } from '../components/AttackLog/AttackLogCompany';
 import { AttackLogKeyPerson } from '../components/AttackLog/AttackLogKeyPerson';
 import { AttackLogCallResult } from './AttackLog/AttackLogCallResult';

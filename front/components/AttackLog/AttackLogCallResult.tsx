@@ -80,21 +80,6 @@ export const AttackLogCallResult = ({ onInputChange }) => {
           } 
       };
       fetchData();
-          const handleKeyDown = (event) => {
-            if (event.ctrlKey && event.key === 't') {
-                event.preventDefault();
-                const now = new Date().toTimeString().split(' ')[0]; // HH:MM:SS 形式
-                setCallingStart(now);
-                onInputChange('callingStart', now);
-            }
-        };
-
-        document.addEventListener('keydown', handleKeyDown);
-
-        // イベントリスナーのクリーンアップ
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-        };
     }, [company, onInputChange]);
 
       const handleCallingStartInputChange = (e: ChangeEvent<HTMLInputElement>) => {
