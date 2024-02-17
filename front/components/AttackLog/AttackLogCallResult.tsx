@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
 import { Textarea, Input } from '@chakra-ui/react'
+import { AttackLog, Company } from '@/types/interface';
 
 interface InputFieldProps {
     label: string;
@@ -33,7 +34,6 @@ export const AttackLogCallResult = ({ onInputChange }) => {
     const [companies, setCompanies] = useState([]);
     const router = useRouter();
     const company = router.query.company as string | string[] | undefined;
-    const [callingDay, setCallingDay] = useState('');
     const [callingStart, setCallingStart] = useState('');
     const [callResult, setCallResult] = useState('');
     const [nextCallDay, setNextCallDay] = useState('');
@@ -52,25 +52,23 @@ export const AttackLogCallResult = ({ onInputChange }) => {
           const AttackLogsData = await resAttackLogs.json();
   
           // companiesとAttackLogsを結合
-          const mergedData = companiesData.map(company => {
+          const mergedData = companiesData.map((company: Company) => {
             return {
               ...company,
-              AttackLog: AttackLogsData.find(at => at.company_id === company.id)
+              AttackLog: AttackLogsData.find((at: AttackLog) => at.company_id === company.id)
             };
           });
   
           setCompanies(mergedData);
 
-          const selectedCompany = mergedData.find(comp => comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
+          const selectedCompany = mergedData.find((comp: Company)=> comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
           if (selectedCompany) {
-              setCallingDay(selectedCompany.calling_day);
               setCallingStart(selectedCompany.calling_start);
               setCallResult(selectedCompany.call_result);
               setNextCallDay(selectedCompany.next_call_day);
               setSalseman(selectedCompany.salseman);
               setCallContent(selectedCompany.call_content);
 
-              onInputChange('callingDay', selectedCompany.calling_day);
               onInputChange('callingStart',selectedCompany.calling_start);
               onInputChange('callResult',selectedCompany.call_result);
               onInputChange('nextCallDay',selectedCompany.next_call_day);
@@ -82,15 +80,7 @@ export const AttackLogCallResult = ({ onInputChange }) => {
           } 
       };
       fetchData();
-
           const handleKeyDown = (event) => {
-            if (event.ctrlKey && event.key === 'd') {
-                event.preventDefault(); 
-                const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 形式
-                setCallingDay(today);
-                onInputChange('callingDay', today);
-            }
-
             if (event.ctrlKey && event.key === 't') {
                 event.preventDefault();
                 const now = new Date().toTimeString().split(' ')[0]; // HH:MM:SS 形式
@@ -107,10 +97,6 @@ export const AttackLogCallResult = ({ onInputChange }) => {
         };
     }, [company, onInputChange]);
 
-      const handleCallingDayInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setCallingDay(e.target.value);
-        onInputChange('callingDay', e.target.value);
-      };
       const handleCallingStartInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCallingStart(e.target.value);
         onInputChange('callingStart', e.target.value);
@@ -138,30 +124,26 @@ export const AttackLogCallResult = ({ onInputChange }) => {
             <div className='w-1/2 mx-9 my-5'>
                 <div className='flex mx-auto'>
                     <div>
-                        <InputField label="アタック日" name="call_day" id="call_day" value={callingDay} onChange={handleCallingDayInputChange}/>
-                    </div>
-                    <div className='ml-12'>
-                        <InputField label="架電開始時間" name="calling_start_at" id="calling_start_at" value={callingStart} onChange={handleCallingStartInputChange}/>
-                    </div>
-                </div>
-                <div className='flex mx-auto mt-8'>
-                    <div>
                         <InputField label="架電結果" name="call_result" id="call_result" value={callResult} onChange={handleCallResultInputChange}/>
                     </div>
                     <div className='ml-12'>
-                        <label htmlFor="next_call_day" className="text-sm font-semibold leading-6 text-sky-400">次回架電日</label>
-                          <Input placeholder="Select Date and Time" type="datetime-local" name="next_call_day" id="next_call_day" value={nextCallDay} onChange={handleNextCallDayInputChange}/>
+                        <label className=" text-sm font-semibold leading-6 text-sky-400">架電開始時間</label>
+                        <Input placeholder="Select Date and Time" type="datetime-local" name="calling_start_at" id="calling_start_at" value={callingStart} onChange={handleCallingStartInputChange}/>
                     </div>
                 </div>
                 <div className='flex mx-auto mt-8'>
                     <div>
-                        <InputField label="担当者" name="salesman" id="salesman" value={salseman} onChange={handleSalsemanInputChange}/>
+                    <InputField label="担当者" name="salesman" id="salesman" value={salseman} onChange={handleSalsemanInputChange}/>
                     </div>
                     <div className='ml-12'>
-                        <label className=" text-sm font-semibold leading-6 text-sky-400">対話内容</label>
-                        <div className="w-64 border-b-2">
-                            <Textarea className="outline-none block rounded-md px-3.5 py-2 text-gray-900 sm:text-sm sm:leading-6" value={callContent} onChange={handleCallContentTextChange}/>
-                        </div>
+                        <label htmlFor="next_call_day" className="text-sm font-semibold leading-6 text-sky-400">次回架電日</label>
+                        <Input placeholder="Select Date and Time" type="datetime-local" name="next_call_day" id="next_call_day" value={nextCallDay} onChange={handleNextCallDayInputChange}/>
+                    </div>
+                </div>
+                <div className='mx-auto mt-8'>
+                    <label className="text-sm font-semibold leading-6 text-sky-400">対話内容</label>
+                    <div className="w-96 border-b-2">
+                        <Textarea className="outline-none block rounded-md px-3.5 py-2 text-gray-900 sm:text-sm sm:leading-6" value={callContent} onChange={handleCallContentTextChange}/>
                     </div>
                 </div>
             </div>
