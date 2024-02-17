@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
-import { Textarea } from '@chakra-ui/react'
+import { Textarea, Input } from '@chakra-ui/react'
 
 interface InputFieldProps {
     label: string;
@@ -41,48 +41,71 @@ export const AttackLogCallResult = ({ onInputChange }) => {
     const [callContent, setCallContent] = useState('');
 
     useEffect(() => {
-        const fetchData = async () => {
-          // companyがまだ取得できていない場合は何もしない
-          if (!company) return;
-          try {
-            const resCompanies = await fetch('http://localhost:3000/companies');
-            const companiesData = await resCompanies.json();
-    
-            const resAttackLogs = await fetch('http://localhost:3000/attack_logs');
-            const AttackLogsData = await resAttackLogs.json();
-    
-            // companiesとAttackLogsを結合
-            const mergedData = companiesData.map(company => {
-              return {
-                ...company,
-                AttackLog: AttackLogsData.find(at => at.company_id === company.id)
-              };
-            });
-    
-            setCompanies(mergedData);
+      const fetchData = async () => {
+        // companyがまだ取得できていない場合は何もしない
+        if (!company) return;
+        try {
+          const resCompanies = await fetch('http://localhost:3000/companies');
+          const companiesData = await resCompanies.json();
+  
+          const resAttackLogs = await fetch('http://localhost:3000/attack_logs');
+          const AttackLogsData = await resAttackLogs.json();
+  
+          // companiesとAttackLogsを結合
+          const mergedData = companiesData.map(company => {
+            return {
+              ...company,
+              AttackLog: AttackLogsData.find(at => at.company_id === company.id)
+            };
+          });
+  
+          setCompanies(mergedData);
 
-            const selectedCompany = mergedData.find(comp => comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
-            if (selectedCompany) {
-                setCallingDay(selectedCompany.calling_day);
-                setCallingStart(selectedCompany.calling_start);
-                setCallResult(selectedCompany.call_result);
-                setNextCallDay(selectedCompany.next_call_day);
-                setSalseman(selectedCompany.salseman);
-                setCallContent(selectedCompany.call_content);
+          const selectedCompany = mergedData.find(comp => comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
+          if (selectedCompany) {
+              setCallingDay(selectedCompany.calling_day);
+              setCallingStart(selectedCompany.calling_start);
+              setCallResult(selectedCompany.call_result);
+              setNextCallDay(selectedCompany.next_call_day);
+              setSalseman(selectedCompany.salseman);
+              setCallContent(selectedCompany.call_content);
 
-                onInputChange('callingDay', selectedCompany.calling_day);
-                onInputChange('callingStart',selectedCompany.calling_start);
-                onInputChange('callResult',selectedCompany.call_result);
-                onInputChange('nextCallDay',selectedCompany.next_call_day);
-                onInputChange('salseman',selectedCompany.salseman);
-                onInputChange('callContent',selectedCompany.call_content);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } 
+              onInputChange('callingDay', selectedCompany.calling_day);
+              onInputChange('callingStart',selectedCompany.calling_start);
+              onInputChange('callResult',selectedCompany.call_result);
+              onInputChange('nextCallDay',selectedCompany.next_call_day);
+              onInputChange('salseman',selectedCompany.salseman);
+              onInputChange('callContent',selectedCompany.call_content);
+              }
+          } catch (error) {
+              console.error('Error fetching data:', error);
+          } 
+      };
+      fetchData();
+
+          const handleKeyDown = (event) => {
+            if (event.ctrlKey && event.key === 'd') {
+                event.preventDefault(); 
+                const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 形式
+                setCallingDay(today);
+                onInputChange('callingDay', today);
+            }
+
+            if (event.ctrlKey && event.key === 't') {
+                event.preventDefault();
+                const now = new Date().toTimeString().split(' ')[0]; // HH:MM:SS 形式
+                setCallingStart(now);
+                onInputChange('callingStart', now);
+            }
         };
-        fetchData();
-      }, [company, onInputChange]);
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        // イベントリスナーのクリーンアップ
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [company, onInputChange]);
 
       const handleCallingDayInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCallingDay(e.target.value);
@@ -126,7 +149,8 @@ export const AttackLogCallResult = ({ onInputChange }) => {
                         <InputField label="架電結果" name="call_result" id="call_result" value={callResult} onChange={handleCallResultInputChange}/>
                     </div>
                     <div className='ml-12'>
-                        <InputField label="次回架電日" name="next_call_day" id="next_call_day" value={nextCallDay} onChange={handleNextCallDayInputChange}/>
+                        <label htmlFor="next_call_day" className="text-sm font-semibold leading-6 text-sky-400">次回架電日</label>
+                          <Input placeholder="Select Date and Time" type="datetime-local" name="next_call_day" id="next_call_day" value={nextCallDay} onChange={handleNextCallDayInputChange}/>
                     </div>
                 </div>
                 <div className='flex mx-auto mt-8'>
