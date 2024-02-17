@@ -1,11 +1,11 @@
 import React, { FC, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { Button } from '@chakra-ui/react';
+import { Button, Stack, Alert, AlertIcon } from '@chakra-ui/react';
 import { AttackLogFormState, AttackLogFormErrors } from '../types/interface';
 import { AttackLogCompany } from '../components/AttackLog/AttackLogCompany';
 import { AttackLogKeyPerson } from '../components/AttackLog/AttackLogKeyPerson';
-import { AttackLogCallResult } from '../components/AttackLog/AttackLogCallResult';
+import { AttackLogCallResult } from './AttackLog/AttackLogCallResult';
 
 interface AttackLogProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -14,6 +14,7 @@ interface AttackLogProps {
 export const AttackLogInfo: FC<AttackLogProps> = () => {
     const router = useRouter();
     const companyId = router.query.company;
+    const [isPostSuccess, setIsPostSuccess] = useState(false);
    
   const [formState, setFormState] = useState<AttackLogFormState>({
     companyId: companyId as string,
@@ -34,7 +35,6 @@ export const AttackLogInfo: FC<AttackLogProps> = () => {
     salseman: "",
     callContent: "",
 });
-const [errors, setErrors] = useState<AttackLogFormErrors>({});
 
 const handleInputChange = useCallback((field, value) => {
   setFormState(prevState => ({
@@ -45,12 +45,10 @@ const handleInputChange = useCallback((field, value) => {
 
 const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault();
-  console.log("送信中");
-
   const companyId = router.query.company;
 
   try {
-    const postData = {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attack_logs`,  {
       company_id: companyId, // ここで `company_id` としてクエリパラメータの値を使用
       company: {
         company_name: formState.companyName,
@@ -74,19 +72,16 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         salseman: formState.salseman,
         call_content: formState.callContent,
       },
-    };
+    });
 
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/attack_logs`, postData);
-
-    if (response.status === 200) {
-      console.log(response.data);
-      router.push('/dashbord');
+    if (response.status === 201) {
+      setIsPostSuccess(true);
     }
   } catch (error) {
-    console.error("POST失敗:", error);
+    alert("POST失敗:");
   }
 };
-
+  // TODO: リダイレクトする方法で検討
   const handleReload = () => {
     router.reload();
   };
@@ -97,6 +92,16 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         <AttackLogCompany onInputChange={handleInputChange}/>
         <AttackLogKeyPerson onInputChange={handleInputChange}/>
         <AttackLogCallResult onInputChange={handleInputChange}/>
+        <div className=' pl-8'>
+          {isPostSuccess && (
+            <Stack spacing={3}>
+              <Alert status='success'>
+                <AlertIcon />
+                Data uploaded to the server. Fire on!
+              </Alert>
+            </Stack>
+          )}
+        </div>
         <Button colorScheme='blue' type="submit" size='lg' ml='32' onClick={handleReload}>登録</Button>
       </form>
     </div>
