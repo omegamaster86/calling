@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_12_093542) do
+ActiveRecord::Schema.define(version: 2024_02_18_073056) do
 
   create_table "attack_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "calling_day", null: false, comment: "架電日"
     t.string "calling_start", comment: "架電開始時間"
     t.string "call_result", null: false, comment: "架電結果"
     t.string "call_content", null: false, comment: "架電内容"
@@ -21,7 +20,7 @@ ActiveRecord::Schema.define(version: 2024_02_12_093542) do
     t.bigint "company_id", null: false, comment: "会社ID"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "salseman", null: false, comment: "担当者"
+    t.string "salesman", null: false, comment: "担当者"
     t.index ["company_id"], name: "index_attack_logs_on_company_id"
   end
 

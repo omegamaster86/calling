@@ -50,6 +50,6 @@ class AttackLogsController < ApplicationController
   end
 
   def attack_log_params
-    params.require(:attack_log).permit(:calling_day, :calling_start, :call_result, :call_content, :next_call_day, :salseman)
+    params.require(:attack_log).permit(:calling_day, :calling_start, :call_result, :call_content, :next_call_day, :salesman)
   end
 end

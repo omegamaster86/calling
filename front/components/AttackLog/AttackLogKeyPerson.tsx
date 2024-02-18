@@ -29,7 +29,7 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
 };
 
 
-export const AttackLogKeyPerson = ({ onInputChange }) => {
+export const AttackLogKeyPerson = ({ onInputChange, errors }) => {
     const [companies, setCompanies] = useState([]);
     const router = useRouter();
     const company = router.query.company as string | string[] | undefined;

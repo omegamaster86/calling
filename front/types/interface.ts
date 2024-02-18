@@ -47,11 +47,10 @@ export interface AttackLogFormState {
     number: string | null;
     email: string | null;
     note: string | null;
-    callingDay: string | null;
     callingStart: string | null;
     callResult: string | null;
     nextCallDay: string | null;
-    salseman: string | null;
+    salesman: string | null;
     callContent: string | null;
 }
 
@@ -81,5 +80,6 @@ export interface AttackLog {
     call_result: string;
     call_content: string;
     next_call_day: string;
-    salseman: string;
+    salesman: string;
+
 }

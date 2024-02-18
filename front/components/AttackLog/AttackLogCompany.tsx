@@ -8,9 +8,10 @@ interface InputFieldProps {
     type?: string;
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    errorMessage?: string;
   }
 
-const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", value = "", onChange  }) => {
+const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", value = "", onChange, errorMessage  }) => {
     return (
       <div>
         <label className="text-sm font-semibold leading-6 text-sky-400">{label}</label>
@@ -22,13 +23,14 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
             value={value}
             onChange={onChange}
             className="outline-none block rounded-md px-3.5 pt-2 text-gray-900 sm:text-sm sm:leading-6"
-          />
+            />
+            {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
         </div>
       </div>
     );
 };
 
-export const AttackLogCompany = ({ onInputChange }) => {
+export const AttackLogCompany = ({ onInputChange, errors  }) => {
     const [companies, setCompanies] = useState([]);
     const router = useRouter();
     const company = router.query.company as string | string[] | undefined;
@@ -102,9 +104,9 @@ export const AttackLogCompany = ({ onInputChange }) => {
         <h2 className='mx-9 font-extrabold border-l-4 border-sky-400 border-b-2 pb-2 pl-2'>法人情報</h2>
         <div className='w-1/2 mx-9 mt-5 '>
             <div className='flex mx-auto'>
-                    <InputField label="会社名" name="company-name" id="company-name" value={companyName} onChange={handleNameInputChange} />
+                    <InputField label="会社名" name="company-name" id="company-name" errorMessage={errors.companyName} value={companyName} onChange={handleNameInputChange} />
                 <div className='ml-12'>
-                    <InputField label="住所" name="address" id="address" value={address} onChange={handleAddressInputChange} />
+                    <InputField label="住所" name="address" id="address" errorMessage={errors.address} value={address} onChange={handleAddressInputChange} />
                 </div>
             </div>
             <div className='flex mx-auto mt-8'>
@@ -112,7 +114,7 @@ export const AttackLogCompany = ({ onInputChange }) => {
                     <InputField label="会社サイト" name="company-site" id="company-site" value={website} onChange={handleWebsiteInputChange}/>
                 </div>
                 <div className='ml-12'>
-                    <InputField label="登記電話番号" name="telephone_number" id="telephone_number" value={telephoneNumber} onChange={handleTelephoneNumberInputChange} />
+                    <InputField label="登記電話番号" name="telephone_number" id="telephone_number" errorMessage={errors.telephoneNumber} value={telephoneNumber} onChange={handleTelephoneNumberInputChange} />
                 </div>
             </div>
         </div>
