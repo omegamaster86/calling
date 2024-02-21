@@ -14,27 +14,32 @@ class SpreadsheetsImportJob < ApplicationJob
         :email
     )
   
-    def perform(spreadsheet_id = '1L6_ZxY3fbXo90LBKArJDe-45x11xA75JoxW_omPQeW4', range = 'シート1!A2:I9')    
+    def perform(spreadsheet_id = '1L6_ZxY3fbXo90LBKArJDe-45x11xA75JoxW_omPQeW4', range = 'シート1')    
       res = google_spreadsheet_service.get_values(spreadsheet_id, range)
       return if res.values.empty? # 値が空だった場合はここで終了
   
       res.values.drop(0).each do |row_data| # 1行目はヘッダーなので削除
         row = Row.new(*row_data)
-        attributes = row.to_h.slice(
-          :company_name,
-          :address,
-          :telephone_number,
-          :website,
-          :industry,
-          :department,
-          :post,
-          :name,
-          :email
-        )
-  
-        # 重複するデータを作成したくないのでfind_or_initialize_byを使用
-        add_company = AddCompany.find_or_initialize_by(attributes)
-        add_company.save
+        begin
+          Company.transaction do
+            company = Company.create!(
+              company_name: row.company_name,
+              address: row.address,
+              telephone_number: row.telephone_number,
+              website: row.website,
+              industry: row.industry
+            )
+            key_person = company.key_people.create!(
+              name: row.name,
+              department: row.department,
+              post: row.post,
+              email: row.email
+            )
+          end
+        rescue ActiveRecord::RecordInvalid => e
+          # エラーメッセージをログに記録
+          Rails.logger.error "Failed to import company or key person: #{e.message}"
+        end
       end
     end
   

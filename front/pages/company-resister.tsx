@@ -5,6 +5,7 @@ import { Input, FormControl, FormLabel, FormErrorMessage, Button, Text } from '@
 import { CompanyResisterFormState, CompanyResisterFormErrors } from '../types/interface';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { ImportButton } from '../components/Import';
 
     const RegistrationForm: React.FC = () => {
       const router = useRouter();
@@ -83,61 +84,64 @@ import { useRouter } from 'next/router';
     };
     
     return (
-      <form className='mt-16 mx-80' onSubmit={handleSubmit}>
-        <FormControl isInvalid={!!errors.companyName} mb={5}>
-          <FormLabel htmlFor='companyName'>会社名<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
-          <Input id='companyName' name='companyName' type='text' onChange={handleChange} />
-          <FormErrorMessage>{errors.companyName}</FormErrorMessage>
-        </FormControl>
+      <div className='mt-16 mx-80'>
+        <form onSubmit={handleSubmit}>
+          <FormControl isInvalid={!!errors.companyName} mb={5}>
+            <FormLabel htmlFor='companyName'>会社名<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
+            <Input id='companyName' name='companyName' type='text' onChange={handleChange} />
+            <FormErrorMessage>{errors.companyName}</FormErrorMessage>
+          </FormControl>
 
-        <FormControl isInvalid={!!errors.industry} mb={5}>
-          <FormLabel htmlFor='industry'>業界<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
-          <Input id='industry' name='industry' type='text' onChange={handleChange} />
-          <FormErrorMessage>{errors.industry}</FormErrorMessage>
-        </FormControl>
+          <FormControl isInvalid={!!errors.industry} mb={5}>
+            <FormLabel htmlFor='industry'>業界<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
+            <Input id='industry' name='industry' type='text' onChange={handleChange} />
+            <FormErrorMessage>{errors.industry}</FormErrorMessage>
+          </FormControl>
 
-        <FormControl isInvalid={!!errors.address} mb={5}>
-          <FormLabel htmlFor='address'>住所<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
-          <Input id='address' name='address' type='text' onChange={handleChange} />
-          <FormErrorMessage>{errors.address}</FormErrorMessage>
-        </FormControl>
+          <FormControl isInvalid={!!errors.address} mb={5}>
+            <FormLabel htmlFor='address'>住所<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
+            <Input id='address' name='address' type='text' onChange={handleChange} />
+            <FormErrorMessage>{errors.address}</FormErrorMessage>
+          </FormControl>
 
-        <FormControl isInvalid={!!errors.telephoneNumber} mb={5}>
-          <FormLabel htmlFor='telephoneNumber'>電話番号<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
-          <Input id='telephoneNumber' name='telephoneNumber' type='text' onChange={handleChange} />
-          <FormErrorMessage>{errors.telephoneNumber}</FormErrorMessage>
-        </FormControl>
+          <FormControl isInvalid={!!errors.telephoneNumber} mb={5}>
+            <FormLabel htmlFor='telephoneNumber'>電話番号<Text as="span" color="red" ml={4}>必須</Text></FormLabel>
+            <Input id='telephoneNumber' name='telephoneNumber' type='text' onChange={handleChange} />
+            <FormErrorMessage>{errors.telephoneNumber}</FormErrorMessage>
+          </FormControl>
 
-        <FormControl isInvalid={!!errors.companyWebsite} mb={5}>
-          <FormLabel htmlFor='companyWebsite'>会社サイト</FormLabel>
-          <Input id='companyWebsite' name='companyWebsite' type='text' onChange={handleChange} />
-        </FormControl>
+          <FormControl isInvalid={!!errors.companyWebsite} mb={5}>
+            <FormLabel htmlFor='companyWebsite'>会社サイト</FormLabel>
+            <Input id='companyWebsite' name='companyWebsite' type='text' onChange={handleChange} />
+          </FormControl>
 
-         <FormControl isInvalid={!!errors.department} mb={5}>
-           <FormLabel htmlFor='department'>部署</FormLabel>
-           <Input id='department' name='department' type='text' onChange={handleChange} />
-         </FormControl>
+          <FormControl isInvalid={!!errors.department} mb={5}>
+            <FormLabel htmlFor='department'>部署</FormLabel>
+            <Input id='department' name='department' type='text' onChange={handleChange} />
+          </FormControl>
 
-         <FormControl isInvalid={!!errors.companyWebsite} mb={5}>
-           <FormLabel htmlFor='post'>役職</FormLabel>
-           <Input id='post' name='post' type='text' onChange={handleChange} />
-         </FormControl>
+          <FormControl isInvalid={!!errors.companyWebsite} mb={5}>
+            <FormLabel htmlFor='post'>役職</FormLabel>
+            <Input id='post' name='post' type='text' onChange={handleChange} />
+          </FormControl>
 
-         <FormControl isInvalid={!!errors.name} mb={5}>
-           <FormLabel htmlFor='name'>氏名</FormLabel>
-           <Input id='name' name='name' type='text' onChange={handleChange} />
-         </FormControl>
+          <FormControl isInvalid={!!errors.name} mb={5}>
+            <FormLabel htmlFor='name'>氏名</FormLabel>
+            <Input id='name' name='name' type='text' onChange={handleChange} />
+          </FormControl>
 
-         <FormControl isInvalid={!!errors.email} mb={5}>
-           <FormLabel htmlFor='email'>メールアドレス</FormLabel>
-           <Input id='email' name='email' type='text' onChange={handleChange} />
-         </FormControl>
+          <FormControl isInvalid={!!errors.email} mb={5}>
+            <FormLabel htmlFor='email'>メールアドレス</FormLabel>
+            <Input id='email' name='email' type='text' onChange={handleChange} />
+          </FormControl>
 
-        <Button mt={4} colorScheme='blue' type="submit">登録</Button>
-        <Button mt={4} ml={6} colorScheme='blue' type="submit">
-           <Link href={'/dashbord'}>ダッシュボード</Link>
-        </Button>
-      </form>
+          <Button mt={4} colorScheme='blue' type="submit">登録</Button>
+          <Button mt={4} ml={6} colorScheme='blue' type="submit">
+            <Link href={'/dashbord'}>ダッシュボード</Link>
+          </Button>
+        </form>
+          <ImportButton/>
+      </div>
     );
   };
 

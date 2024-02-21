@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   resources :key_persons, only: [:index, :show, :create, :update, :destroy]
   post '/keypersonresister', to: 'key_persons#create'
 
+  post '/add_companies', to: 'spreadsheets#import'
+
   resources :todos, except: [:new, :edit]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
