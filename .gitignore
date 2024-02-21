@@ -57,6 +57,7 @@ front/yarn-error.log*
 
 # local env files
 front/.env*.local
+api/.env*.local
 
 # vercel
 front/.vercel
