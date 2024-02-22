@@ -1,2 +1,0 @@
-class AddCompany < ApplicationRecord
-end
