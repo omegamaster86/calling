@@ -23,13 +23,6 @@ class CompaniesController < ApplicationController
         render json: { success: false, error: e.message }, status: :unprocessable_entity
       end
     end
-
-    # dashbordのcompany情報を更新する時に使用、現時点で使わないが、後々使用するので残しておく
-    # privateメソッドとして定義する。個人用notionにやり方記載済み
-    # def edit
-    #   @company = Company.find(params[:id])
-    # 　render json: @company
-    # end
     
     private
   

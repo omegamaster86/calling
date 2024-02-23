@@ -28,7 +28,6 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
     );
 };
 
-
 export const AttackLogKeyPerson = ({ onInputChange, errors }) => {
     const [companies, setCompanies] = useState([]);
     const router = useRouter();
@@ -45,10 +44,10 @@ export const AttackLogKeyPerson = ({ onInputChange, errors }) => {
           // companyがまだ取得できていない場合は何もしない
           if (!company) return;
           try {
-            const resCompanies = await fetch('http://localhost:3000/companies');
+            const resCompanies = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`);
             const companiesData = await resCompanies.json();
     
-            const resKeyPersons = await fetch('http://localhost:3000/key_persons');
+            const resKeyPersons = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/key_persons`);
             const keyPersonsData = await resKeyPersons.json();
     
             // companiesとkeyPersonsを結合

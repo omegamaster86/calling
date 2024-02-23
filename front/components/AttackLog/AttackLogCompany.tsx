@@ -45,10 +45,10 @@ export const AttackLogCompany = ({ onInputChange, errors  }) => {
           // companyがまだ取得できていない場合は何もしない
           if (!company) return;
           try {
-            const resCompanies = await fetch('http://localhost:3000/companies');
+            const resCompanies = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`);
             const companiesData = await resCompanies.json();
     
-            const resKeyPersons = await fetch('http://localhost:3000/key_persons');
+            const resKeyPersons = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/key_persons`);
             const keyPersonsData = await resKeyPersons.json();
     
             // companiesとkeyPersonsを結合

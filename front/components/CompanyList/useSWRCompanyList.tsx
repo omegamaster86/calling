@@ -10,8 +10,8 @@ const fetcher = async (url: string) => {
 };
 
 export const useCompanyAndKeyPersonsData = () => {
-  const { data: companiesData, error: companiesError } = useSWR('http://localhost:3000/companies', fetcher);
-  const { data: keyPersonsData, error: keyPersonsError } = useSWR('http://localhost:3000/key_persons', fetcher);
+  const { data: companiesData, error: companiesError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/companies`, fetcher);
+  const { data: keyPersonsData, error: keyPersonsError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/key_persons`, fetcher);
 
   if (companiesError || keyPersonsError) {
     console.error('Error fetching data:', companiesError || keyPersonsError);

@@ -1,8 +1,8 @@
 class AttackLogsController < ApplicationController
   def index
-    if params[:company]
+    if params[:company_id]
       # company_idに基づいてAttackLogsをフィルタリング
-      attack_logs = AttackLog.where(company_id: params[:company])
+      attack_logs = AttackLog.where(company_id: params[:company_id])
     else
       attack_logs = AttackLog.all
     end
@@ -42,7 +42,7 @@ class AttackLogsController < ApplicationController
   private
 
   def company_params
-      params.require(:company).permit(:company_name, :address, :telephone_number, :website, :industry)
+      params.require(:company).permit(:company_name, :address, :telephone_number, :website)
   end
 
   def key_person_params
@@ -50,6 +50,6 @@ class AttackLogsController < ApplicationController
   end
 
   def attack_log_params
-    params.require(:attack_log).permit(:calling_day, :calling_start, :call_result, :call_content, :next_call_day, :salesman)
+    params.require(:attack_log).permit(:calling_start, :call_result, :call_content, :next_call_day, :salesman)
   end
 end

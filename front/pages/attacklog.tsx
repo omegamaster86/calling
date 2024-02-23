@@ -1,4 +1,4 @@
-import { AttackLogInfo } from "../components/AttackLogInfo";
+import { AttackLogInfo } from "../components/AttackLog/AttackLogInfo";
 import { AttackLogCallHistory } from "../components/AttackLog/AttackLogCallHistory/AttackLogCallHistory";
 import { ArrowLeftIcon, ArrowRightIcon, CloseIcon } from '@chakra-ui/icons';
 
