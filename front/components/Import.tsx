@@ -27,10 +27,7 @@ export const ImportButton = () => {
         setIsPostSuccess(false);
         setIsPostError(true);
       }
-    }).catch(() => {
-      setIsPostError(true); // 失敗時にエラー状態をtrueに設定
-      setIsPostSuccess(false); // 失敗時は成功状態をリセット
-    });
+    })
   };
 
   return (
