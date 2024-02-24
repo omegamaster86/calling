@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 2024_02_18_073056) do
 
   create_table "attack_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -43,6 +44,7 @@ ActiveRecord::Schema.define(version: 2024_02_18_073056) do
     t.string "telephone_number", comment: "電話番号"
     t.string "note", comment: "特記事項"
     t.index ["company_id"], name: "index_key_people_on_company_id"
+    t.index ["email"], name: "index_key_people_on_email", unique: true
   end
 
   create_table "todos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -55,13 +57,9 @@ ActiveRecord::Schema.define(version: 2024_02_18_073056) do
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
-    t.string "password_digest"
+    t.string "password"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "provider"
-    t.string "uid"
-    t.text "tokens"
-    t.string "encrypted_password"
   end
 
   add_foreign_key "attack_logs", "companies"
