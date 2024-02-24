@@ -1,19 +1,59 @@
-import React from 'react';
+import React,{ useState, useEffect } from 'react';
+import { Alert, AlertIcon, Stack} from '@chakra-ui/react'
 
 export const ImportButton = () => {
+  const [isPostSuccess, setIsPostSuccess] = useState(false);
+  const [isPostError, setIsPostError] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+
+  useEffect(() => {
+    if (isPostSuccess || isPostError) {
+      setShowAlert(true);
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isPostSuccess, isPostError]);
+  
   const handleImport = () => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/add_companies`, {
       method: 'POST',
     }).then(response => {
       if (response.ok) {
-        console.log('インポートジョブを実行しました。');
+        setIsPostSuccess(true);
+        setIsPostError(false);
       } else {
-        console.error('エラーが発生しました。');
+        setIsPostSuccess(false);
+        setIsPostError(true);
       }
+    }).catch(() => {
+      setIsPostError(true); // 失敗時にエラー状態をtrueに設定
+      setIsPostSuccess(false); // 失敗時は成功状態をリセット
     });
   };
 
   return (
-    <button className='font-bold text-white bg-sky-600 py-2 px-2 mt-5 rounded-lg' onClick={handleImport}>スプレッドシートからインポート</button>
+    <div>
+      <button className='font-bold text-white bg-sky-600 py-2 px-2 mt-5 rounded-lg' onClick={handleImport}>スプレッドシートからインポート</button>
+      <div className='pt-3 w-48 rounded-lg'>
+        {isPostSuccess && showAlert && (
+          <Stack spacing={3}>
+            <Alert status='success'>
+              <AlertIcon />
+              インポート完了!
+            </Alert>
+          </Stack>
+        )}
+        {isPostError && showAlert && (
+          <Stack spacing={3}>
+            <Alert status='error'>
+              <AlertIcon />
+              インポート失敗。
+            </Alert>
+          </Stack>
+        )}
+      </div>
+    </div>
   );
 }
