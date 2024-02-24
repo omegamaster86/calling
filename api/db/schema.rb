@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_24_110340) do
+
+ActiveRecord::Schema.define(version: 2024_02_18_073056) do
+
+  create_table "attack_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "calling_start", comment: "架電開始時間"
+    t.string "call_result", null: false, comment: "架電結果"
+    t.string "call_content", null: false, comment: "架電内容"
+    t.string "next_call_day", comment: "次回架電日"
+    t.bigint "company_id", null: false, comment: "会社ID"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "salesman", null: false, comment: "担当者"
+    t.index ["company_id"], name: "index_attack_logs_on_company_id"
+  end
 
   create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "company_name", null: false, comment: "会社名"
@@ -28,6 +41,8 @@ ActiveRecord::Schema.define(version: 2024_02_24_110340) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "company_id", null: false, comment: "会社ID"
+    t.string "telephone_number", comment: "電話番号"
+    t.string "note", comment: "特記事項"
     t.index ["company_id"], name: "index_key_people_on_company_id"
     t.index ["email"], name: "index_key_people_on_email", unique: true
   end
@@ -47,5 +62,6 @@ ActiveRecord::Schema.define(version: 2024_02_24_110340) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "attack_logs", "companies"
   add_foreign_key "key_people", "companies"
 end

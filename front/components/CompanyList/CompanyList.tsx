@@ -1,46 +1,26 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Select,Button } from '@chakra-ui/react';
-import { FilterCallingResult } from './FilterComponents/FilterCallingResult';
-import { FilterCompany } from './FilterComponents/FilterCompany';
-import { FilterCompanyNumber } from './FilterComponents/FilterCompanyNumber';
-import { FilterIndustryCompany } from './FilterComponents/FilterCompanyIndustry';
-import { FilterSalesman } from './FilterComponents/FilterSalesman';
+import { Button } from '@chakra-ui/react';
+import { FilterCallingResult } from '../FilterComponents/FilterCallingResult';
+import { FilterCompany } from '../FilterComponents/FilterCompany';
+import { FilterCompanyNumber } from '../FilterComponents/FilterCompanyNumber';
+import { FilterIndustryCompany } from '../FilterComponents/FilterCompanyIndustry';
+import { FilterSalesman } from '../FilterComponents/FilterSalesman';
+import { useCompanyAndKeyPersonsData } from './useSWRCompanyList';
+import { Company } from '../../types/interface';
 
   export const CompanyList = () => {
-
-    const [companies, setCompanies] = useState([]);
+    // const [companies, setCompanies] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [filterCompanyName, setFilterCompanyName] = useState('');
     const [filterCompanyNumber, setFilterCompanyNumber] = useState('');
     const [filterCompanyIndustry, setFilterCompanyIndustry] = useState('');
     const [filterCompanySalesman, setFilterCompanySalesman] = useState('');
+    const { mergedData, isLoading, isError } = useCompanyAndKeyPersonsData();
+    
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Error loading data</div>;
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const resCompanies = await fetch('http://localhost:3000/companies');
-          const companiesData = await resCompanies.json();
-  
-          const resKeyPersons = await fetch('http://localhost:3000/key_persons');
-          const keyPersonsData = await resKeyPersons.json();
-  
-          // companiesとkeyPersonsを結合
-          const mergedData = companiesData.map(company => {
-            return {
-              ...company,
-              keyPerson: keyPersonsData.find(kp => kp.company_id === company.id)
-            };
-          });
-  
-          setCompanies(mergedData);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        } 
-      };
-      fetchData();
-    }, []);
-    // TODO アタックログ実装後、次回予定日、営業担当のフィルター機能を実装する
     const handleSelectChange = (event) => {
       setSelectedOption(event.target.value);
     };
@@ -57,18 +37,18 @@ import { FilterSalesman } from './FilterComponents/FilterSalesman';
       setFilterCompanySalesman(companySalesman);
     };
 
-    const filteredCompanies = companies
-    .filter(company =>
+    const filteredCompanies = mergedData
+    .filter((company: Company) =>
       filterCompanyName === '' || company.company_name.toLowerCase().includes(filterCompanyName.toLowerCase()) 
     )
-    .filter(company =>
-      filterCompanyNumber === '' || company.telephone_number === parseInt(filterCompanyNumber, 10)
+    .filter((company: Company) =>
+      filterCompanyNumber === '' || company.telephone_number === filterCompanyNumber, 10
     )
     // nullが入っている場合、下記のようにする
-    .filter(company =>
+    .filter((company: Company) =>
       filterCompanyIndustry === '' || (company.industry && company.industry.toLowerCase().includes(filterCompanyIndustry.toLowerCase())) 
     )
-    .filter(company =>
+    .filter((company: Company) =>
       filterCompanySalesman === '' || company.keyPerson.name.toLowerCase().includes(filterCompanySalesman.toLowerCase()) 
     );
     // 現在は試しでkeyPersonを表示、品等は営業担当に変更する
@@ -80,6 +60,7 @@ import { FilterSalesman } from './FilterComponents/FilterSalesman';
     // : companies;
   
     return (
+      // console.log(filteredCompanies),
     <div>
         <div className="flex h-[70px] bg-cyan-400 items-center justify-around">
           <div className='flex'>
@@ -111,6 +92,9 @@ import { FilterSalesman } from './FilterComponents/FilterSalesman';
               </thead>
               <tbody  className='border-solid border-2'>
                 {filteredCompanies.map((company, index) => {
+                   const companyIndustry = company.industry.length > 10 
+                   ? `${company.industry.substring(0, 10)}...` 
+                   : company.industry;
                   return (
                     <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td className='border-2'>{company.address}</td>
@@ -119,7 +103,7 @@ import { FilterSalesman } from './FilterComponents/FilterSalesman';
                       <td className='border-2'>予定日 {index + 1}</td>
                       <td className='border-2'><Link href={`/attacklog?company=${company.id}`}>{company.company_name}</Link></td>
                       <td className='border-2'>{company.telephone_number}</td>
-                      <td className='border-2'>{company.industry}</td>
+                      <td className='border-2'>{companyIndustry}</td>
                       <td className='border-2'>{company.keyPerson? company.keyPerson.name : 'N/A'}</td>
                       <td className='border-2'>{company.keyPerson? company.keyPerson.department : 'N/A'}</td>
                       <td className='border-2'>特記事項 {index + 1}</td>
