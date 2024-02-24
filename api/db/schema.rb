@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 2024_02_18_073056) do
+ActiveRecord::Schema.define(version: 2024_02_24_110340) do
 
   create_table "attack_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "calling_start", comment: "架電開始時間"
