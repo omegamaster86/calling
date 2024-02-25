@@ -81,4 +81,12 @@ export interface AttackLog {
 	call_content: string;
 	next_call_day: string;
 	salesman: string;
+	created_at: string;
+	updated_at: string;
 }
+
+export interface ExtendedCompany extends Company {
+	latestSalesman?: string; // 最新の営業担当者名
+	latestCallResult?: string; // 最新の架電結果
+	nextCallDay?: string; // 次回予定日
+  }
