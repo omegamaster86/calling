@@ -16,6 +16,7 @@ export const FilterCallingResult: React.FC<FilterCallingResult> = ({ onCallingRe
             <option value='不在'>不在</option>
             <option value='不通'>不通</option>
             <option value='現アナ'>現アナ</option>
+            <option value='テスト'>テスト</option>
         </Select>
   );
 }

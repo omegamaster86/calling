@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
+import { FilterCallingResult } from '../FilterComponents/FilterCallingResult' 
 import { Textarea, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react'
 import { AttackLog, Company } from '@/types/interface';
 
@@ -88,7 +89,7 @@ export const AttackLogCallResult  = ({ onInputChange, errors  }) => {
         setCallingStart(e.target.value);
         onInputChange('callingStart', e.target.value);
       };
-      const handleCallResultInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const handleCallResultChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setCallResult(e.target.value);
         onInputChange('callResult', e.target.value);
       };
@@ -111,7 +112,10 @@ export const AttackLogCallResult  = ({ onInputChange, errors  }) => {
             <div className='w-1/2 mx-9 my-5'>
                 <div className='flex mx-auto'>
                     <div>
-                        <InputField label="架電結果" name="call_result" id="call_result" errorMessage={errors.callResult} value={callResult} onChange={handleCallResultInputChange}/>
+                      <label className="text-sm font-semibold leading-6 text-sky-400">架電結果</label>
+                      <div className="w-64 mt-2 -ml-5 mr-5">
+                        <FilterCallingResult onCallingResultChange={handleCallResultChange}/>
+                      </div>
                     </div>
                     <div className='ml-12'>
                       <label className="text-sm font-semibold leading-6 text-sky-400">架電開始時間</label>
