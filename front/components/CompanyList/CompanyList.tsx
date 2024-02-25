@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@chakra-ui/react';
 import { FilterCallingResult } from '../FilterComponents/FilterCallingResult';
 import { FilterCompany } from '../FilterComponents/FilterCompany';
@@ -8,10 +8,9 @@ import { FilterIndustryCompany } from '../FilterComponents/FilterCompanyIndustry
 import { FilterSalesman } from '../FilterComponents/FilterSalesman';
 import { FilterNextCallingDay } from '../FilterComponents/FilterNextCallingDay'
 import { useCompanyAndKeyPersonsData } from './useSWRCompanyList';
-import { Company, ExtendedCompany } from '../../types/interface';
+import { Company, ExtendedCompany, ExtendedCompanyWithKeyPerson } from '../../types/interface';
 
   export const CompanyList = () => {
-    // const [companies, setCompanies] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [filterCompanyName, setFilterCompanyName] = useState('');
     const [filterCompanyNumber, setFilterCompanyNumber] = useState('');
@@ -23,7 +22,7 @@ import { Company, ExtendedCompany } from '../../types/interface';
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading data</div>;
 
-    const handleSelectChange = (event) => {
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       setSelectedOption(event.target.value);
     };
     const handleCompanyChange = (companyName: string) => {
@@ -95,8 +94,8 @@ import { Company, ExtendedCompany } from '../../types/interface';
                 </tr>
               </thead>
               <tbody  className='border-solid border-2'>
-                {filteredCompanies.map((company, index) => {
-                   const companyIndustry = company.industry.length > 10 
+                {filteredCompanies.map((company: ExtendedCompanyWithKeyPerson, index: number) => {
+                   const companyIndustry = company.industry?.length > 10 
                    ? `${company.industry.substring(0, 10)}...` 
                    : company.industry;
                   return (
