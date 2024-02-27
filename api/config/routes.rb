@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
   resources :users, only: [:index, :show, :create, :update]
-  get 'user', to: 'users#show'
-  get '/current_user', to: 'users#current'
+  get 'users', to: 'users#show'
   post '/login', to: 'authentication#login'
-  get '/dashbord', to: 'dashbords#index'
+  get '/dashboard', to: 'dashboards#index'
 
   resources :companies, only: [:index, :create]
   post '/companies', to: 'companies#create_with_key_person'
