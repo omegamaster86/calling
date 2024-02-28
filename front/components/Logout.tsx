@@ -6,7 +6,7 @@ export const LogoutButton = () => {
   
   const Logout = async () => {
   try {
-    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
+    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
       withCredentials: true // セッションCookieをリクエストに含める
     });
     localStorage.removeItem('userName');
