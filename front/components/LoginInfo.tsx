@@ -37,7 +37,6 @@ export const LoginInfo = () => {
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      console.log(data); 
       // 最初の {name: string} は送信するデータの型を示し、AxiosResponse<{name: string}> はレスポンスの型
       const response = await axios.post<{name: string}, AxiosResponse<{name: string}>>(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         email: data.email,

@@ -13,6 +13,11 @@ class AuthenticationController < ApplicationController
     end
   end
 
+  def destroy
+    session[:user_id] = nil
+    render json: { logged_out: true }, status: :ok
+  end
+
   private
 end
   

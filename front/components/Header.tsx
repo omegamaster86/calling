@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Box, Spacer } from '@chakra-ui/react';
+import { LogoutButton } from '../components/Logout';
 
 export const Header = () => {
   const [userName, setUserName] = useState('');
@@ -28,6 +29,7 @@ export const Header = () => {
       <Box color="white" fontSize="xl" pr={20}>
         {userName ? userName : 'ローディング中...'}
       </Box>
+      <LogoutButton/>
     </Flex>
   );
 };
