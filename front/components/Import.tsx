@@ -17,7 +17,7 @@ export const ImportButton = () => {
   }, [isPostSuccess, isPostError]);
   
   const handleImport = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/add_companies`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/spreadsheets/import`, {
       method: 'POST',
     }).then(response => {
       if (response.ok) {

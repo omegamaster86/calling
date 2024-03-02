@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 
   resources :todos, except: [:new, :edit]
 
+  post '/spreadsheets/import', to: 'spreadsheets#import'
+
   delete '/logout', to: 'authentication#destroy'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
