@@ -7,16 +7,6 @@ class UsersController < ApplicationController
     render json: @users
   end
 
-  # GET /users/1
-  def show
-    user = User.find(params[:id])
-    render json: user
-  end
-
-  def get_login_user_name
-    render json: current_user
-  end
-
   # POST /users
   def create
     @users = User.new(user_params)
@@ -28,27 +18,24 @@ class UsersController < ApplicationController
     end
   end
 
-  def search
-    user = User.find_by(email: params[:email])
+  def show
+    user = User.find(session[:user_id])
     if user
-      render json: user
+      render json: { name: user.name, email: user.email }, status: :ok
     else
-      render json: { error: "ユーザーが見つかりませんでした" }, status: :not_found
+      render json: { error: 'ユーザーが見つかりません' }, status: :not_found
     end
-  rescue StandardError => e
-    render json: { error: e.message }, status: :internal_server_error
   end
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:email])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:email])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def user_params
-      params.require(:user).permit(:name, :email, :password)
-    end
-
+  # Only allow a trusted parameter "white list" through.
+  def user_params
+    params.permit(:name, :email, :password)
+  end
 end

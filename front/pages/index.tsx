@@ -50,7 +50,7 @@ export const User = ({session, handleSignOut}) => {
       </div>
 
       <div className='flex justify-center'>
-        <Link href={'/dashbord'} className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50">dashbord</Link>
+        <Link href={'/dashboard'} className="mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50">dashboard</Link>
       </div>
     </main>
   )

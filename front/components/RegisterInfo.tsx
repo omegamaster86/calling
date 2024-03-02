@@ -7,12 +7,13 @@ import {
   Button,
   InputGroup,
   InputRightElement,
-  
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
+import { RegisterForm, ErrorResponse } from '@/types/interface';
 import { yupResolver } from '@hookform/resolvers/yup';
 
   const schema = Yup.object().shape({
@@ -22,7 +23,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
       .required('No password provided')
       .min(3, 'Password should be min 3 chars'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .oneOf([Yup.ref('password')], 'Passwords must match')
   })
 
   export const EmailPassword = () => {
@@ -37,16 +38,26 @@ import { yupResolver } from '@hookform/resolvers/yup';
       resolver: yupResolver(schema),
     });
   
-    const onSubmit = async (data) => {
+    const onSubmit = async (data:RegisterForm) => {
       try {
         await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
           name: data.name,
           email: data.email,
           password: data.password,
         });
-        router.push('/dashbord');
-      } catch (error) {
-        setFormErrors({ server: error.response.data.message });
+        router.push('/login');
+      } catch (error: unknown) {
+        // unknown型のエラーに対して、それが実際にはAxiosError型であり、
+        // 更にそのエラーレスポンスがErrorResponse型であることをTypeScriptに教える
+        // これにより、error.responseが存在することが保証される。
+        if (axios.isAxiosError(error)) {
+          const serverError = error as AxiosError<ErrorResponse>;
+          if (serverError && serverError.response) {
+            setFormErrors({ server: serverError.response.data.message });
+          }
+        } else {
+          console.error('予期せぬエラーが発生', error);
+        }
       }
     };
   
