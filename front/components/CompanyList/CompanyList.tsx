@@ -1,29 +1,28 @@
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@chakra-ui/react';
 import { FilterCallingResult } from '../FilterComponents/FilterCallingResult';
 import { FilterCompany } from '../FilterComponents/FilterCompany';
 import { FilterCompanyNumber } from '../FilterComponents/FilterCompanyNumber';
 import { FilterIndustryCompany } from '../FilterComponents/FilterCompanyIndustry';
 import { FilterSalesman } from '../FilterComponents/FilterSalesman';
-import { FilterNextCallingDay } from '../FilterComponents/FilterNextCallingDay';
+import { FilterNextCallingDay } from '../FilterComponents/FilterNextCallingDay'
 import { useCompanyAndKeyPersonsData } from './useSWRCompanyList';
-import { Company,ExtendedCompany  } from '../../types/interface';
+import { Company, ExtendedCompany, ExtendedCompanyWithKeyPerson } from '../../types/interface';
 
   export const CompanyList = () => {
-    // const [companies, setCompanies] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [filterCompanyName, setFilterCompanyName] = useState('');
     const [filterCompanyNumber, setFilterCompanyNumber] = useState('');
     const [filterCompanyIndustry, setFilterCompanyIndustry] = useState('');
-    const [filterCompanySalesman, setFilterCompanySalesman] = useState('');
+    const [filterSalesman, setFilterSalesman] = useState('');
     const [filterNextCallingDay, setNextCallingDay ] = useState('');
     const { mergedData, isLoading, isError } = useCompanyAndKeyPersonsData();
     
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading data</div>;
 
-    const handleSelectChange = (event) => {
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       setSelectedOption(event.target.value);
     };
     const handleCompanyChange = (companyName: string) => {
@@ -35,14 +34,17 @@ import { Company,ExtendedCompany  } from '../../types/interface';
     const handleIndustryChange = (companyIndustry: string) => {
       setFilterCompanyIndustry(companyIndustry);
     };
-    const handleSalesmanChange = (companySalesman: string) => {
-      setFilterCompanySalesman(companySalesman);
+    const handleSalesmanChange = (Salesman: string) => {
+      setFilterSalesman(Salesman);
     };
     const handleNextCallingDayChange = (NextCallingDay: string) => {
       setNextCallingDay(NextCallingDay);
-    };
+    }
 
     const filteredCompanies = mergedData
+    .filter((company: ExtendedCompany) =>
+    selectedOption === '' || company.latestCallResult!.toLowerCase().includes(selectedOption.toLowerCase()) 
+    )
     .filter((company: Company) =>
       filterCompanyName === '' || company.company_name.toLowerCase().includes(filterCompanyName.toLowerCase()) 
     )
@@ -53,15 +55,14 @@ import { Company,ExtendedCompany  } from '../../types/interface';
     .filter((company: Company) =>
       filterCompanyIndustry === '' || (company.industry && company.industry.toLowerCase().includes(filterCompanyIndustry.toLowerCase())) 
     )
-    .filter((company: Company) =>
-      filterCompanySalesman === '' || company.keyPerson.name.toLowerCase().includes(filterCompanySalesman.toLowerCase()) 
+    .filter((company: ExtendedCompany) =>
+      filterSalesman === '' || company.latestSalesman!.toLowerCase().includes(filterSalesman.toLowerCase()) 
     )
     .filter((company: ExtendedCompany) =>
     filterNextCallingDay === '' || company.nextCallDay!.toLowerCase().includes(filterNextCallingDay.toLowerCase()) 
     );
     const filteredCompanyIds = filteredCompanies.map((company: Company) => company.id);
-
-  
+    
     return (
     <div>
         <div className="flex h-[70px] bg-cyan-400 items-center justify-around">
@@ -72,7 +73,7 @@ import { Company,ExtendedCompany  } from '../../types/interface';
             <FilterIndustryCompany onCompanyIndustryChange={handleIndustryChange}/>
             <FilterSalesman onCompanySalesmanChange={handleSalesmanChange}/>
             <FilterNextCallingDay onNextCallingDayChange={handleNextCallingDayChange}/>
-            <Button colorScheme='blue' mx='5' type="submit" px="90">
+            <Button colorScheme='blue' mx='5' type="submit" px="5">
               <Link href={'/company-resister'}>企業登録フォームへ</Link>
             </Button>
           </div>
@@ -94,22 +95,22 @@ import { Company,ExtendedCompany  } from '../../types/interface';
                 </tr>
               </thead>
               <tbody  className='border-solid border-2'>
-                {filteredCompanies.map((company, index) => {
-                   const companyIndustry = company.industry.length > 10 
+                {filteredCompanies.map((company: ExtendedCompanyWithKeyPerson, index: number) => {
+                   const companyIndustry = company.industry?.length > 10 
                    ? `${company.industry.substring(0, 10)}...` 
                    : company.industry;
                   return (
                     <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td className='border-2'>{company.address}</td>
-                      <td className='border-2'>アポイント{index + 1}</td>
-                      <td className='border-2'>担当者 {index + 1}</td>
-                      <td className='border-2'>予定日 {index + 1}</td>
-                      <td className='border-2'><Link href={`/attacklog?company=${company.id}&filteredIds=${filteredCompanyIds.join(',')}`}>{company.company_name}</Link></td>
+                      <td className='border-2'>{company.latestCallResult}</td>
+                      <td className='border-2'>{company.latestSalesman}</td>
+                      <td className='border-2'>{company.nextCallDay}</td>
+                      <td className='border-2'><Link href={`/attacklog?company=${company.id}`}>{company.company_name}</Link></td>
                       <td className='border-2'>{company.telephone_number}</td>
                       <td className='border-2'>{companyIndustry}</td>
-                      <td className='border-2'>{company.keyPerson? company.keyPerson.name : 'N/A'}</td>
-                      <td className='border-2'>{company.keyPerson? company.keyPerson.department : 'N/A'}</td>
-                      <td className='border-2'>特記事項 {index + 1}</td>
+                      <td className='border-2'>{company.keyPerson? company.keyPerson.name : ''}</td>
+                      <td className='border-2'>{company.keyPerson? company.keyPerson.department : ''}</td>
+                      <td className='border-2'>{company.keyPerson? company.keyPerson.note : ''}</td>
                     </tr>
                   );
                   })}

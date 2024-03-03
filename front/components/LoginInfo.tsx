@@ -13,6 +13,8 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { LoginForm, ErrorResponse } from "@/types/interface";
+import { AxiosError, AxiosResponse } from 'axios';
 
 export const LoginInfo = () => {
   const [formErrors, setFormErrors] = useState({});
@@ -33,22 +35,29 @@ export const LoginInfo = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: LoginForm) => {
     try {
-      console.log(data); 
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+      // 最初の {name: string} は送信するデータの型を示し、AxiosResponse<{name: string}> はレスポンスの型
+      const response = await axios.post<{name: string}, AxiosResponse<{name: string}>>(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         email: data.email,
         password: data.password,
       });
-      console.log(response.data); 
-      // 認証成功のレスポンスを確認
-      if (response.data.token) {
-        router.push('/dashbord');
+      const { name } = response.data;
+      // ローカルストレージにユーザー名を保存
+      localStorage.setItem('userName', name);
+      router.push('/dashboard');
+    } catch (error: unknown) {
+      // unknown型のエラーに対して、それが実際にはAxiosError型であり、
+      // 更にそのエラーレスポンスがErrorResponse型であることをTypeScriptに教える
+      // これにより、error.responseが存在することが保証される。
+      if (axios.isAxiosError(error)) {
+        const serverError = error as AxiosError<ErrorResponse>;
+        if (serverError && serverError.response) {
+          setFormErrors({ server: serverError.response.data.message });
+        }
       } else {
-        setFormErrors({ server: "認証に失敗しました。" });
+        console.error('予期せぬエラーが発生', error);
       }
-    } catch (error) {
-      setFormErrors({ server: error.response.data.message });
     }
   };
 

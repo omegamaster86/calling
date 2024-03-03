@@ -7,7 +7,7 @@ interface FilterCallingResult {
 
 export const FilterCallingResult: React.FC<FilterCallingResult> = ({ onCallingResultChange }) => {
   return (
-        <Select placeholder='架電結果' bg='Cyan 50' ml='5' onChange={onCallingResultChange}>
+        <Select placeholder='架電結果' bg='Cyan 50' ml='5' w={130} onChange={onCallingResultChange}>
             <option value='アポイント'>アポイント</option>
             <option value='コンタクト'>コンタクト</option>
             <option value='資料送付'>資料送付</option>
@@ -16,6 +16,7 @@ export const FilterCallingResult: React.FC<FilterCallingResult> = ({ onCallingRe
             <option value='不在'>不在</option>
             <option value='不通'>不通</option>
             <option value='現アナ'>現アナ</option>
+            <option value='テスト'>テスト</option>
         </Select>
   );
 }

@@ -64,7 +64,7 @@ import { ImportButton } from '../components/Import';
           }
         });
         if (response.status === 200) {
-          router.push('/dashbord');
+          router.push('/dashboard');
         } 
       } catch (validationError) {
         if (validationError instanceof yup.ValidationError) {
@@ -137,7 +137,7 @@ import { ImportButton } from '../components/Import';
 
           <Button mt={4} colorScheme='blue' type="submit">登録</Button>
           <Button mt={4} ml={6} colorScheme='blue' type="submit">
-            <Link href={'/dashbord'}>ダッシュボード</Link>
+            <Link href={'/dashboard'}>ダッシュボード</Link>
           </Button>
         </form>
           <ImportButton/>
