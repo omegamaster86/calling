@@ -6,8 +6,9 @@ import { FilterCompany } from '../FilterComponents/FilterCompany';
 import { FilterCompanyNumber } from '../FilterComponents/FilterCompanyNumber';
 import { FilterIndustryCompany } from '../FilterComponents/FilterCompanyIndustry';
 import { FilterSalesman } from '../FilterComponents/FilterSalesman';
+import { FilterNextCallingDay } from '../FilterComponents/FilterNextCallingDay';
 import { useCompanyAndKeyPersonsData } from './useSWRCompanyList';
-import { Company } from '../../types/interface';
+import { Company,ExtendedCompany  } from '../../types/interface';
 
   export const CompanyList = () => {
     // const [companies, setCompanies] = useState([]);
@@ -16,6 +17,7 @@ import { Company } from '../../types/interface';
     const [filterCompanyNumber, setFilterCompanyNumber] = useState('');
     const [filterCompanyIndustry, setFilterCompanyIndustry] = useState('');
     const [filterCompanySalesman, setFilterCompanySalesman] = useState('');
+    const [filterNextCallingDay, setNextCallingDay ] = useState('');
     const { mergedData, isLoading, isError } = useCompanyAndKeyPersonsData();
     
     if (isLoading) return <div>Loading...</div>;
@@ -36,6 +38,9 @@ import { Company } from '../../types/interface';
     const handleSalesmanChange = (companySalesman: string) => {
       setFilterCompanySalesman(companySalesman);
     };
+    const handleNextCallingDayChange = (NextCallingDay: string) => {
+      setNextCallingDay(NextCallingDay);
+    };
 
     const filteredCompanies = mergedData
     .filter((company: Company) =>
@@ -50,17 +55,14 @@ import { Company } from '../../types/interface';
     )
     .filter((company: Company) =>
       filterCompanySalesman === '' || company.keyPerson.name.toLowerCase().includes(filterCompanySalesman.toLowerCase()) 
+    )
+    .filter((company: ExtendedCompany) =>
+    filterNextCallingDay === '' || company.nextCallDay!.toLowerCase().includes(filterNextCallingDay.toLowerCase()) 
     );
-    // 現在は試しでkeyPersonを表示、品等は営業担当に変更する
+    const filteredCompanyIds = filteredCompanies.map((company: Company) => company.id);
 
-
-    // アタックログから情報を取得
-    // const filteredCallingResult = selectedOption
-    // ? companies.filter(company => attacklog.--- === selectedOption) // 仮にアポイント結果をappointmentResultプロパティと仮定
-    // : companies;
   
     return (
-      // console.log(filteredCompanies),
     <div>
         <div className="flex h-[70px] bg-cyan-400 items-center justify-around">
           <div className='flex'>
@@ -69,6 +71,7 @@ import { Company } from '../../types/interface';
             <FilterCompanyNumber onCompanyNumberChange={handleInputNumberChange}/>
             <FilterIndustryCompany onCompanyIndustryChange={handleIndustryChange}/>
             <FilterSalesman onCompanySalesmanChange={handleSalesmanChange}/>
+            <FilterNextCallingDay onNextCallingDayChange={handleNextCallingDayChange}/>
             <Button colorScheme='blue' mx='5' type="submit" px="90">
               <Link href={'/company-resister'}>企業登録フォームへ</Link>
             </Button>
@@ -101,7 +104,7 @@ import { Company } from '../../types/interface';
                       <td className='border-2'>アポイント{index + 1}</td>
                       <td className='border-2'>担当者 {index + 1}</td>
                       <td className='border-2'>予定日 {index + 1}</td>
-                      <td className='border-2'><Link href={`/attacklog?company=${company.id}`}>{company.company_name}</Link></td>
+                      <td className='border-2'><Link href={`/attacklog?company=${company.id}&filteredIds=${filteredCompanyIds.join(',')}`}>{company.company_name}</Link></td>
                       <td className='border-2'>{company.telephone_number}</td>
                       <td className='border-2'>{companyIndustry}</td>
                       <td className='border-2'>{company.keyPerson? company.keyPerson.name : 'N/A'}</td>

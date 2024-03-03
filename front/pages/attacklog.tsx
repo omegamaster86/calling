@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { Company } from '../types/interface';
 import { AttackLogInfo } from "../components/AttackLog/AttackLogInfo";
 import { AttackLogCallHistory } from "../components/AttackLog/AttackLogCallHistory/AttackLogCallHistory";
 import { ArrowLeftIcon, ArrowRightIcon, CloseIcon } from '@chakra-ui/icons';
@@ -15,32 +14,41 @@ const fetcher = async (url: string) => {
 
 export default function AttackLog(){
     const router = useRouter();
-    const { company } = router.query;
+    const { company, filteredIds } = router.query;
     const { data: companiesData, error: companiesError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/companies`, fetcher);
-    const companyIds = companiesData?.map((company: Company) => company.id) || [];
+    const filteredCompanyIds: number[] = typeof filteredIds === 'string' ? filteredIds.split(',').map((id: string) => parseInt(id, 10)) : 
+    Array.isArray(filteredIds) ? filteredIds.map((id: string) => parseInt(id, 10)) : [];
 
     const goToNextCompany = () => {
-      // companyがundefinedまたはstring[]型の場合の処理
-      const companyIdString = typeof company === 'string' ? company : Array.isArray(company) ? company[0] : '0';
-      // 現在のcompanyIDを数値に変換
-      const currentId = parseInt(companyIdString, 10);
-      // companyIdsの中で現在のIDの次のIDを見つける
-      const currentIndex = companyIds.indexOf(currentId);
-      const nextIdIndex = currentIndex + 1 === companyIds.length ? 0 : currentIndex + 1;
-
-      const nextId = companyIds[nextIdIndex];
-      router.push(`/attacklog?company=${nextId}`);
+      if (typeof company === "string") {
+        // parseInt関数は文字列を数値に変換するために使われ、第二引数の10は10進数
+        const currentId = parseInt(company, 10);
+        // indexOfメソッドは、指定された要素が配列内で最初に見つかった位置のインデックスを返す。
+        // このインデックスは、次に表示すべき会社を決定するために使用されます。
+        const currentIndex = filteredCompanyIds.indexOf(currentId);
+        // 配列のループ処理
+        const nextIdIndex = currentIndex + 1 === filteredCompanyIds.length ? 0 : currentIndex + 1;
+        const nextId = filteredCompanyIds[nextIdIndex];
+        router.push(`/attacklog?company=${nextId}&filteredIds=${filteredIds}`);
+      } else {
+        router.push(`/attacklog?company=${filteredCompanyIds[0]}&filteredIds=${filteredIds}`);
+      }
     };
 
     const goToPrevCompany = () => {
-      const companyIdString = typeof company === 'string' ? company : Array.isArray(company) ? company[0] : '0';
-      const currentId = parseInt(companyIdString, 10);
+      if(typeof company === "string") {
+        const currentId = parseInt(company, 10);
+        const currentIndex = filteredCompanyIds.indexOf(currentId);
+        const prevIdIndex = currentIndex - 1 < 0 ? filteredCompanyIds.length - 1 : currentIndex - 1;
+        const prevId = filteredCompanyIds[prevIdIndex];
+        router.push(`/attacklog?company=${prevId}&filteredIds=${filteredIds}`);
+      } else {
+        router.push(`/attacklog?company=${filteredCompanyIds[filteredCompanyIds.length - 1]}&filteredIds=${filteredIds}`);
+      }
+    };
 
-      const currentIndex = companyIds.indexOf(currentId);
-      const prevIdIndex = currentIndex - 1 < 0 ? companyIds.length - 1 : currentIndex - 1;
-  
-      const prevId = companyIds[prevIdIndex];
-      router.push(`/attacklog?company=${prevId}`);
+    const closeAttackLog = () => {
+        router.push(`/dashboard`);
     };
 
     if (companiesError) return <div>データの取得に失敗しました。</div>;
@@ -59,7 +67,7 @@ export default function AttackLog(){
                         <div className="pr-3">次</div>
                         <ArrowRightIcon color="white.500"/>
                     </div>
-                    <div className=" bg-emerald-500 w-24 flex items-center rounded-md py-2 px-5 mx-2 text-white font-semibold">
+                    <div className=" bg-emerald-500 w-24 flex items-center rounded-md py-2 px-5 mx-2 text-white font-semibold" onClick={closeAttackLog}>
                         <CloseIcon color="white.500"/>
                         <div className="pl-3">閉</div>
                     </div>
