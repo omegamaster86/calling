@@ -32,7 +32,6 @@ export const ImportButton = () => {
 
   return (
     <div>
-      <button className='font-bold text-white bg-sky-600 py-2 px-2 mt-5 rounded-lg' onClick={handleImport}>スプレッドシートからインポート</button>
       <div className='pt-3 w-48 rounded-lg'>
         {isPostSuccess && showAlert && (
           <Stack spacing={3}>
@@ -51,6 +50,7 @@ export const ImportButton = () => {
           </Stack>
         )}
       </div>
+      <button className='font-bold text-white bg-sky-600 py-2 px-2 mt-5 rounded-lg' onClick={handleImport}>スプレッドシートからインポート</button>
     </div>
   );
 }

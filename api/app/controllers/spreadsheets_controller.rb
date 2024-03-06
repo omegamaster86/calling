@@ -7,11 +7,13 @@ class SpreadsheetsController < ApplicationController
     range = "シート1"
 
     # ジョブを実行
-    SpreadsheetsImportJob.perform_now(spreadsheet_id, range)
+    result = SpreadsheetsImportJob.perform_now(spreadsheet_id, range)
 
-    render json: { message: 'インポートが完了しました' }, status: :ok
-  rescue => e
-    render json: { error: e.message }, status: :internal_server_error
+    if result.is_a?(String)
+      render json: { error: result }, status: :unprocessable_entity
+    else
+      render json: { message: "Import successful" }, status: :ok
+    end
   end
 end
   
