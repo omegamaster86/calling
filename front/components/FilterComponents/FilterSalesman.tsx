@@ -1,18 +1,22 @@
 import { Stack, Input } from '@chakra-ui/react';
-import React from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface FilterCompanyProps {
+    filterSalesman: string;
     onCompanySalesmanChange: (companyIndustry: string) => void;
   }
   
-  export const FilterSalesman: React.FC<FilterCompanyProps> = ({ onCompanySalesmanChange }) => {
-    const [companySalesman, setCompanySalesman] = useState('');
-  
-    const handleSalesmanChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setCompanySalesman(event.target.value);
-      onCompanySalesmanChange(event.target.value);
-    };
+export const FilterSalesman: React.FC<FilterCompanyProps> = ({ filterSalesman, onCompanySalesmanChange }) => {
+  const [companySalesman, setCompanySalesman] = useState(filterSalesman || '');
+
+  useEffect(() => {
+    setCompanySalesman(filterSalesman || '');
+  }, [filterSalesman]);
+
+  const handleSalesmanChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCompanySalesman(event.target.value);
+    onCompanySalesmanChange(event.target.value);
+  };
 
   return (
     <Stack ml='5'>

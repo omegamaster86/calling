@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@chakra-ui/react';
 import { FilterCallingResult } from '../FilterComponents/FilterCallingResult';
 import { FilterCompany } from '../FilterComponents/FilterCompany';
@@ -8,22 +8,45 @@ import { FilterIndustryCompany } from '../FilterComponents/FilterCompanyIndustry
 import { FilterSalesman } from '../FilterComponents/FilterSalesman';
 import { FilterNextCallingDay } from '../FilterComponents/FilterNextCallingDay'
 import { useCompanyAndKeyPersonsData } from './useSWRCompanyList';
-import { Company, ExtendedCompany, ExtendedCompanyWithKeyPerson } from '../../types/interface';
+import { Company,ExtendedCompany  } from '../../types/interface';
+import { useRouter } from 'next/router';
 
   export const CompanyList = () => {
-    const [selectedOption, setSelectedOption] = useState('');
+    const [filterCallingResult, setFilterCallingResult] = useState('');
     const [filterCompanyName, setFilterCompanyName] = useState('');
     const [filterCompanyNumber, setFilterCompanyNumber] = useState('');
     const [filterCompanyIndustry, setFilterCompanyIndustry] = useState('');
     const [filterSalesman, setFilterSalesman] = useState('');
     const [filterNextCallingDay, setNextCallingDay ] = useState('');
     const { mergedData, isLoading, isError } = useCompanyAndKeyPersonsData();
+    const router = useRouter();
+
+    useEffect(() => {
+      if (router.isReady) {
+        const query = router.query;
+        // 各クエリパラメータを文字列に変換し、配列やundefinedの場合はデフォルト値を設定
+        const filterCallingResult = typeof query.filterCallingResult === 'string' ? decodeURIComponent(query.filterCallingResult) : '';
+        const filterCompanyName = typeof query.filterCompanyName === 'string' ? decodeURIComponent(query.filterCompanyName) : '';
+        const filterCompanyNumber = typeof query.filterCompanyNumber === 'string' ? decodeURIComponent(query.filterCompanyNumber) : '';
+        const filterCompanyIndustry = typeof query.filterCompanyIndustry === 'string' ? decodeURIComponent(query.filterCompanyIndustry) : '';
+        const filterSalesman = typeof query.filterSalesman === 'string' ? decodeURIComponent(query.filterSalesman) : '';
+        const filterNextCallingDay = typeof query.filterNextCallingDay === 'string' ? decodeURIComponent(query.filterNextCallingDay) : '';
+    
+        setFilterCallingResult(filterCallingResult);
+        setFilterCompanyName(filterCompanyName);
+        setFilterCompanyNumber(filterCompanyNumber);
+        setFilterCompanyIndustry(filterCompanyIndustry);
+        setFilterSalesman(filterSalesman);
+        setNextCallingDay(filterNextCallingDay);
+      }
+    }, [router.isReady, router.query]);
+
     
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading data</div>;
 
-    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelectedOption(event.target.value);
+    const handleSelectChange = (event) => {
+      setFilterCallingResult(event.target.value);
     };
     const handleCompanyChange = (companyName: string) => {
       setFilterCompanyName(companyName);
@@ -43,7 +66,7 @@ import { Company, ExtendedCompany, ExtendedCompanyWithKeyPerson } from '../../ty
 
     const filteredCompanies = mergedData
     .filter((company: ExtendedCompany) =>
-    selectedOption === '' || company.latestCallResult!.toLowerCase().includes(selectedOption.toLowerCase()) 
+    filterCallingResult === '' || company.latestCallResult!.toLowerCase().includes(filterCallingResult.toLowerCase()) 
     )
     .filter((company: Company) =>
       filterCompanyName === '' || company.company_name.toLowerCase().includes(filterCompanyName.toLowerCase()) 
@@ -62,18 +85,18 @@ import { Company, ExtendedCompany, ExtendedCompanyWithKeyPerson } from '../../ty
     filterNextCallingDay === '' || company.nextCallDay!.toLowerCase().includes(filterNextCallingDay.toLowerCase()) 
     );
     const filteredCompanyIds = filteredCompanies.map((company: Company) => company.id);
-    
+
     return (
     <div>
         <div className="flex h-[70px] bg-cyan-400 items-center justify-around">
           <div className='flex'>
-            <FilterCallingResult onCallingResultChange={handleSelectChange}/>
-            <FilterCompany onCompanyChange={handleCompanyChange}/>
-            <FilterCompanyNumber onCompanyNumberChange={handleInputNumberChange}/>
-            <FilterIndustryCompany onCompanyIndustryChange={handleIndustryChange}/>
-            <FilterSalesman onCompanySalesmanChange={handleSalesmanChange}/>
-            <FilterNextCallingDay onNextCallingDayChange={handleNextCallingDayChange}/>
-            <Button colorScheme='blue' mx='5' type="submit" px="5">
+            <FilterCallingResult selectedOption={filterCallingResult} onCallingResultChange={handleSelectChange}/>
+            <FilterCompany filterCompanyName={filterCompanyName} onCompanyChange={handleCompanyChange}/>
+            <FilterCompanyNumber filterCompanyNumber={filterCompanyNumber} onCompanyNumberChange={handleInputNumberChange}/>
+            <FilterIndustryCompany filterCompanyIndustry={filterCompanyIndustry} onCompanyIndustryChange={handleIndustryChange}/>
+            <FilterSalesman filterSalesman={filterSalesman} onCompanySalesmanChange={handleSalesmanChange}/>
+            <FilterNextCallingDay filterNextCallingDay={filterNextCallingDay} onNextCallingDayChange={handleNextCallingDayChange}/>
+            <Button colorScheme='blue' mx='5' type="submit" px="90">
               <Link href={'/company-resister'}>企業登録フォームへ</Link>
             </Button>
           </div>
@@ -95,19 +118,32 @@ import { Company, ExtendedCompany, ExtendedCompanyWithKeyPerson } from '../../ty
                 </tr>
               </thead>
               <tbody  className='border-solid border-2'>
-                {filteredCompanies.map((company: ExtendedCompanyWithKeyPerson, index: number) => {
-                   const companyIndustry = company.industry?.length > 10 
-                   ? `${company.industry.substring(0, 10)}...` 
-                   : company.industry;
+                {filteredCompanies.map((company, index) => {
+                   const params = new URLSearchParams({
+                    company: company.id.toString(),
+                    filteredIds: filteredCompanyIds.join(','),
+                    filterCallingResult,
+                    filterCompanyName,
+                    filterCompanyNumber,
+                    filterCompanyIndustry,
+                    filterSalesman,
+                    filterNextCallingDay
+                  }).toString();
                   return (
+                    // ダッシュボードからアタックログにクエリ情報を渡す
+                    // クエリに直接filteredCompanyIdsを記載しないURLSearchParamsを使用する
+                    // リダイレクトした際にクエリデータをcompany.keyPerson.nameとかにセットする
+                    // name=田中のデータをアタックログに渡す（クエリで）リダイレクトする際にクエリデータをURLに渡す
+                    // リダイレクトした際にURLSearchParamsを使用してクエリデータをセットする.
+                    // どこに？
                     <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td className='border-2'>{company.address}</td>
                       <td className='border-2'>{company.latestCallResult}</td>
                       <td className='border-2'>{company.latestSalesman}</td>
                       <td className='border-2'>{company.nextCallDay}</td>
-                      <td className='border-2'><Link href={`/attacklog?company=${company.id}`}>{company.company_name}</Link></td>
+                      <td className='border-2'><Link href={`/attacklog?${params}`}>{company.company_name}</Link></td>
                       <td className='border-2'>{company.telephone_number}</td>
-                      <td className='border-2'>{companyIndustry}</td>
+                      <td className='border-2'>{company.industry}</td>
                       <td className='border-2'>{company.keyPerson? company.keyPerson.name : ''}</td>
                       <td className='border-2'>{company.keyPerson? company.keyPerson.department : ''}</td>
                       <td className='border-2'>{company.keyPerson? company.keyPerson.note : ''}</td>

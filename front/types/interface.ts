@@ -74,15 +74,15 @@ export interface KeyPerson {
 }
 
 export interface AttackLog {
-  company_id?: bigint;
-  calling_day: string;
-  calling_start: string;
-  call_result: string;
-  call_content: string;
-  next_call_day: string;
-  salesman: string;
-  created_at: string;
-  updated_at: string;
+	company_id?: bigint;
+	calling_day: string;
+	calling_start: string;
+	call_result: string;
+	call_content: string;
+	next_call_day: string;
+	salesman: string;
+	created_at: string;
+	updated_at: string;
 }
 
 export interface ExtendedCompany extends Company {
