@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter, NextRouter } from 'next/router';
 import useSWR from 'swr';
 import { AttackLogInfo } from "../components/AttackLog/AttackLogInfo";
 import { AttackLogCallHistory } from "../components/AttackLog/AttackLogCallHistory/AttackLogCallHistory";
@@ -11,6 +11,15 @@ const fetcher = async (url: string) => {
     }
     return response.json();
 };
+
+const createQueryParams = (router: NextRouter) => new URLSearchParams({
+  filterCallingResult: Array.isArray(router.query.filterCallingResult) ? router.query.filterCallingResult[0] : router.query.filterCallingResult || '',
+  filterCompanyName: Array.isArray(router.query.filterCompanyName) ? router.query.filterCompanyName[0] : router.query.filterCompanyName || '',
+  filterCompanyNumber: Array.isArray(router.query.filterCompanyNumber) ? router.query.filterCompanyNumber[0] : router.query.filterCompanyNumber || '',
+  filterCompanyIndustry: Array.isArray(router.query.filterCompanyIndustry) ? router.query.filterCompanyIndustry[0] : router.query.filterCompanyIndustry || '',
+  filterSalesman: Array.isArray(router.query.filterSalesman) ? router.query.filterSalesman[0] : router.query.filterSalesman || '',
+  filterNextCallingDay: Array.isArray(router.query.filterNextCallingDay) ? router.query.filterNextCallingDay[0] : router.query.filterNextCallingDay || '',
+}).toString();
 
 export default function AttackLog(){
     const router = useRouter();
@@ -29,16 +38,9 @@ export default function AttackLog(){
         // 配列のループ処理
         const nextIdIndex = currentIndex + 1 === filteredCompanyIds.length ? 0 : currentIndex + 1;
         const nextId = filteredCompanyIds[nextIdIndex];
-        const queryParams = new URLSearchParams({
-          filterCallingResult: Array.isArray(router.query.filterCallingResult) ? router.query.filterCallingResult[0] : router.query.filterCallingResult || '',
-          filterCompanyName: Array.isArray(router.query.filterCompanyName) ? router.query.filterCompanyName[0] : router.query.filterCompanyName || '',
-          filterCompanyNumber: Array.isArray(router.query.filterCompanyNumber) ? router.query.filterCompanyNumber[0] : router.query.filterCompanyNumber || '',
-          filterCompanyIndustry: Array.isArray(router.query.filterCompanyIndustry) ? router.query.filterCompanyIndustry[0] : router.query.filterCompanyIndustry || '',
-          filterSalesman: Array.isArray(router.query.filterSalesman) ? router.query.filterSalesman[0] : router.query.filterSalesman || '',
-          filterNextCallingDay: Array.isArray(router.query.filterNextCallingDay) ? router.query.filterNextCallingDay[0] : router.query.filterNextCallingDay || '',
-        }).toString();
+        const queryParams = createQueryParams(router);
     
-        router.push(`/attacklog?company=${nextId}&filteredIds=${filteredIds}?${queryParams}`);
+        router.push(`/attacklog?company=${nextId}&filteredIds=${filteredIds}&${queryParams}`);
       }
     };
 
@@ -48,32 +50,15 @@ export default function AttackLog(){
         const currentIndex = filteredCompanyIds.indexOf(currentId);
         const prevIdIndex = currentIndex - 1 < 0 ? filteredCompanyIds.length - 1 : currentIndex - 1;
         const prevId = filteredCompanyIds[prevIdIndex];
-        const queryParams = new URLSearchParams({
-          filterCallingResult: Array.isArray(router.query.filterCallingResult) ? router.query.filterCallingResult[0] : router.query.filterCallingResult || '',
-          filterCompanyName: Array.isArray(router.query.filterCompanyName) ? router.query.filterCompanyName[0] : router.query.filterCompanyName || '',
-          filterCompanyNumber: Array.isArray(router.query.filterCompanyNumber) ? router.query.filterCompanyNumber[0] : router.query.filterCompanyNumber || '',
-          filterCompanyIndustry: Array.isArray(router.query.filterCompanyIndustry) ? router.query.filterCompanyIndustry[0] : router.query.filterCompanyIndustry || '',
-          filterSalesman: Array.isArray(router.query.filterSalesman) ? router.query.filterSalesman[0] : router.query.filterSalesman || '',
-          filterNextCallingDay: Array.isArray(router.query.filterNextCallingDay) ? router.query.filterNextCallingDay[0] : router.query.filterNextCallingDay || '',
-        }).toString();
+        const queryParams = createQueryParams(router);
     
-        router.push(`/attacklog?company=${prevId}&filteredIds=${filteredIds}?${queryParams}`);
+        router.push(`/attacklog?company=${prevId}&filteredIds=${filteredIds}&${queryParams}`);
       }
     };
     // 会社IDとフィルター条件を保持するクエリパラメーターを詳細ページに持ってくる、リダイレクト画面に戻る（一般的）
     const closeAttackLog = () => {
-      
-      // URLSearchParamsオブジェクトを作成
-      const queryParams = new URLSearchParams({
-        filterCallingResult: Array.isArray(router.query.filterCallingResult) ? router.query.filterCallingResult[0] : router.query.filterCallingResult || '',
-        filterCompanyName: Array.isArray(router.query.filterCompanyName) ? router.query.filterCompanyName[0] : router.query.filterCompanyName || '',
-        filterCompanyNumber: Array.isArray(router.query.filterCompanyNumber) ? router.query.filterCompanyNumber[0] : router.query.filterCompanyNumber || '',
-        filterCompanyIndustry: Array.isArray(router.query.filterCompanyIndustry) ? router.query.filterCompanyIndustry[0] : router.query.filterCompanyIndustry || '',
-        filterSalesman: Array.isArray(router.query.filterSalesman) ? router.query.filterSalesman[0] : router.query.filterSalesman || '',
-        filterNextCallingDay: Array.isArray(router.query.filterNextCallingDay) ? router.query.filterNextCallingDay[0] : router.query.filterNextCallingDay || '',
-      }).toString();
-
-      router.push(`/dashbord?${queryParams}`);
+      const queryParams = createQueryParams(router);
+      router.push(`/dashboard?${queryParams}`);
   };
 
     if (companiesError) return <div>データの取得に失敗しました。</div>;

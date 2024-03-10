@@ -8,7 +8,7 @@ import { FilterIndustryCompany } from '../FilterComponents/FilterCompanyIndustry
 import { FilterSalesman } from '../FilterComponents/FilterSalesman';
 import { FilterNextCallingDay } from '../FilterComponents/FilterNextCallingDay'
 import { useCompanyAndKeyPersonsData } from './useSWRCompanyList';
-import { Company,ExtendedCompany  } from '../../types/interface';
+import { Company,ExtendedCompany, ExtendedCompanyWithKeyPerson } from '../../types/interface';
 import { useRouter } from 'next/router';
 
   export const CompanyList = () => {
@@ -45,8 +45,8 @@ import { useRouter } from 'next/router';
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading data</div>;
 
-    const handleSelectChange = (event) => {
-      setFilterCallingResult(event.target.value);
+    const handleCallingResultChange = (newValue: string) => {
+      setFilterCallingResult(newValue);
     };
     const handleCompanyChange = (companyName: string) => {
       setFilterCompanyName(companyName);
@@ -90,7 +90,7 @@ import { useRouter } from 'next/router';
     <div>
         <div className="flex h-[70px] bg-cyan-400 items-center justify-around">
           <div className='flex'>
-            <FilterCallingResult selectedOption={filterCallingResult} onCallingResultChange={handleSelectChange}/>
+            <FilterCallingResult filterCallingResult={filterCallingResult} onCallingResultChange={handleCallingResultChange}/>
             <FilterCompany filterCompanyName={filterCompanyName} onCompanyChange={handleCompanyChange}/>
             <FilterCompanyNumber filterCompanyNumber={filterCompanyNumber} onCompanyNumberChange={handleInputNumberChange}/>
             <FilterIndustryCompany filterCompanyIndustry={filterCompanyIndustry} onCompanyIndustryChange={handleIndustryChange}/>
@@ -118,7 +118,7 @@ import { useRouter } from 'next/router';
                 </tr>
               </thead>
               <tbody  className='border-solid border-2'>
-                {filteredCompanies.map((company, index) => {
+                {filteredCompanies.map((company: ExtendedCompanyWithKeyPerson, index: number) => {
                    const params = new URLSearchParams({
                     company: company.id.toString(),
                     filteredIds: filteredCompanyIds.join(','),
@@ -130,12 +130,6 @@ import { useRouter } from 'next/router';
                     filterNextCallingDay
                   }).toString();
                   return (
-                    // ダッシュボードからアタックログにクエリ情報を渡す
-                    // クエリに直接filteredCompanyIdsを記載しないURLSearchParamsを使用する
-                    // リダイレクトした際にクエリデータをcompany.keyPerson.nameとかにセットする
-                    // name=田中のデータをアタックログに渡す（クエリで）リダイレクトする際にクエリデータをURLに渡す
-                    // リダイレクトした際にURLSearchParamsを使用してクエリデータをセットする.
-                    // どこに？
                     <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td className='border-2'>{company.address}</td>
                       <td className='border-2'>{company.latestCallResult}</td>
