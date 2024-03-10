@@ -96,7 +96,7 @@ import { useRouter } from 'next/router';
             <FilterIndustryCompany filterCompanyIndustry={filterCompanyIndustry} onCompanyIndustryChange={handleIndustryChange}/>
             <FilterSalesman filterSalesman={filterSalesman} onCompanySalesmanChange={handleSalesmanChange}/>
             <FilterNextCallingDay filterNextCallingDay={filterNextCallingDay} onNextCallingDayChange={handleNextCallingDayChange}/>
-            <Button colorScheme='blue' mx='5' type="submit" px="90">
+            <Button colorScheme='blue' mx='5' type="submit" px="3">
               <Link href={'/company-resister'}>企業登録フォームへ</Link>
             </Button>
           </div>

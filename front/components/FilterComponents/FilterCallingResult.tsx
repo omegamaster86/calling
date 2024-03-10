@@ -20,7 +20,7 @@ export const FilterCallingResult: React.FC<FilterCallingResult> = ({ filterCalli
   };
 
   return (
-        <Select placeholder='架電結果' bg='Cyan 50' ml='5' value={callingResult} onChange={handleCallingResultChange}>
+        <Select placeholder='架電結果' bg='Cyan 50' ml='5' w='110' value={callingResult} onChange={handleCallingResultChange}>
             <option value='アポイント'>アポイント</option>
             <option value='コンタクト'>コンタクト</option>
             <option value='資料送付'>資料送付</option>
