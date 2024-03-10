@@ -24,6 +24,8 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 gem "google-api-client"
 
+gem 'roo', '~> 2.8.3'
+
 # 環境変数を管理するgem
 gem 'dotenv-rails'
 
