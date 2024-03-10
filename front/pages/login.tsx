@@ -8,9 +8,9 @@ import { signIn } from "next-auth/react"
 
 export default function Login(){
 
-    async function handleGoogleSignin() {
-        signIn('google',{callbackUrl : `${process.env.NEXTAUTH_URL}`})
-    }
+    // async function handleGoogleSignin() {
+    //     signIn('google',{callbackUrl : `${process.env.NEXTAUTH_URL}`})
+    // }
 
     return(
         <Layout>
@@ -23,13 +23,13 @@ export default function Login(){
                     <p className=" w-3/4 mx-auto text-gray-400">HHKBHHKBHHKBHHKBHHKBHHKB</p>
                 </div>
                 <LoginInfo/>
-                <form className=" flex flex-col gap-5">
+                {/* <form className=" flex flex-col gap-5">
                     <div>
                         <button type="button" onClick={handleGoogleSignin} className="w-full border py-3 flex justify-center gap-2 hover:bg-gray-200">
                             Sign In With Google<Image src={'/assets/google.svg'} width="20" height={20} alt="googleicon" className="pt-1"></Image>
                         </button>
                     </div>
-                </form>
+                </form> */}
                 <p className="text-gray-400 text-center">
                     don't have an account yet?  <Link className=" text-blue-700" href={'/register'}>Sign Up</Link>
                 </p>
