@@ -135,7 +135,7 @@ import { useRouter } from 'next/router';
                       <td className='border-2'>{company.latestCallResult}</td>
                       <td className='border-2'>{company.latestSalesman}</td>
                       <td className='border-2'>{company.nextCallDay}</td>
-                      <td className='border-2'><Link href={`/attacklog?${params}`}>{company.company_name}</Link></td>
+                      <td className='border-2 text-indigo-600 hover:underline underline-offset-2'><Link href={`/attacklog?${params}`}>{company.company_name}</Link></td>
                       <td className='border-2'>{company.telephone_number}</td>
                       <td className='border-2'>{company.industry}</td>
                       <td className='border-2'>{company.keyPerson? company.keyPerson.name : ''}</td>
