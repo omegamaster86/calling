@@ -7,13 +7,10 @@ import { AttackLogFormState } from '../../types/interface';
 import { AttackLogCompany } from './AttackLogCompany';
 import { AttackLogKeyPerson } from './AttackLogKeyPerson';
 import { AttackLogCallResult } from './AttackLogCallResult';
-import { AttackLog } from '@/types/interface';
 
 interface AttackLogProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
-
-type OnInputChange = (field: keyof AttackLog, value: string) => void;
 
 export const AttackLogInfo: FC<AttackLogProps> = () => {
   const router = useRouter();
@@ -54,8 +51,9 @@ export const AttackLogInfo: FC<AttackLogProps> = () => {
     callContent: "",
 });
 
-  const handleInputChange: OnInputChange = useCallback((field, value) => {
-    setFormState(prevState => ({
+  const handleInputChange = useCallback((field: string, value: string) => {
+    // setFormState を使用して、formState ステートの該当するフィールドを更新
+    setFormState((prevState) => ({
       ...prevState,
       [field]: value,
     }));
@@ -99,10 +97,13 @@ export const AttackLogInfo: FC<AttackLogProps> = () => {
     }
   } catch (error) {
     if (error instanceof yup.ValidationError) {
+      // reduce()関数を使用して、inner配列を走査し、
+      // 各エラーオブジェクト（curr）からフィールド名（path）とエラーメッセージ（message）を抽出
       const errors = error.inner.reduce((acc, curr) => {
-        acc[curr.path] = curr.message;
-        return acc;
-      }, {});
+        const key = curr.path || "unknown";
+        acc[key] = curr.message;// `acc` オブジェクトの該当するキーにエラーメッセージを割り当てる。
+        return acc;// 更新された `acc` を次の反復のために返す。
+      }, {} as Record<string, string>);// 初期値として空のオブジェクトを渡す。
       setFormErrors(errors);
     } else {
       console.error("Validation failed", error);

@@ -1,5 +1,11 @@
 import React, { FC, useEffect, useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
+import { Company, KeyPerson } from '@/types/interface';
+
+interface AttackLogKeyPersonProps {
+  onInputChange: (field: string, value: string) => void;
+  errors: Record<string, string>; 
+}
 
 interface InputFieldProps {
     label: string;
@@ -28,7 +34,7 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
     );
 };
 
-export const AttackLogKeyPerson = ({ onInputChange, errors }) => {
+export const AttackLogKeyPerson: FC<AttackLogKeyPersonProps> = ({ onInputChange }) => {
     const [companies, setCompanies] = useState([]);
     const router = useRouter();
     const company = router.query.company as string | string[] | undefined;
@@ -41,7 +47,6 @@ export const AttackLogKeyPerson = ({ onInputChange, errors }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-          // companyがまだ取得できていない場合は何もしない
           if (!company) return;
           try {
             const resCompanies = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`);
@@ -51,16 +56,16 @@ export const AttackLogKeyPerson = ({ onInputChange, errors }) => {
             const keyPersonsData = await resKeyPersons.json();
     
             // companiesとkeyPersonsを結合
-            const mergedData = companiesData.map(company => {
+            const mergedData = companiesData.map((company: Company) => {
               return {
                 ...company,
-                keyPerson: keyPersonsData.find(kp => kp.company_id === company.id)
+                keyPerson: keyPersonsData.find((kp:KeyPerson) => kp.company_id?.toString() === company.id.toString())
               };
             });
     
             setCompanies(mergedData);
 
-            const selectedCompany = mergedData.find(comp => comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
+            const selectedCompany = mergedData.find((comp: Company) => comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
             if (selectedCompany) {
                 setDepartment(selectedCompany.keyPerson.department); // 見つかったらその名前を設定
                 setPost(selectedCompany.keyPerson.post); 
