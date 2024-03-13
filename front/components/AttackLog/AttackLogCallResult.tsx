@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { FilterCallingResult } from '../FilterComponents/FilterCallingResult' 
 import { Textarea, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react'
 import { AttackLog, Company } from '@/types/interface';
+import useSWR from 'swr';
 
 interface InputFieldProps {
   label: string;
@@ -12,6 +13,11 @@ interface InputFieldProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   errorMessage?: string;
+}
+
+interface AttackLogCallResultProps {
+  onInputChange: (field: string, value: string) => void;
+  errors: Record<string, string>; 
 }
 
 const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", value = "", onChange, errorMessage }) => {
@@ -33,8 +39,10 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
     );
 };
 
-export const AttackLogCallResult  = ({ onInputChange, errors  }) => {
-    const [companies, setCompanies] = useState([]);
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+export const AttackLogCallResult: FC<AttackLogCallResultProps>  = ({ onInputChange, errors  }) => {
+    // const [companies, setCompanies] = useState([]);
     const router = useRouter();
     const company = router.query.company as string | string[] | undefined;
     const [callingStart, setCallingStart] = useState('');
@@ -43,27 +51,17 @@ export const AttackLogCallResult  = ({ onInputChange, errors  }) => {
     const [salesman, setSalesman] = useState('');
     const [callContent, setCallContent] = useState('');
 
-    useEffect(() => {
-      const fetchData = async () => {
-        // companyがまだ取得できていない場合は何もしない
-        if (!company) return;
-        try {
-          const resCompanies = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`);
-          const companiesData = await resCompanies.json();
-  
-          const resAttackLogs = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/attack_logs`);
-          const AttackLogsData = await resAttackLogs.json();
-  
-          // companiesとAttackLogsを結合
-          const mergedData = companiesData.map((company: Company) => {
-            return {
-              ...company,
-              AttackLog: AttackLogsData.find((at: AttackLog) => at.company_id === company.id)
-            };
-          });
-  
-          setCompanies(mergedData);
+    const { data: companiesData, error: companiesError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/companies`, fetcher);
+    const { data: AttackLogsData, error: AttackLogsError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/attack_logs`, fetcher);
 
+    if (companiesError || AttackLogsError) return <div>データの読み込みに失敗しました。</div>;
+
+    useEffect(() => {
+        if (!companiesData || !AttackLogsData) return;
+          const mergedData = companiesData.map((company: Company) => ({
+              ...company,
+              AttackLog: AttackLogsData.find((at: AttackLog) => at.company_id?.toString() === company.id.toString())
+            }));
           const selectedCompany = mergedData.find((comp: Company)=> comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
           if (selectedCompany) {
               setCallingStart(selectedCompany.calling_start);
@@ -77,13 +75,8 @@ export const AttackLogCallResult  = ({ onInputChange, errors  }) => {
               onInputChange('nextCallDay',selectedCompany.next_call_day);
               onInputChange('salesman',selectedCompany.salesman);
               onInputChange('callContent',selectedCompany.call_content);
-              }
-          } catch (error) {
-              console.error('Error fetching data:', error);
-          } 
-      };
-      fetchData();
-    }, [company, onInputChange]);
+          }
+      }, [onInputChange, companiesData, AttackLogsData]);
 
       const handleCallingStartInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCallingStart(e.target.value);

@@ -23,7 +23,7 @@ const fetcher = async (url: string) => {
     }
 
     const mergedData = companiesData.map((company: Company) => {
-      const relatedAttackLogs = AttackLogsData.filter((attackLog: AttackLog) => attackLog.company_id === company.id);
+      const relatedAttackLogs = AttackLogsData.filter((attackLog: AttackLog) => attackLog.company_id?.toString() === company.id.toString());
       // calling_dayがあるアタックログのみを含む企業のデータを返す
       return {
         ...company,

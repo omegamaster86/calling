@@ -55,7 +55,7 @@ export interface AttackLogFormState {
 }
 
 export interface Company {
-  id?: number;
+  id: number;
   company_name: string;
   industry: string;
   address: string;
