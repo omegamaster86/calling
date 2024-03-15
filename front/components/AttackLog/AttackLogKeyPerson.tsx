@@ -9,13 +9,13 @@ interface AttackLogKeyPersonProps {
 }
 
 interface InputFieldProps {
-    label: string;
-    name: string;
-    id: string;
-    type?: string;
-    value?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  }
+  label: string;
+  name: string;
+  id: string;
+  type?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", value = "", onChange  }) => {
     return (
@@ -38,70 +38,68 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export const AttackLogKeyPerson: FC<AttackLogKeyPersonProps> = ({ onInputChange }) => {
-    // const [companies, setCompanies] = useState([]);
-    const router = useRouter();
-    const company = router.query.company as string | string[] | undefined;
-    const [department, setDepartment] = useState('');
-    const [post, setPost] = useState('');
-    const [name, setName] = useState('');
-    const [telephoneNumber, setTelephoneNumber] = useState('');
-    const [email, setEmail] = useState(''); 
-    const [note, setNote] = useState('');
+  const router = useRouter();
+  const company = router.query.company as string | string[] | undefined;
+  const [department, setDepartment] = useState('');
+  const [post, setPost] = useState('');
+  const [name, setName] = useState('');
+  const [telephoneNumber, setTelephoneNumber] = useState('');
+  const [email, setEmail] = useState(''); 
+  const [note, setNote] = useState('');
 
-    const { data: companiesData, error: companiesError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/companies`, fetcher);
-    const { data: keyPersonsData, error: keyPersonsError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/key_persons`, fetcher);
+  const { data: companiesData, error: companiesError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/companies`, fetcher);
+  const { data: keyPersonsData, error: keyPersonsError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/key_persons`, fetcher);
 
-    if (companiesError || keyPersonsError) return <div>データの読み込みに失敗しました。</div>;
+  if (companiesError || keyPersonsError) return <div>データの読み込みに失敗しました。</div>;
 
-    useEffect(() => {
-        if (!companiesData || !keyPersonsData) return;
-              const mergedData = companiesData.map((company: Company) => ({
-                  ...company,
-                  keyPerson: keyPersonsData.find((kp:KeyPerson) => kp.company_id?.toString() === company.id.toString())
-              }));
-            const selectedCompany = mergedData.find((comp: Company) => comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
-            if (selectedCompany) {
-                setDepartment(selectedCompany.keyPerson.department); // 見つかったらその名前を設定
-                setPost(selectedCompany.keyPerson.post); 
-                setName(selectedCompany.keyPerson.name);
-                setTelephoneNumber(selectedCompany.keyPerson.telephone_number);
-                setEmail(selectedCompany.keyPerson.email);
-                setNote(selectedCompany.keyPerson.note);
+  useEffect(() => {
+    if (!companiesData || !keyPersonsData) return;
+      const mergedData = companiesData.map((company: Company) => ({
+          ...company,
+          keyPerson: keyPersonsData.find((kp:KeyPerson) => kp.company_id?.toString() === company.id.toString())
+      }));
+      const selectedCompany = mergedData.find((comp: Company) => comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
+        if (selectedCompany) {
+          setDepartment(selectedCompany.keyPerson.department); // 見つかったらその名前を設定
+          setPost(selectedCompany.keyPerson.post); 
+          setName(selectedCompany.keyPerson.name);
+          setTelephoneNumber(selectedCompany.keyPerson.telephone_number);
+          setEmail(selectedCompany.keyPerson.email);
+          setNote(selectedCompany.keyPerson.note);
 
-                onInputChange('department', selectedCompany.keyPerson.department); // 見つかったらその名前を設定
-                onInputChange('post', selectedCompany.keyPerson.post); 
-                onInputChange('name', selectedCompany.keyPerson.name);
-                onInputChange('number', selectedCompany.keyPerson.telephone_number);
-                onInputChange('email', selectedCompany.keyPerson.email);
-                onInputChange('note', selectedCompany.keyPerson.note);
-                }
-      }, [ onInputChange, companiesData, keyPersonsData]);
+          onInputChange('department', selectedCompany.keyPerson.department); // 見つかったらその名前を設定
+          onInputChange('post', selectedCompany.keyPerson.post); 
+          onInputChange('name', selectedCompany.keyPerson.name);
+          onInputChange('number', selectedCompany.keyPerson.telephone_number);
+          onInputChange('email', selectedCompany.keyPerson.email);
+          onInputChange('note', selectedCompany.keyPerson.note);
+        }
+    }, [ onInputChange, companiesData, keyPersonsData]);
 
-      const handleDepartmentInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setDepartment(e.target.value);
-        onInputChange('department', e.target.value);
-      };
-      const handlePostInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setPost(e.target.value);
-        onInputChange('post', e.target.value);
-      };
-      const handleNameInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-         setName(e.target.value);
-         onInputChange('name', e.target.value);
-      };
-      const handleTelephoneNumberInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setTelephoneNumber(e.target.value);
-        onInputChange('number', e.target.value);
-      };
-      const handleEmailInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-        onInputChange('email', e.target.value);
-      };
-      const handleNoteInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setNote(e.target.value);
-        onInputChange('note', e.target.value);
-      };
-      
+    const handleDepartmentInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setDepartment(e.target.value);
+      onInputChange('department', e.target.value);
+    };
+    const handlePostInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setPost(e.target.value);
+      onInputChange('post', e.target.value);
+    };
+    const handleNameInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setName(e.target.value);
+        onInputChange('name', e.target.value);
+    };
+    const handleTelephoneNumberInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setTelephoneNumber(e.target.value);
+      onInputChange('number', e.target.value);
+    };
+    const handleEmailInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+      onInputChange('email', e.target.value);
+    };
+    const handleNoteInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setNote(e.target.value);
+      onInputChange('note', e.target.value);
+    };
 
   return (
     <div>
