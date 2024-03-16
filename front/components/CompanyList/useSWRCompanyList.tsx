@@ -37,7 +37,7 @@ export const useCompanyAndKeyPersonsData = () => {
   }
 
   const mergedData = companiesData.map((company: Company) => {
-    const companyAttackLogs = attackLogsData.filter((log: AttackLog) => log.company_id === company.id);
+    const companyAttackLogs = attackLogsData.filter((log: AttackLog) => log.company_id?.toString() === company.id.toString());
     // 最新のログを取得するために、日付でソート（仮にcreated_atを使用）
     const latestLog = companyAttackLogs.sort((a: AttackLog, b: AttackLog) => 
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -45,7 +45,7 @@ export const useCompanyAndKeyPersonsData = () => {
   
     return {
       ...company,
-      keyPerson: keyPersonsData.find((kp: KeyPerson) => kp.company_id === company.id),
+      keyPerson: keyPersonsData.find((kp: KeyPerson) => kp.company_id?.toString() === company.id.toString()),
       latestCallResult: latestLog ? latestLog.call_result : '', 
       latestSalesman: latestLog ? latestLog.salesman : '', 
       nextCallDay: latestLog ? formatDate(latestLog.next_call_day) : '',

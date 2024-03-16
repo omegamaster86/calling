@@ -1,5 +1,12 @@
 import React, { FC, useEffect, useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
+import { Company, KeyPerson } from '@/types/interface';
+import useSWR from 'swr';
+
+interface AttackLogCompanyProps {
+  onInputChange: (field: string, value: string) => void;
+  errors: Record<string, string>; 
+}
 
 interface InputFieldProps {
     label: string;
@@ -30,8 +37,10 @@ const InputField: FC<InputFieldProps> = ({  label, name, id, type = "text", valu
     );
 };
 
-export const AttackLogCompany = ({ onInputChange, errors  }) => {
-    const [companies, setCompanies] = useState([]);
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+export const AttackLogCompany: FC<AttackLogCompanyProps> = ({ onInputChange, errors  }) => {
+    // const [companies, setCompanies] = useState([]);
     const router = useRouter();
     const company = router.query.company as string | string[] | undefined;
     const [companyName, setCompanyName] = useState('');
@@ -39,29 +48,18 @@ export const AttackLogCompany = ({ onInputChange, errors  }) => {
     const [website, setWebsite] = useState('');
     const [telephoneNumber, setTelephoneNumber] = useState('');
    
+    const { data: companiesData, error: companiesError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/companies`, fetcher);
+    const { data: keyPersonsData, error: keyPersonsError } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/key_persons`, fetcher);
+
+    if (companiesError || keyPersonsError) return <div>データの読み込みに失敗しました。</div>;
 
     useEffect(() => {
-        const fetchData = async () => {
-          // companyがまだ取得できていない場合は何もしない
-          if (!company) return;
-          try {
-            const resCompanies = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`);
-            const companiesData = await resCompanies.json();
-    
-            const resKeyPersons = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/key_persons`);
-            const keyPersonsData = await resKeyPersons.json();
-    
-            // companiesとkeyPersonsを結合
-            const mergedData = companiesData.map(company => {
-              return {
-                ...company,
-                keyPerson: keyPersonsData.find(kp => kp.company_id === company.id)
-              };
-            });
-    
-            setCompanies(mergedData);
-
-            const selectedCompany = mergedData.find(comp => comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
+        if (!companiesData || !keyPersonsData) return;
+              const mergedData = companiesData.map((company: Company) => ({
+                  ...company,
+                  keyPerson: keyPersonsData.find((kp:KeyPerson) => kp.company_id?.toString() === company.id.toString())
+              }));
+            const selectedCompany = mergedData.find((comp: Company) => comp.id.toString() === company); // companyクエリと一致するIDを持つ会社を探す
             if (selectedCompany) {
                 setCompanyName(selectedCompany.company_name); // 見つかったらその名前を設定
                 setAddress(selectedCompany.address); 
@@ -73,15 +71,9 @@ export const AttackLogCompany = ({ onInputChange, errors  }) => {
                 onInputChange('companyWebsite', selectedCompany.website);
                 onInputChange('telephoneNumber', selectedCompany.telephone_number);
               }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } 
-        };
-        fetchData();
-      }, [company, onInputChange]);
+            }, [ onInputChange, companiesData, keyPersonsData]);
 
       // 会社名、住所、会社サイト、登記電話番号の入力値を更新する関数
-
       const handleNameInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCompanyName(e.target.value);
         onInputChange('companyName', e.target.value);

@@ -1,7 +1,17 @@
 import { useCompanyAndAttackLogsData } from './useSWRAttackLog';
 import { useRouter } from 'next/router';
-import { Company } from '@/types/interface';
 
+interface AttackLog {
+  calling_start: string;
+  call_result: string;
+  call_content: string;
+}
+
+interface Company {
+  id: string | number;
+  name: string;
+  attackLogs: AttackLog[];
+}
 
 export const AttackLogCallHistory = () => {
   const { mergedData, isLoading, isError } = useCompanyAndAttackLogsData();
@@ -9,7 +19,7 @@ export const AttackLogCallHistory = () => {
   const { company: companyId } = router.query; 
   const formatDateTime = ((dateTimeStr: string) => {
     if (!Date.parse(dateTimeStr)) {
-      return '日時フォーマット変更前'; // 無効な日時の場合は 'N/A' を返す
+      return '日時フォーマット変更前';
     }
     const dateObj = new Date(dateTimeStr);
     const formattedDate = new Intl.DateTimeFormat('ja-JP', {
@@ -41,8 +51,8 @@ export const AttackLogCallHistory = () => {
             </tr>
             </thead>
             <tbody className='border-solid border-2'>
-            {filteredData.map((company, index) => (
-               company.attackLogs.map((log, logIndex) => (
+            {filteredData.map((company: Company, index: number) => (
+               company.attackLogs.map((log: AttackLog, logIndex: number) => (
                 <tr key={`${index}-${logIndex}`} className={logIndex % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                   <td className='border-2 text-nowrap truncate'>{formatDateTime(log.calling_start)}</td>
                   <td className='border-2 truncate'>{log.call_result}</td>
@@ -56,3 +66,7 @@ export const AttackLogCallHistory = () => {
     </div>
   );
 }
+// index は会社のインデックス（外側の .map() から）、
+// logIndex はアタックログのインデックス（内側の .map() から）
+// この組み合わせにより、各 <tr> 要素に一意のキーを割り当てる
+// 内側、外側はそれぞれの配列のインデックスを表す
