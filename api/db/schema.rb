@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_26_100316) do
+ActiveRecord::Schema.define(version: 2024_03_16_041322) do
 
   create_table "attack_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "calling_start", comment: "架電開始時間"
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 2024_02_26_100316) do
     t.string "telephone_number", null: false, comment: "電話番号"
     t.string "website", comment: "ウェブサイトURL"
     t.string "industry", null: false, comment: "業界"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "key_people", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
