@@ -1,13 +1,26 @@
 import { Select } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface FilterCallingResult {
-    onCallingResultChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+    filterCallingResult: string;
+    onCallingResultChange: (value: string) => void
   }
 
-export const FilterCallingResult: React.FC<FilterCallingResult> = ({ onCallingResultChange }) => {
+export const FilterCallingResult: React.FC<FilterCallingResult> = ({ filterCallingResult, onCallingResultChange }) => {
+  const [callingResult, setCallingResult] = useState(filterCallingResult || '');
+
+  useEffect(() => {
+    setCallingResult(filterCallingResult || '');
+  }, [filterCallingResult]);
+
+  const handleCallingResultChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    setCallingResult(selectedValue);
+    onCallingResultChange(selectedValue);
+  };
+
   return (
-        <Select placeholder='架電結果' bg='Cyan 50' ml='5' w={130} onChange={onCallingResultChange}>
+        <Select placeholder='架電結果' bg='Cyan 50' ml='5' w='110' value={callingResult} onChange={handleCallingResultChange}>
             <option value='アポイント'>アポイント</option>
             <option value='コンタクト'>コンタクト</option>
             <option value='資料送付'>資料送付</option>

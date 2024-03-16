@@ -1,13 +1,17 @@
 import { Stack, Input } from '@chakra-ui/react';
-import React from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface FilterCompanyProps {
+    filterNextCallingDay: string;
     onNextCallingDayChange: (companyIndustry: string) => void;
   }
   
-  export const FilterNextCallingDay: React.FC<FilterCompanyProps> = ({ onNextCallingDayChange }) => {
-    const [NextCallingDay, setNextCallingDay] = useState('');
+  export const FilterNextCallingDay: React.FC<FilterCompanyProps> = ({ filterNextCallingDay, onNextCallingDayChange }) => {
+    const [NextCallingDay, setNextCallingDay] = useState(filterNextCallingDay ||'');
+
+    useEffect(() => {
+      setNextCallingDay(filterNextCallingDay || '');
+    }, [filterNextCallingDay]);
   
     const handleNextCallingDayChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setNextCallingDay(event.target.value);

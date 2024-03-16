@@ -15,15 +15,15 @@ export interface FormValues {
 
 // CompanyRegister.tsxで使用
 export interface CompanyResisterFormState {
-  companyName: string | null;
-  industry: string | null;
-  address: string | null;
-  telephoneNumber: string | null;
-  companyWebsite: string | null;
-  department: string | null;
-  post: string | null;
-  name: string | null;
-  email: string | null;
+	companyName: string | null;
+	industry: string | null;
+	address: string | null;
+	telephoneNumber: string | null;
+	companyWebsite: string | null;
+	department: string | null;
+	post: string | null;
+	name: string | null;
+	email: string | null;
 }
 
 // CompanyRegister.tsxで使用
@@ -55,7 +55,7 @@ export interface AttackLogFormState {
 }
 
 export interface Company {
-  id?: number;
+  id: number;
   company_name: string;
   industry: string;
   address: string;
@@ -74,15 +74,15 @@ export interface KeyPerson {
 }
 
 export interface AttackLog {
-  company_id?: bigint;
-  calling_day: string;
-  calling_start: string;
-  call_result: string;
-  call_content: string;
-  next_call_day: string;
-  salesman: string;
-  created_at: string;
-  updated_at: string;
+	company_id?: bigint;
+	calling_day: string;
+	calling_start: string;
+	call_result: string;
+	call_content: string;
+	next_call_day: string;
+	salesman: string;
+	created_at: string;
+	updated_at: string;
 }
 
 export interface ExtendedCompany extends Company {
