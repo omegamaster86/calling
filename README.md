@@ -220,10 +220,9 @@ calling
 | Make                            | 実行する処理                                                            |                                                                                
 | ------------------------------- | ----------------------------------------------------------------------- | 
 | `docker-compose up --build`     | Dockerコンテナでサーバの立ち上げ                                       |
-| `docker exec -it mouretsu_backend /bin/bash`  | mouretsu_backend コンテナに入る                                         |
-| `docker exec -it mouretsu_frontend /bin/sh`   | mouretsu_frontend コンテナに入る                                        |
-| `docker exec -it mouretsu_db bash`            | mouretsu_db コンテナに入る                                              |
-| `docker-compose down`           | 全てのサービスを停止し、コンテナを削除                                       |
+| `docker-compose down`           | 全てのサービスを停止し、コンテナを削除                              　      |
+| `docker-compose up front`       | フロントエンドのみ起動                              　　　　　　　　　　　　　　　　　　　　　　　　　　　      |
+| `docker-compose up api`         | バックエンドのみ起動                              　　　　　　　　　　　　　　　　　　　　　　　　　　　      |
 
 テーブル定義書のリンク
 
