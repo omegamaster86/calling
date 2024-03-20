@@ -48,9 +48,15 @@
 | ----------------------| ---------- |
 | React                 | 18.2.0     |
 | Next.js               | 14.0.4     |
-| Ruby                  | 3.2.2      |
-| Rails                 | 7.2.3      |
-| Docker                | 24.0.7     |
+| typescript            | ^5         |
+| Ruby                  | 2.7.8      |
+| Rails                 | 6.0.6      |
+| Docker                | 24.0.6     |
+| swr                   | ^2.2.4     |
+| yup                   | ^1.3.3     |
+| chakra-ui             | ^2.8.2     |
+| axios                 | ^1.6.2     |
+| biomejs               | ^1.6.1     |
 
 その他のパッケージのバージョンは pyproject.toml と package.json を参照してください
 
