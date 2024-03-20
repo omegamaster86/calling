@@ -17,6 +17,7 @@
   <img src="https://img.shields.io/badge/-Rails-CC0000.svg?logo=rails&style=for-the-badge">
   <!-- インフラ一覧 -->
   <img src="https://img.shields.io/badge/-Docker-20232A.svg?logo=docker&style=for-the-badge">
+  <img src="https://camo.qiitausercontent.com/f7e5d6d8c1221de3bf6584e07eba39d4b9dbdffb/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f2d4d7953514c2d3434373941312e7376673f6c6f676f3d6d7973716c267374796c653d666f722d7468652d6261646765266c6f676f436f6c6f723d7768697465">
 </p>
 
 ## 目次
