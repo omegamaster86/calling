@@ -68,18 +68,27 @@ Calling
 
 ❯ tree -a -I "node_modules|.next|.git|.pytest_cache|static" -L 2
 <pre>
-.
-├── .github
-│   ├── workflows
-│       └── actionlint.yml
-│       └── ai-pr-reviewer.yml
+calling
+│               
 ├── backend
 │   ├── app
 │   │   └── channels/application_cable
 │   │   └── controllers
+│   │       └──attack_logs_controller.rb
+│   │       └──authentication_controller.rb
+│   │       └──companies_controller.rb
+│   │       └──dashbords_controller.rb
+│   │       └──key_persons_controller.rb
+│   │       └──spreadsheets_controller.rb
+│   │       └──users_controller.rb
 │   │   └── jobs
 │   │   └── mailers
 │   │   └── models
+│   │       └──application_record.rb
+│   │       └──attack_log.rb
+│   │       └──company.rb
+│   │       └──key_person.rb
+│   │       └──user.rb
 │   │   └── views/layouts
 │   ├── bin
 │   │   └── bundle
@@ -87,14 +96,16 @@ Calling
 │   │   └── rake
 │   │   └── setup
 │   ├── config
-│   │   └── [アプリケーションの設定ファイル]
+│   │   └──initializers
+│   │      └──cors.rb 
+│   │   └── routes.rb
 │   ├── db
-│   │   └── Schemafile
 │   │   └── schema.rb
-│   ├── lib/tasks
-│   │   └── .keep
+│   ├── lib
+│   │   └── google
+│   │       └──spreadsheets.rb
 │   ├── log
-│   │   └── .keep
+│   │   └── development.log
 │   ├── public
 │   │   └── robots.txt
 │   ├── spec
@@ -103,11 +114,10 @@ Calling
 │   │   ├── rails_helper.rb
 │   │   └── spec_helper.rb
 │   ├── storage
-│   │   └── [アップロードされたファイルのストレージ]
+│   │   └── .keep
 │   ├── test
 │   │   ├── channels/application_cable
 │   │   ├── controllers
-│   │   │   └── healthcheck_controller_test.rb
 │   │   ├── fixtures/files
 │   │   ├── integration
 │   │   ├── mailers
@@ -116,11 +126,7 @@ Calling
 │   ├── tmp
 │   │   └── [一時ファイル]
 │   ├── vendor
-│   │   └── [サードパーティのコード]
-│   ├── .gitattributes
-│   ├── .gitignore
-│   ├── .rspec
-│   ├── .rubocop.yaml
+│   │   └── .keep
 │   ├── .ruby-version
 │   ├── Dockerfile
 │   ├── Gemfile
@@ -128,7 +134,7 @@ Calling
 │   ├── README.md
 │   ├── Rakefile
 │   └── config.ru
-│   └── entrypoint.sh
+│   └── .env.local
 ├── frontend
 │   ├── node_modules
 │   │   └── [依存関係のライブラリ]
@@ -171,6 +177,7 @@ Calling
 │   └── yarn.lock
 ├── .gitignore
 ├── README.md
+├── er .drawio.png
 └── docker-compose.yml
 </pre>
 
