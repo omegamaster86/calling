@@ -57,7 +57,7 @@ Calling
 | chakra-ui             | ^2.8.2     |
 | axios                 | ^1.6.2     |
 | biomejs               | ^1.6.1     |
-| MySQL                 |      |
+| MySQL                 | 8.0        |
 
 
 
