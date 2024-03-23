@@ -218,6 +218,10 @@ calling
 | `docker-compose down`           | 全てのサービスを停止し、コンテナを削除                              　      |
 | `docker-compose up front`       | フロントエンドのみ起動                              　　　　　　　　　　　　　　　　　　　　　　　　　　　      |
 | `docker-compose up api`         | バックエンドのみ起動                              　　　　　　　　　　　　　　　　　　　　　　　　　　　      |
+| `docker exec -it portfolio_front sh`     | フロントエンドのコンテナ内へ遷移                        　　　　     |
+| `docker exec -it portfolio_api bash`     | バックエンドのコンテナ内へ遷移                        　　　　     |
+
+docker exec -it portfolio_api bash
 
 ## テーブル定義書のリンク
 https://mouretsu-engineering.notion.site/61e6addaf8e34af298b8f73c5d3ad714?pvs=4
