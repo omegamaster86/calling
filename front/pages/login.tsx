@@ -18,10 +18,7 @@ export default function Login() {
 			</Head>
 			<section className="w-3/4 mx-auto flex flex-col gap-10">
 				<div className="title">
-					<h1 className="text-gray-800 text-4xl font-bold py-4">Explore</h1>
-					<p className=" w-3/4 mx-auto text-gray-400">
-						HHKBHHKBHHKBHHKBHHKBHHKB
-					</p>
+					<h1 className="text-gray-800 text-4xl font-bold py-4">Login</h1>
 				</div>
 				<LoginInfo />
 				{/* <form className=" flex flex-col gap-5">
@@ -31,10 +28,10 @@ export default function Login() {
                         </button>
                     </div>
                 </form> */}
-				<p className="text-gray-400 text-center">
-					don't have an account yet?{" "}
-					<Link className=" text-blue-700" href={"/register"}>
-						Sign Up
+				<p className="flex flex-col text-gray-400 text-center">
+					アカウントを持っていませんか？{" "}
+					<Link className=" text-blue-700 mt-4" href={"/register"}>
+						アカウント作成
 					</Link>
 				</p>
 			</section>

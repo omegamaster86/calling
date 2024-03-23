@@ -11,17 +11,14 @@ export default function Register() {
 			</Head>
 			<section className="w-3/4 mx-auto flex flex-col gap-10">
 				<div className="title">
-					<h1 className="text-gray-800 text-4xl font-bold py-4">Register</h1>
-					<p className=" w-3/4 mx-auto text-gray-400">
-						HHKBHHKBHHKBHHKBHHKBHHKB
-					</p>
+					<h1 className="text-gray-800 text-4xl font-bold py-4">新規作成</h1>
 				</div>
 				<EmailPassword />
 
-				<p className="text-gray-400 text-center">
-					Have an account ?{" "}
-					<Link className=" text-blue-700" href={"/login"}>
-						Sign In
+				<p className="flex flex-col text-gray-400 text-center">
+					すでにアカウントをお持ちですか?{" "}
+					<Link className=" text-blue-700 mt-4" href={"/login"}>
+						Login
 					</Link>
 				</p>
 			</section>

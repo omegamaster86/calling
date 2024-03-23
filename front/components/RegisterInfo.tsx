@@ -67,7 +67,7 @@ export const EmailPassword = () => {
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<FormControl isInvalid={!!errors.name}>
 				<FormLabel htmlFor="name"/>
-				<Input id="name" placeholder="name" {...register("name")} />
+				<Input id="name" placeholder="Name" {...register("name")} />
 				<FormErrorMessage>{errors.name?.message}</FormErrorMessage>
 			</FormControl>
 
@@ -125,7 +125,7 @@ export const EmailPassword = () => {
 				className="w-full mt-4 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-md py-3 text-gray-50 text-lg
             hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:border-blue-500 hover:text-gray-700"
 			>
-				Register
+				登録
 			</button>
 		</form>
 	);
