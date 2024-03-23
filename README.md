@@ -224,7 +224,8 @@ calling
 | `docker-compose up front`       | フロントエンドのみ起動                              　　　　　　　　　　　　　　　　　　　　　　　　　　　      |
 | `docker-compose up api`         | バックエンドのみ起動                              　　　　　　　　　　　　　　　　　　　　　　　　　　　      |
 
-テーブル定義書のリンク
+## テーブル定義書のリンク
+https://mouretsu-engineering.notion.site/61e6addaf8e34af298b8f73c5d3ad714?pvs=4
 
 ## Figmaのリンク
 https://www.figma.com/file/AD9a5VvgCeJNSPv0xaavGC/%E7%84%A1%E9%A1%8C?type=design&node-id=0%3A1&mode=design&t=LFzXkPFWACqmnHb1-1
