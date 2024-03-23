@@ -53,11 +53,6 @@ Calling
 | Ruby                  | 2.7.8      |
 | Rails                 | 6.0.6      |
 | Docker                | 24.0.6     |
-| swr                   | ^2.2.4     |
-| yup                   | ^1.3.3     |
-| chakra-ui             | ^2.8.2     |
-| axios                 | ^1.6.2     |
-| biomejs               | ^1.6.1     |
 | MySQL                 | 8.0        |
 
 
