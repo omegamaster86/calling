@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { FC, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import { FilterCallingResult } from "../FilterComponents/FilterCallingResult";
@@ -62,7 +62,6 @@ export const AttackLogCallResult: FC<AttackLogCallResultProps> = ({
 	onInputChange,
 	errors,
 }) => {
-	// const [companies, setCompanies] = useState([]);
 	const router = useRouter();
 	const company = router.query.company as string | string[] | undefined;
 	const [callingStart, setCallingStart] = useState("");
@@ -83,31 +82,34 @@ export const AttackLogCallResult: FC<AttackLogCallResultProps> = ({
 	if (companiesError || AttackLogsError)
 		return <div>データの読み込みに失敗しました。</div>;
 
-	useEffect(() => {
+	const selectedCompany = useMemo(() => {
 		if (!companiesData || !AttackLogsData) return;
+
 		const mergedData = companiesData.map((company: Company) => ({
 			...company,
 			AttackLog: AttackLogsData.find(
 				(at: AttackLog) => at.company_id?.toString() === company.id.toString(),
 			),
 		}));
-		const selectedCompany = mergedData.find(
-			(comp: Company) => comp.id.toString() === company,
-		); // companyクエリと一致するIDを持つ会社を探す
-		if (selectedCompany) {
-			setCallingStart(selectedCompany.calling_start);
-			setCallResult(selectedCompany.call_result);
-			setNextCallDay(selectedCompany.next_call_day);
-			setSalesman(selectedCompany.salesman);
-			setCallContent(selectedCompany.call_content);
 
-			onInputChange("callingStart", selectedCompany.calling_start);
-			onInputChange("callResult", selectedCompany.call_result);
-			onInputChange("nextCallDay", selectedCompany.next_call_day);
-			onInputChange("salesman", selectedCompany.salesman);
-			onInputChange("callContent", selectedCompany.call_content);
-		}
-	}, [onInputChange, companiesData, AttackLogsData, company]);
+		return mergedData.find((comp: Company) => comp.id.toString() === company);
+	}, [companiesData, AttackLogsData, company]);
+
+	useEffect(() => {
+		if (!selectedCompany) return;
+
+		setCallingStart(selectedCompany.calling_start || "");
+		setCallResult(selectedCompany.call_result || "");
+		setNextCallDay(selectedCompany.next_call_day || "");
+		setSalesman(selectedCompany.salesman || "");
+		setCallContent(selectedCompany.call_content || "");
+
+		onInputChange("callingStart", selectedCompany.calling_start || "");
+		onInputChange("callResult", selectedCompany.call_result || "");
+		onInputChange("nextCallDay", selectedCompany.next_call_day || "");
+		onInputChange("salesman", selectedCompany.salesman || "");
+		onInputChange("callContent", selectedCompany.call_content || "");
+	}, [selectedCompany, onInputChange]);
 
 	const handleCallingStartInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setCallingStart(e.target.value);

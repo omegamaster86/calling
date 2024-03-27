@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   post '/login', to: 'authentication#login'
   get '/dashboard', to: 'dashboards#index'
 
-  resources :companies, only: [:index, :create]
+  resources :companies, only: [:index]
   post '/companies', to: 'companies#create_with_key_person'
 
   resources :key_persons, only: [:index, :create]

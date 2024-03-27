@@ -19,8 +19,8 @@ class AttackLogsController < ApplicationController
         # 既存のcompanyに対する更新処理があればここに記述
         company.update!(company_params)
 
-        # key_personの更新が必要な場合は、companyに紐づくkey_personをメールアドレスで検索し、更新する
-        key_person = company.key_people.find_by!(email: params[:key_person][:email])
+        # key_personの更新が必要な場合は、companyに紐づくkey_personをidで検索し、更新する
+        key_person = company.key_people.first
         key_person.update!(key_person_params)
 
         attack_log = company.attack_logs.find_or_initialize_by(id: params[:attack_log][:id])

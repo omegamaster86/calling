@@ -168,7 +168,6 @@ export const CompanyList = () => {
 			<div
 				className="flex justify-around"
 				style={{
-					height: "800px",
 					width: "100%",
 					overflowX: "auto",
 					overflowY: "auto",
