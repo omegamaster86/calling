@@ -224,7 +224,7 @@ calling
 docker exec -it portfolio_api bash
 
 ## テーブル定義書のリンク
-https://mouretsu-engineering.notion.site/61e6addaf8e34af298b8f73c5d3ad714?pvs=4
+https://docs.google.com/spreadsheets/d/1jenMacEMAW08iC4_F8_qNn9_tZ8fSMJw2BFogfYH4nA/edit#gid=1195158703
 
 ## Figmaのリンク
 https://www.figma.com/file/AD9a5VvgCeJNSPv0xaavGC/%E7%84%A1%E9%A1%8C?type=design&node-id=0%3A1&mode=design&t=LFzXkPFWACqmnHb1-1
