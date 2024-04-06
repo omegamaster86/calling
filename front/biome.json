@@ -1,0 +1,32 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.6.1/schema.json",
+	"files": {
+		"ignore": [
+			".next",
+			"node_modules"
+		]
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineWidth": 100
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"all": true,
+			"nursery": {
+				"all": true,
+				"noNodejsModules": "off"
+			},
+			"a11y": {
+				"all": true,
+				"useKeyWithClickEvents": "off"
+			}
+		}
+	}
+}

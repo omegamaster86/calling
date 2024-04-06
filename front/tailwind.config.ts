@@ -15,6 +15,11 @@ const config: Config = {
       },
     },
   },
+  // 下記を記載する事で、tailwindのベーススタイルを適応しない設定にする
+  corePlugins: {
+    preflight: false,
+  },
   plugins: [],
 }
+
 export default config

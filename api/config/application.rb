@@ -33,5 +33,7 @@ module App
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    # spreadsheetsを読み込むための設定
+    config.paths.add "lib", eager_load: true
   end
 end
