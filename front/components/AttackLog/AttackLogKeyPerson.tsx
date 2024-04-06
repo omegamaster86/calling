@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { FC, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import type { Company, KeyPerson } from "@/types/interface";
@@ -71,33 +71,37 @@ export const AttackLogKeyPerson: FC<AttackLogKeyPersonProps> = ({
 	if (companiesError || keyPersonsError)
 		return <div>データの読み込みに失敗しました。</div>;
 
-	useEffect(() => {
-		if (!companiesData || !keyPersonsData) return;
-		const mergedData = companiesData.map((company: Company) => ({
-			...company,
-			keyPerson: keyPersonsData.find(
-				(kp: KeyPerson) => kp.company_id?.toString() === company.id.toString(),
-			),
-		}));
-		const selectedCompany = mergedData.find(
-			(comp: Company) => comp.id.toString() === company,
-		); // companyクエリと一致するIDを持つ会社を探す
-		if (selectedCompany) {
-			setDepartment(selectedCompany.keyPerson.department); // 見つかったらその名前を設定
-			setPost(selectedCompany.keyPerson.post);
-			setName(selectedCompany.keyPerson.name);
-			setTelephoneNumber(selectedCompany.keyPerson.telephone_number);
-			setEmail(selectedCompany.keyPerson.email);
-			setNote(selectedCompany.keyPerson.note);
+		const selectedCompany = useMemo(() => {
+			if (!companiesData || !keyPersonsData) return null;
+	
+			const mergedData = companiesData.map((company: Company) => ({
+				...company,
+				keyPerson: keyPersonsData.find(
+					(kp: KeyPerson) => kp.company_id?.toString() === company.id.toString(),
+				),
+			}));
+	
+			return mergedData.find((comp: Company) => comp.id.toString() === company);
+		}, [companiesData, keyPersonsData, company]);
 
-			onInputChange("department", selectedCompany.keyPerson.department); // 見つかったらその名前を設定
-			onInputChange("post", selectedCompany.keyPerson.post);
-			onInputChange("name", selectedCompany.keyPerson.name);
-			onInputChange("number", selectedCompany.keyPerson.telephone_number);
-			onInputChange("email", selectedCompany.keyPerson.email);
-			onInputChange("note", selectedCompany.keyPerson.note);
-		}
-	}, [onInputChange, companiesData, keyPersonsData, company]);
+		useEffect(() => {
+			if (!selectedCompany) return;
+	
+			setDepartment(selectedCompany.keyPerson.department || ""); // 見つかったらその名前を設定
+			setPost(selectedCompany.keyPerson.post || "");
+			setName(selectedCompany.keyPerson.name || "");
+			setTelephoneNumber(selectedCompany.keyPerson.telephone_number || "");
+			setEmail(selectedCompany.keyPerson.email || "");
+			setNote(selectedCompany.keyPerson.note || "");
+	
+			// onInputChangeコールバックを利用して親コンポーネントに変更を伝える
+			onInputChange("department", selectedCompany.keyPerson.department || ""); // 見つかったらその名前を設定
+			onInputChange("post", selectedCompany.keyPerson.post || "");
+			onInputChange("name", selectedCompany.keyPerson.name || "");
+			onInputChange("number", selectedCompany.keyPerson.telephone_number || "");
+			onInputChange("email", selectedCompany.keyPerson.email || "");
+			onInputChange("note", selectedCompany.keyPerson.note || "");
+		}, [selectedCompany, onInputChange]);
 
 	const handleDepartmentInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setDepartment(e.target.value);

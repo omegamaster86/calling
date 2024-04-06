@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { FC, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import type { Company, KeyPerson } from "@/types/interface";
@@ -54,7 +54,6 @@ export const AttackLogCompany: FC<AttackLogCompanyProps> = ({
 	onInputChange,
 	errors,
 }) => {
-	// const [companies, setCompanies] = useState([]);
 	const router = useRouter();
 	const company = router.query.company as string | string[] | undefined;
 	const [companyName, setCompanyName] = useState("");
@@ -74,29 +73,33 @@ export const AttackLogCompany: FC<AttackLogCompanyProps> = ({
 	if (companiesError || keyPersonsError)
 		return <div>データの読み込みに失敗しました。</div>;
 
-	useEffect(() => {
-		if (!companiesData || !keyPersonsData) return;
+	const selectedCompany = useMemo(() => {
+		if (!companiesData || !keyPersonsData) return null;
+
 		const mergedData = companiesData.map((company: Company) => ({
 			...company,
 			keyPerson: keyPersonsData.find(
 				(kp: KeyPerson) => kp.company_id?.toString() === company.id.toString(),
 			),
 		}));
-		const selectedCompany = mergedData.find(
-			(comp: Company) => comp.id.toString() === company,
-		); // companyクエリと一致するIDを持つ会社を探す
-		if (selectedCompany) {
-			setCompanyName(selectedCompany.company_name); // 見つかったらその名前を設定
-			setAddress(selectedCompany.address);
-			setWebsite(selectedCompany.website);
-			setTelephoneNumber(selectedCompany.telephone_number);
 
-			onInputChange("companyName", selectedCompany.company_name);
-			onInputChange("address", selectedCompany.address);
-			onInputChange("companyWebsite", selectedCompany.website);
-			onInputChange("telephoneNumber", selectedCompany.telephone_number);
-		}
-	}, [onInputChange, companiesData, keyPersonsData, company]);
+		return mergedData.find((comp: Company) => comp.id.toString() === company);
+	}, [companiesData, keyPersonsData, company]);
+
+	useEffect(() => {
+		if (!selectedCompany) return;
+
+		setCompanyName(selectedCompany.company_name || "");
+		setAddress(selectedCompany.address || "");
+		setWebsite(selectedCompany.website || "");
+		setTelephoneNumber(selectedCompany.telephone_number || "");
+
+		// onInputChangeコールバックを利用して親コンポーネントに変更を伝える
+		onInputChange("companyName", selectedCompany.company_name || "");
+		onInputChange("address", selectedCompany.address || "");
+		onInputChange("companyWebsite", selectedCompany.website || "");
+		onInputChange("telephoneNumber", selectedCompany.telephone_number || "");
+	}, [selectedCompany, onInputChange]);
 
 	// 会社名、住所、会社サイト、登記電話番号の入力値を更新する関数
 	const handleNameInputChange = (e: ChangeEvent<HTMLInputElement>) => {

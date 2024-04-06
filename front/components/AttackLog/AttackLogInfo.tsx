@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import type { FC } from "react";
@@ -17,6 +17,8 @@ export const AttackLogInfo: FC<AttackLogProps> = () => {
 	const router = useRouter();
 	const companyId = router.query.company;
 	const [isPostSuccess, setIsPostSuccess] = useState(false);
+	const [isPostError, setIsPostError] = useState(false);
+	const [showAlert, setShowAlert] = useState(false);
 	const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 	const formSchema = yup.object().shape({
 		companyName: yup
@@ -105,8 +107,11 @@ export const AttackLogInfo: FC<AttackLogProps> = () => {
 
 			if (response.status === 201) {
 				setIsPostSuccess(true);
-				// TODO: リダイレクトする方法で検討
+				setIsPostError(false);
 				router.reload();
+			} else {
+				setIsPostError(true);
+				setIsPostSuccess(false);
 			}
 		} catch (error) {
 			if (error instanceof yup.ValidationError) {
@@ -127,6 +132,16 @@ export const AttackLogInfo: FC<AttackLogProps> = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (isPostSuccess || isPostError) {
+			setShowAlert(true);
+			const timer = setTimeout(() => {
+				setShowAlert(false);
+			}, 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [isPostSuccess, isPostError]);
+
 	return (
 		<div className="mt-5 mx-auto">
 			<form onSubmit={handleSubmit}>
@@ -143,11 +158,19 @@ export const AttackLogInfo: FC<AttackLogProps> = () => {
 					errors={formErrors}
 				/>
 				<div className=" pl-24 w-64 pb-4">
-					{isPostSuccess && (
+					{isPostSuccess && showAlert && (
 						<Stack spacing={3}>
 							<Alert status="success">
 								<AlertIcon />
 								登録完了!
+							</Alert>
+						</Stack>
+					)}
+					{isPostError && showAlert && (
+						<Stack spacing={3}>
+							<Alert status="error">
+								<AlertIcon />
+								登録失敗。
 							</Alert>
 						</Stack>
 					)}
