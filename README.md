@@ -221,7 +221,6 @@ calling
 | `docker exec -it portfolio_front sh`     | フロントエンドのコンテナ内へ遷移                        　　　　     |
 | `docker exec -it portfolio_api bash`     | バックエンドのコンテナ内へ遷移                        　　　　     |
 
-docker exec -it portfolio_api bash
 
 ## テーブル定義書のリンク
 https://docs.google.com/spreadsheets/d/1jenMacEMAW08iC4_F8_qNn9_tZ8fSMJw2BFogfYH4nA/edit#gid=1195158703
