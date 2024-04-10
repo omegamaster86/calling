@@ -9,7 +9,7 @@ class AuthenticationController < ApplicationController
       render json: { token: token, name: user.name }, status: :ok
     else
       # 認証に失敗した場合の処理
-      render json: { error: 'Invalid credentials' }, status: :unauthorized
+      render json: { error: '入力情報が間違っています' }, status: :unauthorized
     end
   end
 

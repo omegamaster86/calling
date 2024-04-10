@@ -6,6 +6,7 @@ import {
 	Button,
 	InputGroup,
 	InputRightElement,
+	Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
@@ -18,14 +19,15 @@ import type { AxiosError, AxiosResponse } from "axios";
 
 export const LoginInfo = () => {
 	const [formErrors, setFormErrors] = useState({});
+	const [serverErrorMessage, setServerErrorMessage] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
 
 	const schema = Yup.object().shape({
-		email: Yup.string().email("Invalid email").required("No email provided"),
+		email: Yup.string().email("Invalid email").required("メールアドレスを入力してください"),
 		password: Yup.string()
-			.required("No password provided")
-			.min(3, "Password should be min 3 chars"),
+			.required("パスワードを入力してください")
+			.min(3, "文字数が不足しています"),
 	});
 	const {
 		register,
@@ -56,7 +58,7 @@ export const LoginInfo = () => {
 			if (axios.isAxiosError(error)) {
 				const serverError = error as AxiosError<ErrorResponse>;
 				if (serverError.response?.data) {
-					setFormErrors({ server: serverError.response.data.message });
+					setServerErrorMessage("入力情報が間違っています");
 				}
 			} else {
 				console.error("予期せぬエラーが発生", error);
@@ -92,6 +94,7 @@ export const LoginInfo = () => {
 				</InputGroup>
 				<FormErrorMessage>{errors.password?.message}</FormErrorMessage>
 			</FormControl>
+			<Text mt={2} color="red.500">{serverErrorMessage}</Text>
 			<button
 				type="submit"
 				className="w-full mt-4 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-md py-3 text-gray-50 text-lg
