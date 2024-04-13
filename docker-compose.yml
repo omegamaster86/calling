@@ -31,6 +31,7 @@ services:
     image: portfolio_api_image
     container_name: portfolio_api
   front: 
+  
     build:
       context: ./front
       dockerfile: Dockerfile
