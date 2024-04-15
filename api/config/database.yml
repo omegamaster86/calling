@@ -68,12 +68,13 @@ test:
 #   username: app
 #   password: <%= ENV['APP_DATABASE_PASSWORD'] %>
 production:
+  url: <%= ENV['DATABASE_URL'] %>
   adapter: mysql2
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password: "password"
-  host: db
-  database: app_production
-  username: app
-  password: <%= ENV['APP_DATABASE_PASSWORD'] %>
+  # username: root
+  # password: "password"
+  # host: db
+  # database: app_production
+  # username: app
+  # password: <%= ENV['APP_DATABASE_PASSWORD'] %>
