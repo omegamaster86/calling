@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "https://calling-3xmi-git-develop-omegamaster86s-projects.vercel.app" || "http://localhost:8000"
+    origins ENV['NEXTAUTH_URL'] || "http://localhost:8000"
 
     resource '*',
       headers: :any,
