@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   resources :users, only: [:index, :show, :create, :update]
   get 'users', to: 'users#show'
   post '/login', to: 'authentication#login'
