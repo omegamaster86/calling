@@ -20,6 +20,9 @@ export default function Login() {
 				<div className="title">
 					<h1 className="text-gray-800 text-4xl font-bold py-4">Login</h1>
 				</div>
+				<div>
+					テスト用{" "}Email:zzz@test.com、Password:zzzzzz
+				</div>
 				<LoginInfo />
 				{/* <form className=" flex flex-col gap-5">
                     <div>
