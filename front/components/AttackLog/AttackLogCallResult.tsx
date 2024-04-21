@@ -83,16 +83,30 @@ export const AttackLogCallResult: FC<AttackLogCallResultProps> = ({
 		return <div>データの読み込みに失敗しました。</div>;
 
 	const selectedCompany = useMemo(() => {
-		if (!companiesData || !AttackLogsData) return;
+		if (!companiesData || !AttackLogsData) return null;
+		const mergedData = companiesData.map((company: Company) => {
+			const companyAttackLogs = AttackLogsData.filter(
+				(log: AttackLog) =>
+					log.company_id?.toString() === company.id.toString(),
+			);
+			// 最新のログを取得するために、日付でソート（仮にcreated_atを使用）
+			const latestLog = companyAttackLogs.sort(
+				(a: AttackLog, b: AttackLog) =>
+					new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+			)[0]; // 最新のものが先頭に来るようにして、先頭の要素を取得
 
-		const mergedData = companiesData.map((company: Company) => ({
-			...company,
-			AttackLog: AttackLogsData.find(
-				(at: AttackLog) => at.company_id?.toString() === company.id.toString(),
-			),
-		}));
-
-		return mergedData.find((comp: Company) => comp.id.toString() === company);
+			return {
+				...company,
+				keyPerson: AttackLogsData.find(
+					(at: AttackLog) =>
+						at.company_id?.toString() === company.id.toString(),
+				),
+				latestSalesman: latestLog ? latestLog.salesman : "",
+			};
+		});
+		return (
+			mergedData.find((comp: Company) => comp.id.toString() === company) || null
+		);
 	}, [companiesData, AttackLogsData, company]);
 
 	useEffect(() => {
@@ -101,13 +115,13 @@ export const AttackLogCallResult: FC<AttackLogCallResultProps> = ({
 		setCallingStart(selectedCompany.calling_start || "");
 		setCallResult(selectedCompany.call_result || "");
 		setNextCallDay(selectedCompany.next_call_day || "");
-		setSalesman(selectedCompany.salesman || "");
+		setSalesman(selectedCompany.latestSalesman || "");
 		setCallContent(selectedCompany.call_content || "");
 
 		onInputChange("callingStart", selectedCompany.calling_start || "");
 		onInputChange("callResult", selectedCompany.call_result || "");
 		onInputChange("nextCallDay", selectedCompany.next_call_day || "");
-		onInputChange("salesman", selectedCompany.salesman || "");
+		onInputChange("salesman", selectedCompany.latestSalesman || "");
 		onInputChange("callContent", selectedCompany.call_content || "");
 	}, [selectedCompany, onInputChange]);
 
