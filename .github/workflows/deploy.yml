@@ -1,48 +1,21 @@
-# name: Deploy to Heroku
-# on:
-#   push:
-#     branches:
-#       - main
+name: Deploy to Heroku
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - uses: actions/checkout@v2
-
-#       - name: Login to Heroku
-#         uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-#         with:
-#           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-#           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-#           heroku_email: "masya868686@gmail.com"
-#           branch: "main"
-#           dontuseforce: false
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Git
-        run: |
-          git config --global user.name "Your Name"
-          git config --global user.email "your-email@example.com"
-
-      - name: Add Heroku remote
-        run: git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-
-      - name: Fetch Heroku
-        run: git fetch heroku
-
-      - name: Rebase Heroku/main
-        run: git rebase heroku/main
-
-      - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
+      - name: Login to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: "masya868686@gmail.com"
           branch: "main"
+          dontuseforce: false
