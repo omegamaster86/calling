@@ -12,7 +12,6 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Login to Heroku
-        run: git push heroku ${{ github.ref }}:refs/heads/main --force 
         uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
