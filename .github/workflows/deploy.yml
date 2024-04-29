@@ -19,30 +19,32 @@
 #           heroku_email: "masya868686@gmail.com"
 #           dontuseforce: false
 #           usedocker: true
-name: Deploy to Heroku
-on:
-  push:
-    branches:
-      - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+# chatGTP修正案
+# name: Deploy to Heroku
+# on:
+#   push:
+#     branches:
+#       - main
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.HEROKU_APP_NAME }}:latest -f api/Dockerfile .
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
 
-      - name: Heroku login
-        run: heroku container:login
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#       - name: Build Docker image
+#         run: docker build -t ${{ secrets.HEROKU_APP_NAME }}:latest -f api/Dockerfile .
 
-      - name: Push Docker image to Heroku
-        run: heroku container:push web -a ${{ secrets.HEROKU_APP_NAME }}
+#       - name: Heroku login
+#         run: heroku container:login
+#         env:
+#           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
-      - name: Release the container
-        run: heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#       - name: Push Docker image to Heroku
+#         run: heroku container:push web -a ${{ secrets.HEROKU_APP_NAME }}
+
+#       - name: Release the container
+#         run: heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
+#         env:
+#           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
