@@ -134,6 +134,17 @@ export const CompanyList = () => {
 
 	return (
 		<div>
+			<div className="flex h-[70px] bg-cyan-400 items-center justify-center">
+				<Button colorScheme="blue" mx="5" type="submit" px="3">
+					<Link href={"/apoint-list"}>案件管理用ページへ</Link>
+				</Button>
+				<Button colorScheme="blue" mx="5" type="submit" px="3">
+					<Link href={"/salesman-result"}>営業担当者成績ページへ</Link>
+				</Button>
+				<Button colorScheme="blue" mx="5" type="submit" px="3">
+					<Link href={"/company-resister"}>企業登録フォームへ</Link>
+				</Button>
+			</div>
 			<div className="flex h-[70px] bg-cyan-400 items-center justify-around">
 				<div className="flex">
 					<FilterCallingResult
@@ -160,9 +171,6 @@ export const CompanyList = () => {
 						filterNextCallingDay={filterNextCallingDay}
 						onNextCallingDayChange={handleNextCallingDayChange}
 					/>
-					<Button colorScheme="blue" mx="5" type="submit" px="3">
-						<Link href={"/company-resister"}>企業登録フォームへ</Link>
-					</Button>
 				</div>
 			</div>
 			<div
