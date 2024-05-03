@@ -1,8 +1,11 @@
 import React from 'react'
+import App from "../components/ApointList/App"
 
 const ApointList = () => {
   return (
-    <div>apoint-list</div>
+    <div>
+      <App/>
+    </div>
   )
 }
 
