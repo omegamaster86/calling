@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Button } from "@chakra-ui/react";
+import { Card, CardBody, Button } from "@chakra-ui/react";
 import { FilterCallingResult } from "../FilterComponents/FilterCallingResult";
 import { FilterCompany } from "../FilterComponents/FilterCompany";
 import { FilterCompanyNumber } from "../FilterComponents/FilterCompanyNumber";
@@ -165,72 +165,76 @@ export const CompanyList = () => {
 					</Button>
 				</div>
 			</div>
-			<div
-				className="flex justify-around"
-				style={{
-					width: "100%",
-					overflowX: "auto",
-					overflowY: "auto",
-				}}
-			>
-				<table>
-					<thead>
-						<tr>
-							<th className="border-2 w-44">架電結果</th>
-							<th className="border-2 w-44">営業担当者</th>
-							<th className="border-2 w-44">次回予定日</th>
-							<th className="border-2 w-44">業界</th>
-							<th className="border-2 w-44">会社名</th>
-							<th className="border-2 w-44">電話番号</th>
-							<th className="border-2 w-44">名前</th>
-							<th className="border-2 w-44">部署</th>
-							<th className="border-2 w-44">特記事項</th>
-						</tr>
-					</thead>
-					<tbody className="border-solid border-2">
-						{filteredCompanies.map(
-							(company: ExtendedCompanyWithKeyPerson, index: number) => {
-								const params = new URLSearchParams({
-									company: company.id.toString(),
-									filteredIds: filteredCompanyIds.join(","),
-									filterCallingResult,
-									filterCompanyName,
-									filterCompanyNumber,
-									filterCompanyIndustry,
-									filterSalesman,
-									filterNextCallingDay,
-								}).toString();
-								return (
-									<tr
-										key={company.id}
-										className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
-									>
-										<td className="border-2">{company.latestCallResult}</td>
-										<td className="border-2">{company.latestSalesman}</td>
-										<td className="border-2">{company.nextCallDay}</td>
-										<td className="border-2">{company.industry}</td>
-										<td className="border-2 text-indigo-600 hover:underline underline-offset-2">
-											<Link href={`/attacklog?${params}`}>
-												{company.company_name}
-											</Link>
-										</td>
-										<td className="border-2">{company.telephone_number}</td>
-										<td className="border-2">
-											{company.keyPerson ? company.keyPerson.name : ""}
-										</td>
-										<td className="border-2">
-											{company.keyPerson ? company.keyPerson.department : ""}
-										</td>
-										<td className="border-2">
-											{company.keyPerson ? company.keyPerson.note : ""}
-										</td>
-									</tr>
-								);
-							},
-						)}
-					</tbody>
-				</table>
-			</div>
+			<Card>
+				<CardBody>
+				<div
+					className="flex justify-around rounded-lg"
+					style={{
+						width: "100%",
+						overflowX: "auto",
+						overflowY: "auto",
+					}}
+				>
+					<table>
+						<thead>
+							<tr>
+								<th className="border-2 w-44">架電結果</th>
+								<th className="border-2 w-44">営業担当者</th>
+								<th className="border-2 w-44">次回予定日</th>
+								<th className="border-2 w-44">業界</th>
+								<th className="border-2 w-44">会社名</th>
+								<th className="border-2 w-44">電話番号</th>
+								<th className="border-2 w-44">名前</th>
+								<th className="border-2 w-44">部署</th>
+								<th className="border-2 w-44">特記事項</th>
+							</tr>
+						</thead>
+						<tbody className="border-solid border-2">
+							{filteredCompanies.map(
+								(company: ExtendedCompanyWithKeyPerson, index: number) => {
+									const params = new URLSearchParams({
+										company: company.id.toString(),
+										filteredIds: filteredCompanyIds.join(","),
+										filterCallingResult,
+										filterCompanyName,
+										filterCompanyNumber,
+										filterCompanyIndustry,
+										filterSalesman,
+										filterNextCallingDay,
+									}).toString();
+									return (
+										<tr
+											key={company.id}
+											className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
+										>
+											<td className="border-2">{company.latestCallResult}</td>
+											<td className="border-2">{company.latestSalesman}</td>
+											<td className="border-2">{company.nextCallDay}</td>
+											<td className="border-2">{company.industry}</td>
+											<td className="border-2 text-indigo-600 hover:underline underline-offset-2">
+												<Link href={`/attacklog?${params}`}>
+													{company.company_name}
+												</Link>
+											</td>
+											<td className="border-2">{company.telephone_number}</td>
+											<td className="border-2">
+												{company.keyPerson ? company.keyPerson.name : ""}
+											</td>
+											<td className="border-2">
+												{company.keyPerson ? company.keyPerson.department : ""}
+											</td>
+											<td className="border-2">
+												{company.keyPerson ? company.keyPerson.note : ""}
+											</td>
+										</tr>
+									);
+								},
+							)}
+						</tbody>
+					</table>
+				</div>
+				</CardBody>
+			</Card>
 		</div>
 	);
 };
