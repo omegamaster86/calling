@@ -1,10 +1,12 @@
 import React from 'react'
-import App from "../components/ApointList/App"
+import ApointListAll from "../components/ApointList/ApointList"
+import Board from "../components/ApointList/board"
 
 const ApointList = () => {
   return (
     <div>
-      <App/>
+      <ApointListAll/>
+      <Board/>
     </div>
   )
 }

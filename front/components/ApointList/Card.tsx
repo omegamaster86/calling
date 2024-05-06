@@ -12,10 +12,6 @@ export const Card: FC<CardType> = ({ id, title }) => {
 		id: id,
 	});
 
-	const style = {
-		transform: CSS.Transform.toString(transform),
-	};
-
 	return (
 		// attributes、listenersはDOMイベントを検知するために利用します。
 		// listenersを任意の領域に付与することで、ドラッグするためのハンドルを作ることもできます。
