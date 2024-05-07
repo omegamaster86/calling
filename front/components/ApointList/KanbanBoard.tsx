@@ -1,4 +1,3 @@
-import { PlusIcon } from "./Icons";
 import { useMemo, useState, useEffect } from "react";
 import type { Column, Id, Task } from "./types";
 import ColumnContainer from "./ColumnContainer";
@@ -20,27 +19,27 @@ import TaskCard from "./TaskCard";
 
 const defaultCols: Column[] = [
 	{
-		id: "1",
+		id: "col1",
 		title: "商談前",
 	},
 	{
-		id: "2",
+		id: "col2",
 		title: "1次商談",
 	},
 	{
-		id: "3",
+		id: "col3",
 		title: "2次商談",
 	},
 	{
-		id: "4",
+		id: "col4",
 		title: "3次商談",
 	},
 	{
-		id: "5",
+		id: "col5",
 		title: "成約",
 	},
 	{
-		id: "6",
+		id: "col6",
 		title: "失注",
 	},
 ];
@@ -48,12 +47,12 @@ const defaultCols: Column[] = [
 const defaultTasks: Task[] = [
 	{
 		id: "1",
-		columnId: "todo",
+		columnId: "col1",
 		content: "List admin APIs for dashboard",
 	},
 	{
 		id: "2",
-		columnId: "todo",
+		columnId: "col1",
 		content:
 			"Develop user registration functionality with OTP delivered on SMS after email confirmation and phone number confirmation",
 	},
@@ -133,7 +132,7 @@ function KanbanBoard() {
 									<TaskCard
 										task={activeTask}
 										deleteTask={deleteTask}
-										updateTask={updateTask}
+										// updateTask={updateTask}
 									/>
 								) : null}
 							</DragOverlay>,
