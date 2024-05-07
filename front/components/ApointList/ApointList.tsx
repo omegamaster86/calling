@@ -11,8 +11,10 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { Column } from "./Column";
 import type { ColumnType } from "./Column";
 import { useState, useEffect } from "react";
-import { useCompanyAndKeyPersonsData } from "../CompanyList/useSWRCompanyList";
-import type { ExtendedCompanyWithKeyPerson } from "@/types/interface";
+import { Input, Button } from "@chakra-ui/react";
+import dynamic from "next/dynamic";
+// import { useCompanyAndKeyPersonsData } from "../CompanyList/useSWRCompanyList";
+// import type { ExtendedCompanyWithKeyPerson } from "@/types/interface";
 
 export default function ApointListAll() {
 	const initialData: ColumnType[] = [
@@ -31,27 +33,27 @@ export default function ApointListAll() {
 			],
 		},
 		{
-			id: "Column3",
+			id: "Column2",
 			title: "1次商談",
-			cards: [],
+			cards: [],	
 		},
 		{
-			id: "Column4",
+			id: "Column3",
 			title: "2次商談",
 			cards: [],
 		},
 		{
-			id: "Column5",
+			id: "Column4",
 			title: "3次商談",
 			cards: [],
 		},
 		{
-			id: "Column6",
+			id: "Column5",
 			title: "成約",
 			cards: [],
 		},
 		{
-			id: "Column7",
+			id: "Column6",
 			title: "失注",
 			cards: [],
 		},
@@ -83,7 +85,15 @@ export default function ApointListAll() {
 			})
 		);
 	};
-	
+
+  const deleteTask = (id: string) => {
+    setColumns((prevState) =>
+      prevState.map((column) => ({
+        ...column,
+        cards: column.cards.filter((card) => card.id !== id),
+      }))
+    );
+  };
 
 	// useEffect(() => {
 	// 	if (!isLoading && mergedData) {
@@ -218,33 +228,44 @@ export default function ApointListAll() {
 			onDragEnd={handleDragEnd}
 			onDragOver={handleDragOver}
 		>
-			<div className="flex flex-row p-5 font-sans text-center">
-				{columns.map((column) => (
-					<div key={column.id} className="flex flex-col">
-						<Column id={column.id} title={column.title} cards={column.cards} />
-						<input
-							type="text"
-							placeholder="新しいカードのタイトル"
-							value={activeColumnId === column.id ? newCardTitle : ""}
-							onChange={(e) => {
-								setActiveColumnId(column.id);
-								setNewCardTitle(e.target.value);
-							}}
-							className="mb-2"
-						/>
-						<button
-							type="button"
-							onClick={() => {
-								handleAddCard(column.id, newCardTitle);
-								setNewCardTitle("");
-							}}
-							disabled={!newCardTitle || activeColumnId !== column.id}
-						>
-							カード追加
-						</button>
-					</div>
-				))}
-			</div>
+      <div className="overflow-x-auto w-full">
+        <div className="flex flex-row min-w-[800px] p-5 font-sans text-center justify-start">
+          {columns.map((column) => (
+            <div key={column.id} className="flex flex-col min-w-[200px]">
+              <Column id={column.id} title={column.title} cards={column.cards} deleteTask={deleteTask}/>
+              {column.title === "商談前" && (
+                <>
+                  <Input
+                    type="text"
+                    placeholder="新しいタイトル"
+                    bg="white"
+                    w={190}
+                    value={activeColumnId === column.id ? newCardTitle : ""}
+                    onChange={(e) => {
+                      setActiveColumnId(column.id);
+                      setNewCardTitle(e.target.value);
+                    }}
+                    className="my-3"
+                  />
+                  <Button
+                    colorScheme="blue"
+                    mr={3}
+                    type="submit"
+                    onClick={() => {
+                      handleAddCard(column.id, newCardTitle);
+                      setNewCardTitle("");
+                    }}
+                    disabled={!newCardTitle || activeColumnId !== column.id}
+                  >
+                    カード追加
+                  </Button>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
 		</DndContext>
 	);
 }

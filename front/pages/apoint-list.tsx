@@ -1,12 +1,13 @@
 import React from 'react'
 import ApointListAll from "../components/ApointList/ApointList"
-import Board from "../components/ApointList/board"
+import KanbanBoard from "../components/ApointList/KanbanBoard"
+
 
 const ApointList = () => {
   return (
-    <div>
+    <div className='bg-cyan-400 min-h-screen'>
       <ApointListAll/>
-      <Board/>
+      <KanbanBoard/>
     </div>
   )
 }
