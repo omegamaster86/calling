@@ -24,7 +24,7 @@ function ColumnContainer({
   createTask,
   tasks,
   deleteTask,
-  updateTask,
+  // updateTask,
 }: Props) {
   const [editMode, setEditMode] = useState(false);
 
@@ -114,7 +114,7 @@ function ColumnContainer({
               key={task.id}
               task={task}
               deleteTask={deleteTask}
-              updateTask={updateTask}
+              // updateTask={updateTask}
             />
           ))}
         </SortableContext>
