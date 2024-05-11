@@ -48,13 +48,12 @@ const defaultTasks: Task[] = [
 	{
 		id: "1",
 		columnId: "col1",
-		content: "List admin APIs for dashboard",
+		content: "テスト1",
 	},
 	{
 		id: "2",
 		columnId: "col1",
-		content:
-			"Develop user registration functionality with OTP delivered on SMS after email confirmation and phone number confirmation",
+		content:"テスト2",
 	},
 ];
 
@@ -102,15 +101,6 @@ function KanbanBoard() {
 							))}
 						</SortableContext>
 					</div>
-					{/* <button
-						type="button"
-						onClick={() => {
-							createNewColumn();
-						}}
-						className=" h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg bg-mainBackgroundColor border-2 border-columnBackgroundColor p-4 ring-rose-500 hover:ring-2 flex gap-2">
-						<PlusIcon />
-						Add Column
-					</button> */}
 				</div>
 
 				{isClient
@@ -143,11 +133,11 @@ function KanbanBoard() {
 		</div>
 	);
 
-	function createTask(columnId: Id) {
+	function createTask(columnId: Id, content: string) {
 		const newTask: Task = {
 			id: generateId(),
 			columnId,
-			content: `Task ${tasks.length + 1}`,
+			content: content,
 		};
 
 		setTasks([...tasks, newTask]);
@@ -166,15 +156,6 @@ function KanbanBoard() {
 
 		setTasks(newTasks);
 	}
-
-	// function createNewColumn() {
-	// 	const columnToAdd: Column = {
-	// 		id: generateId(),
-	// 		title: `Column ${columns.length + 1}`,
-	// 	};
-
-	// 	setColumns([...columns, columnToAdd]);
-	// }
 
 	function deleteColumn(id: Id) {
 		const filteredColumns = columns.filter((col) => col.id !== id);
@@ -277,7 +258,6 @@ function KanbanBoard() {
 }
 
 function generateId() {
-	/* Generate a random number between 0 and 10000 */
 	return Math.floor(Math.random() * 10001);
 }
 
