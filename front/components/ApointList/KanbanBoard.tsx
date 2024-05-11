@@ -222,7 +222,6 @@ function KanbanBoard() {
 									<TaskCard
 										task={activeTask}
 										deleteTask={deleteTask}
-										// updateTask={updateTask}
 									/>
 								) : null}
 							</DragOverlay>,
