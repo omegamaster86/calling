@@ -1,9 +1,10 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import type { Column, Id, Task } from "./types";
 import { CSS } from "@dnd-kit/utilities";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import TaskCard from "./TaskCard";
 import { Input, Button } from "@chakra-ui/react";
+import { useCompanyAndKeyPersonsData } from "../CompanyList/useSWRCompanyList";
 
 interface Props {
 	column: Column;
@@ -26,9 +27,36 @@ function ColumnContainer({
 	const [editMode, setEditMode] = useState(false);
 	const [newCardTitle, setNewCardTitle] = useState<string>("");
 	const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
+	// const { mergedData, isLoading, isError } = useCompanyAndKeyPersonsData();
 	const tasksIds = useMemo(() => {
 		return tasks.map((task) => task.id);
 	}, [tasks]);
+
+
+// 最終架電結果がアポイントの企業名を取得できるコード
+// しかしドラック&ドロップした際に商談前に情報が残り続けてしまう
+// useEffect(() => {
+//   if (isLoading || isError) {
+//     return;
+//   }
+
+//   if (column.title === "商談前") {
+//     const appointmentCompanies = mergedData.filter(
+//       company => company.latestCallResult === "アポイント"
+//     );
+
+//     // 既存のタスクタイトルのリストを作成
+//     const existingTaskTitles = new Set(tasks.map(task => task.content));
+
+//     for (const company of appointmentCompanies) {
+//       const taskTitle = `${company.company_name}`;
+//       // 既に存在するタスクタイトルでない場合にのみタスクを作成
+//       if (!existingTaskTitles.has(taskTitle)) {
+//         createTask(column.id, taskTitle);
+//       }
+//     }
+//   }
+// }, [column, isLoading, isError, mergedData, createTask, tasks]);
 
 	const {
 		setNodeRef,
@@ -51,11 +79,11 @@ function ColumnContainer({
 		transform: CSS.Transform.toString(transform),
 	};
 
-  const handleAddCard = (columnId: Id, cardTitle: string) => {
-  if (!cardTitle.trim()) return; // タイトルが空白の場合は何もしない
-  createTask(columnId, cardTitle); 
-  setNewCardTitle(""); 
-  }
+	const handleAddCard = (columnId: Id, cardTitle: string) => {
+		if (!cardTitle.trim()) return; // タイトルが空白の場合は何もしない
+		createTask(columnId, cardTitle);
+		setNewCardTitle("");
+	};
 	if (isDragging) {
 		return (
 			<div
@@ -113,11 +141,7 @@ function ColumnContainer({
 				<div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
 					<SortableContext items={tasksIds}>
 						{tasks.map((task) => (
-							<TaskCard
-								key={task.id}
-								task={task}
-								deleteTask={deleteTask}
-							/>
+							<TaskCard key={task.id} task={task} deleteTask={deleteTask} />
 						))}
 					</SortableContext>
 				</div>
