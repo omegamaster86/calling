@@ -89,23 +89,11 @@ function KanbanBoard() {
 		setTasks([...tasks, newTask]);
 	};
 
-	const deleteTask = (id: Id) => {
-		const newTasks = tasks.filter((task) => task.id !== id);
-		setTasks(newTasks);
-	};
-
 	const updateTask = (id: Id, content: string) => {
 		const newTasks = tasks.map((task) => {
 			if (task.id !== id) return task;
 			return { ...task, content };
 		});
-		setTasks(newTasks);
-	};
-
-	const deleteColumn = (id: Id) => {
-		const filteredColumns = columns.filter((col) => col.id !== id);
-		setColumns(filteredColumns);
-		const newTasks = tasks.filter((t) => t.columnId !== id);
 		setTasks(newTasks);
 	};
 
@@ -191,10 +179,8 @@ function KanbanBoard() {
 								<ColumnContainer
 									key={col.id}
 									column={col}
-									deleteColumn={deleteColumn}
 									updateColumn={updateColumn}
 									createTask={createTask}
-									deleteTask={deleteTask}
 									updateTask={updateTask}
 									tasks={tasks.filter((task) => task.columnId === col.id)}
 								/>
@@ -209,10 +195,8 @@ function KanbanBoard() {
 								{activeColumn ? (
 									<ColumnContainer
 										column={activeColumn}
-										deleteColumn={deleteColumn}
 										updateColumn={updateColumn}
 										createTask={createTask}
-										deleteTask={deleteTask}
 										updateTask={updateTask}
 										tasks={tasks.filter(
 											(task) => task.columnId === activeColumn.id,
@@ -221,7 +205,6 @@ function KanbanBoard() {
 								) : activeTask ? (
 									<TaskCard
 										task={activeTask}
-										deleteTask={deleteTask}
 									/>
 								) : null}
 							</DragOverlay>,

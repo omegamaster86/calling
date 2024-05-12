@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { Delete } from "./Icons";
+import { LinkMark } from "./Icons";
 import type { Id, Task } from "./types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 interface Props {
 	task: Task;
-	deleteTask: (id: Id) => void;
 }
 
-function TaskCard({ task, deleteTask }: Props) {
+function TaskCard({ task }: Props) {
 	const [mouseIsOver, setMouseIsOver] = useState(false);
 
 	const {
@@ -62,10 +61,9 @@ function TaskCard({ task, deleteTask }: Props) {
 				<button
 					type="button"
 					onClick={() => {
-						deleteTask(task.id);
 					}}
 					className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded opacity-60 hover:opacity-100">
-					<Delete />
+          <LinkMark />
 				</button>
 			)}
 		</div>
