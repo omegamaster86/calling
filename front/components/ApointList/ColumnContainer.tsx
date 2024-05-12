@@ -8,21 +8,17 @@ import { useCompanyAndKeyPersonsData } from "../CompanyList/useSWRCompanyList";
 
 interface Props {
 	column: Column;
-	deleteColumn: (id: Id) => void;
 	updateColumn: (id: Id, title: string) => void;
 	createTask: (columnId: Id, content: string) => void;
 	updateTask: (id: Id, content: string) => void;
-	deleteTask: (id: Id) => void;
 	tasks: Task[];
 }
 
 function ColumnContainer({
 	column,
-	deleteColumn,
 	updateColumn,
 	createTask,
 	tasks,
-	deleteTask,
 }: Props) {
 	const [editMode, setEditMode] = useState(false);
 	const [newCardTitle, setNewCardTitle] = useState<string>("");
@@ -131,7 +127,6 @@ function ColumnContainer({
 					<button
 						type="button"
 						onClick={() => {
-							deleteColumn(column.id);
 						}}
 						className=" stroke-gray-500 hover:stroke-white hover:bg-columnBackgroundColor rounded px-1 py-2"
 					/>
@@ -141,7 +136,7 @@ function ColumnContainer({
 				<div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
 					<SortableContext items={tasksIds}>
 						{tasks.map((task) => (
-							<TaskCard key={task.id} task={task} deleteTask={deleteTask} />
+							<TaskCard key={task.id} task={task} />
 						))}
 					</SortableContext>
 				</div>

@@ -13,13 +13,17 @@ export const ApoList = () => {
 	);
 
 	return (
-		<div className="pt-5 pl-10">
-      <h3 className="pb-3 font-bold">アポイント獲得企業</h3>
-			{filteredCompanies.map((company: ExtendedCompanyWithKeyPerson) => (
-				<tr key={company.id}>
-					<td className="border-2">{company.company_name}</td>
-				</tr>
-			))}
-		</div>
+    <div className="pt-5 pl-10">
+    <h3 className="pb-3 font-bold">アポイント獲得企業</h3>
+    <table>
+      <tbody>
+        {filteredCompanies.map((company: ExtendedCompanyWithKeyPerson) => (
+          <tr key={company.id}>
+            <td className="border-2">{company.company_name}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
 	);
 };
