@@ -89,22 +89,6 @@ function KanbanBoard() {
 		setTasks([...tasks, newTask]);
 	};
 
-	const updateTask = (id: Id, content: string) => {
-		const newTasks = tasks.map((task) => {
-			if (task.id !== id) return task;
-			return { ...task, content };
-		});
-		setTasks(newTasks);
-	};
-
-	const updateColumn = (id: Id, title: string) => {
-		const newColumns = columns.map((col) => {
-			if (col.id !== id) return col;
-			return { ...col, title };
-		});
-		setColumns(newColumns);
-	};
-
 	const onDragStart = (event: DragStartEvent) => {
 		if (event.active.data.current?.type === "Column") {
 			setActiveColumn(event.active.data.current.column);
@@ -179,9 +163,7 @@ function KanbanBoard() {
 								<ColumnContainer
 									key={col.id}
 									column={col}
-									updateColumn={updateColumn}
 									createTask={createTask}
-									updateTask={updateTask}
 									tasks={tasks.filter((task) => task.columnId === col.id)}
 								/>
 							))}
@@ -195,9 +177,7 @@ function KanbanBoard() {
 								{activeColumn ? (
 									<ColumnContainer
 										column={activeColumn}
-										updateColumn={updateColumn}
 										createTask={createTask}
-										updateTask={updateTask}
 										tasks={tasks.filter(
 											(task) => task.columnId === activeColumn.id,
 										)}

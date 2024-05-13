@@ -8,15 +8,12 @@ import { useCompanyAndKeyPersonsData } from "../CompanyList/useSWRCompanyList";
 
 interface Props {
 	column: Column;
-	updateColumn: (id: Id, title: string) => void;
 	createTask: (columnId: Id, content: string) => void;
-	updateTask: (id: Id, content: string) => void;
 	tasks: Task[];
 }
 
 function ColumnContainer({
 	column,
-	updateColumn,
 	createTask,
 	tasks,
 }: Props) {
@@ -113,7 +110,6 @@ function ColumnContainer({
 							<input
 								className="bg-black focus:border-rose-500 border rounded outline-none px-2"
 								value={column.title}
-								onChange={(e) => updateColumn(column.id, e.target.value)}
 								onBlur={() => {
 									setEditMode(false);
 								}}
