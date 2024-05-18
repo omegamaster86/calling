@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useMemo, useState, useEffect } from "react";
 import type { Column, Id, Task } from "./types";
 import ColumnContainer from "./ColumnContainer";
@@ -16,52 +17,41 @@ import type {
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import TaskCard from "./TaskCard";
+import { Input, Button } from "@chakra-ui/react";
 
 const defaultCols: Column[] = [
 	{
-		id: "col1",
+		id: 1,
 		title: "商談前",
 	},
 	{
-		id: "col2",
+		id: 2,
 		title: "1次商談",
 	},
 	{
-		id: "col3",
+		id: 3,
 		title: "2次商談",
 	},
 	{
-		id: "col4",
+		id: 4,
 		title: "3次商談",
 	},
 	{
-		id: "col5",
+		id: 5,
 		title: "成約",
 	},
 	{
-		id: "col6",
+		id: 6,
 		title: "失注",
-	},
-];
-
-const defaultTasks: Task[] = [
-	{
-		id: "1",
-		columnId: "col1",
-		content: "テスト1",
-	},
-	{
-		id: "2",
-		columnId: "col1",
-		content: "テスト2",
 	},
 ];
 
 function KanbanBoard() {
 	const [columns, setColumns] = useState<Column[]>(defaultCols);
+	const [tasks, setTasks] = useState<Task[]>([]);
+	const [newCardTitle, setNewCardTitle] = useState<string>("");
 	const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 	const [isClient, setIsClient] = useState(false);
-	const [tasks, setTasks] = useState<Task[]>(defaultTasks);
 	const [activeColumn, setActiveColumn] = useState<Column | null>(null);
 	const [activeTask, setActiveTask] = useState<Task | null>(null);
 	const sensors = useSensors(
@@ -74,19 +64,51 @@ function KanbanBoard() {
 
 	useEffect(() => {
 		setIsClient(true);
+		// fetchColumns();
 	}, []);
 
-	const generateId = () => {
-		return Math.floor(Math.random() * 10001);
+	const createTask = async (columnId: Id, content: string) => {
+		if (!content) {
+			alert("カード名が未入力です");
+			return;
+		}
+		try {
+			const response = await axios.post(
+				`${process.env.NEXT_PUBLIC_API_URL}/tasks`,
+				{
+					task: {
+						column_id: columnId,
+						content,
+					},
+				},
+			);
+			setTasks([...tasks, response.data]);
+		} catch {
+			alert("カードの作成に失敗しました");
+		}
 	};
 
-	const createTask = (columnId: Id, content: string) => {
-		const newTask: Task = {
-			id: generateId(),
-			columnId,
-			content: content,
-		};
-		setTasks([...tasks, newTask]);
+	const updateTask = async (taskId, updates) => {
+		try {
+			const response = await axios.put(
+				`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}`,
+				updates,
+			);
+			setTasks(
+				tasks.map((task) => (task.id === taskId ? response.data : task)),
+			);
+		} catch (error) {
+			console.error("Error updating task:", error);
+		}
+	};
+
+	const deleteTask = async (taskId) => {
+		try {
+			await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}`);
+			setTasks(tasks.filter((task) => task.id !== taskId));
+		} catch (error) {
+			console.error("Error deleting task:", error);
+		}
 	};
 
 	const onDragStart = (event: DragStartEvent) => {
@@ -150,6 +172,23 @@ function KanbanBoard() {
 
 	return (
 		<div className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px]">
+			<div className="mb-4">
+				<Input
+					type="text"
+					placeholder="新しいカードのタイトル"
+					value={newCardTitle}
+					onChange={(e) => setNewCardTitle(e.target.value)}
+				/>
+				<Button
+					colorScheme="blue"
+					onClick={() => {
+						createTask(1, newCardTitle); // 商談前カラムにカードを追加
+						setNewCardTitle(""); // インプットをクリア
+					}}
+				>
+					カードを追加
+				</Button>
+			</div>
 			<DndContext
 				sensors={sensors}
 				onDragStart={onDragStart}
@@ -163,8 +202,10 @@ function KanbanBoard() {
 								<ColumnContainer
 									key={col.id}
 									column={col}
-									createTask={createTask}
 									tasks={tasks.filter((task) => task.columnId === col.id)}
+									createTask={createTask}
+									updateTask={updateTask}
+									deleteTask={deleteTask}
 								/>
 							))}
 						</SortableContext>
@@ -178,6 +219,8 @@ function KanbanBoard() {
 									<ColumnContainer
 										column={activeColumn}
 										createTask={createTask}
+										updateTask={updateTask}
+										deleteTask={deleteTask}
 										tasks={tasks.filter(
 											(task) => task.columnId === activeColumn.id,
 										)}
@@ -185,6 +228,8 @@ function KanbanBoard() {
 								) : activeTask ? (
 									<TaskCard
 										task={activeTask}
+										updateTask={updateTask}
+										deleteTask={deleteTask}
 									/>
 								) : null}
 							</DragOverlay>,
@@ -195,4 +240,5 @@ function KanbanBoard() {
 		</div>
 	);
 }
+
 export default KanbanBoard;

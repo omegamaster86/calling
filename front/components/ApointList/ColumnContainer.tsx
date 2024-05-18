@@ -9,13 +9,17 @@ import { useCompanyAndKeyPersonsData } from "../CompanyList/useSWRCompanyList";
 interface Props {
 	column: Column;
 	createTask: (columnId: Id, content: string) => void;
+	updateTask: (taskId: Id, updates: string) => void;
+	deleteTask: (taskId: Id) => void;
 	tasks: Task[];
 }
 
 function ColumnContainer({
 	column,
-	createTask,
 	tasks,
+	createTask,
+	updateTask,
+	deleteTask,
 }: Props) {
 	const [editMode, setEditMode] = useState(false);
 	const [newCardTitle, setNewCardTitle] = useState<string>("");
@@ -25,31 +29,30 @@ function ColumnContainer({
 		return tasks.map((task) => task.id);
 	}, [tasks]);
 
+	// 最終架電結果がアポイントの企業名を取得できるコード
+	// しかしドラック&ドロップした際に商談前に情報が残り続けてしまう
+	// useEffect(() => {
+	//   if (isLoading || isError) {
+	//     return;
+	//   }
 
-// 最終架電結果がアポイントの企業名を取得できるコード
-// しかしドラック&ドロップした際に商談前に情報が残り続けてしまう
-// useEffect(() => {
-//   if (isLoading || isError) {
-//     return;
-//   }
+	//   if (column.title === "商談前") {
+	//     const appointmentCompanies = mergedData.filter(
+	//       company => company.latestCallResult === "アポイント"
+	//     );
 
-//   if (column.title === "商談前") {
-//     const appointmentCompanies = mergedData.filter(
-//       company => company.latestCallResult === "アポイント"
-//     );
+	//     // 既存のタスクタイトルのリストを作成
+	//     const existingTaskTitles = new Set(tasks.map(task => task.content));
 
-//     // 既存のタスクタイトルのリストを作成
-//     const existingTaskTitles = new Set(tasks.map(task => task.content));
-
-//     for (const company of appointmentCompanies) {
-//       const taskTitle = `${company.company_name}`;
-//       // 既に存在するタスクタイトルでない場合にのみタスクを作成
-//       if (!existingTaskTitles.has(taskTitle)) {
-//         createTask(column.id, taskTitle);
-//       }
-//     }
-//   }
-// }, [column, isLoading, isError, mergedData, createTask, tasks]);
+	//     for (const company of appointmentCompanies) {
+	//       const taskTitle = `${company.company_name}`;
+	//       // 既に存在するタスクタイトルでない場合にのみタスクを作成
+	//       if (!existingTaskTitles.has(taskTitle)) {
+	//         createTask(column.id, taskTitle);
+	//       }
+	//     }
+	//   }
+	// }, [column, isLoading, isError, mergedData, createTask, tasks]);
 
 	const {
 		setNodeRef,
@@ -72,11 +75,6 @@ function ColumnContainer({
 		transform: CSS.Transform.toString(transform),
 	};
 
-	const handleAddCard = (columnId: Id, cardTitle: string) => {
-		if (!cardTitle.trim()) return; // タイトルが空白の場合は何もしない
-		createTask(columnId, cardTitle);
-		setNewCardTitle("");
-	};
 	if (isDragging) {
 		return (
 			<div
@@ -122,8 +120,7 @@ function ColumnContainer({
 					</div>
 					<button
 						type="button"
-						onClick={() => {
-						}}
+						onClick={() => {}}
 						className=" stroke-gray-500 hover:stroke-white hover:bg-columnBackgroundColor rounded px-1 py-2"
 					/>
 				</div>
@@ -132,38 +129,16 @@ function ColumnContainer({
 				<div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
 					<SortableContext items={tasksIds}>
 						{tasks.map((task) => (
-							<TaskCard key={task.id} task={task} />
+							<TaskCard
+								key={task.id}
+								task={task}
+								updateTask={updateTask}
+								deleteTask={deleteTask}
+							/>
 						))}
 					</SortableContext>
 				</div>
 			</div>
-			{column.title === "商談前" && (
-				<div>
-					<Input
-						type="text"
-						placeholder="新しいタイトル"
-						bg="white"
-						w={190}
-						value={activeColumnId === column.id ? newCardTitle : ""}
-						onChange={(e) => {
-							setActiveColumnId(column.id.toString());
-							setNewCardTitle(e.target.value);
-						}}
-						className="my-3"
-					/>
-					<Button
-						type="submit"
-						colorScheme="blue"
-						mt={5}
-						onClick={() => {
-							createTask(column.id, newCardTitle);
-							handleAddCard(column.id, newCardTitle);
-						}}
-					>
-						カードを追加
-					</Button>
-				</div>
-			)}
 		</div>
 	);
 }
