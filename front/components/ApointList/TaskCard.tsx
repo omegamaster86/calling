@@ -6,11 +6,10 @@ import { CSS } from "@dnd-kit/utilities";
 
 interface Props {
 	task: Task;
-	updateTask: (taskId: Id, updates: string) => void;
 	deleteTask: (taskId: Id) => void;
 }
 
-function TaskCard({ task, updateTask, deleteTask }: Props) {
+function TaskCard({ task, deleteTask }: Props) {
 	const [mouseIsOver, setMouseIsOver] = useState(false);
 
 	const {
@@ -31,13 +30,6 @@ function TaskCard({ task, updateTask, deleteTask }: Props) {
 	const style = {
 		transition,
 		transform: CSS.Transform.toString(transform),
-	};
-
-	const handleUpdate = () => {
-		const newContent = prompt("Update task content:", task.content);
-		if (newContent) {
-			updateTask(task.id, newContent);
-		}
 	};
 
 	const handleDelete = () => {
@@ -75,9 +67,6 @@ function TaskCard({ task, updateTask, deleteTask }: Props) {
 			</p>
 			{mouseIsOver && (
 				<div className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded opacity-60 hover:opacity-100">
-					<button type="button" onClick={handleUpdate} className="mr-2">
-						Update
-					</button>
 					<button type="button" onClick={handleDelete}>
 						Delete
 					</button>
@@ -89,3 +78,4 @@ function TaskCard({ task, updateTask, deleteTask }: Props) {
 }
 
 export default TaskCard;
+

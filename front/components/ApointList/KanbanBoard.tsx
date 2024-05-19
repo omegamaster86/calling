@@ -64,8 +64,17 @@ function KanbanBoard() {
 
 	useEffect(() => {
 		setIsClient(true);
-		// fetchColumns();
+		fetchTasks();
 	}, []);
+
+	const fetchTasks = async () => {
+		try {
+			const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/tasks`);
+			setTasks(response.data);
+		} catch (error) {
+			console.error("Error fetching tasks:", error);
+		}
+	};
 
 	const createTask = async (columnId: Id, content: string) => {
 		if (!content) {
@@ -82,13 +91,14 @@ function KanbanBoard() {
 					},
 				},
 			);
-			setTasks([...tasks, response.data]);
+			setNewCardTitle("");
+			fetchTasks(); // 新しいタスクを追加した後にタス
 		} catch {
 			alert("カードの作成に失敗しました");
 		}
 	};
 
-	const updateTask = async (taskId, updates) => {
+	const updateTask = async (taskId: Id, updates: { column_id: Id }) => {
 		try {
 			const response = await axios.put(
 				`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}`,
@@ -102,7 +112,7 @@ function KanbanBoard() {
 		}
 	};
 
-	const deleteTask = async (taskId) => {
+	const deleteTask = async (taskId: Id) => {
 		try {
 			await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}`);
 			setTasks(tasks.filter((task) => task.id !== taskId));
@@ -122,22 +132,25 @@ function KanbanBoard() {
 		}
 	};
 
-	const onDragEnd = (event: DragEndEvent) => {
-		setActiveColumn(null);
-		setActiveTask(null);
-		const { active, over } = event;
-		if (!over) return;
-		const activeId = active.id;
-		const overId = over.id;
-		if (activeId === overId) return;
-		const isActiveAColumn = active.data.current?.type === "Column";
-		if (!isActiveAColumn) return;
-		setColumns((columns) => {
-			const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
-			const overColumnIndex = columns.findIndex((col) => col.id === overId);
-			return arrayMove(columns, activeColumnIndex, overColumnIndex);
-		});
-	};
+	const onDragEnd = async (event: DragEndEvent) => {
+    setActiveColumn(null);
+    setActiveTask(null);
+    const { active, over } = event;
+    if (!over) return;
+    const activeId = active.id;
+    const overId = over.id;
+    if (activeId === overId) return;
+
+    const isActiveATask = active.data.current?.type === "Task";
+    if (isActiveATask) {
+        const activeTask = tasks.find((task) => task.id === activeId);
+        const overColumn = columns.find((col) => col.id === overId);
+        if (activeTask && overColumn) {
+            await updateTask(activeTask.id, { column_id: overColumn.id });
+            fetchTasks(); // タスクのカラムID更新後にタスク一覧を再取得
+        }
+    }
+};
 
 	const onDragOver = (event: DragOverEvent) => {
 		const { active, over } = event;
@@ -171,38 +184,21 @@ function KanbanBoard() {
 	};
 
 	return (
-		<div className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px]">
-			<div className="mb-4">
-				<Input
-					type="text"
-					placeholder="新しいカードのタイトル"
-					value={newCardTitle}
-					onChange={(e) => setNewCardTitle(e.target.value)}
-				/>
-				<Button
-					colorScheme="blue"
-					onClick={() => {
-						createTask(1, newCardTitle); // 商談前カラムにカードを追加
-						setNewCardTitle(""); // インプットをクリア
-					}}
-				>
-					カードを追加
-				</Button>
-			</div>
+		<div className="flex pl-28 flex-col min-h-screen w-full items-center overflow-x-auto overflow-y-hidden">
 			<DndContext
 				sensors={sensors}
 				onDragStart={onDragStart}
 				onDragEnd={onDragEnd}
 				onDragOver={onDragOver}
 			>
-				<div className="m-auto flex gap-4">
+				<div className="my-8 px-5 flex gap-4 flex-col">
 					<div className="flex gap-4">
 						<SortableContext items={columnsId}>
 							{columns.map((col) => (
 								<ColumnContainer
 									key={col.id}
 									column={col}
-									tasks={tasks.filter((task) => task.columnId === col.id)}
+									tasks={tasks.filter((task) => task.column_id === col.id)}
 									createTask={createTask}
 									updateTask={updateTask}
 									deleteTask={deleteTask}
@@ -210,15 +206,33 @@ function KanbanBoard() {
 							))}
 						</SortableContext>
 					</div>
+					<div className=" w-52">
+						<Input
+							type="text"
+							bg="white"
+							placeholder="新しいカードのタイトル"
+							value={newCardTitle}
+							onChange={(e) => setNewCardTitle(e.target.value)}
+						/>
+						<Button
+							colorScheme="blue"
+							mt={4}
+							onClick={() => {
+								createTask(1, newCardTitle); // 商談前カラムにカードを追加
+								setNewCardTitle(""); 
+							}}
+						>
+							カードを追加
+						</Button>
+					</div>
 				</div>
-
 				{isClient
 					? createPortal(
 							<DragOverlay>
 								{activeColumn ? (
 									<ColumnContainer
 										column={activeColumn}
-										createTask={createTask}
+                    createTask={createTask}
 										updateTask={updateTask}
 										deleteTask={deleteTask}
 										tasks={tasks.filter(
@@ -228,7 +242,6 @@ function KanbanBoard() {
 								) : activeTask ? (
 									<TaskCard
 										task={activeTask}
-										updateTask={updateTask}
 										deleteTask={deleteTask}
 									/>
 								) : null}

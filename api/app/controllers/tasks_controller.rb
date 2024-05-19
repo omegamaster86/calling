@@ -1,4 +1,9 @@
 class TasksController < ApplicationController
+  def index
+    tasks = Task.all
+    render json: tasks
+  end
+  
   def create
     column = Column.find(params[:task][:column_id])
     task = column.tasks.new(task_params)

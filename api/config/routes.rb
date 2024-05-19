@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   delete '/logout', to: 'authentication#destroy'
 
   # アポイント獲得後のapoint-listで使用するカード情報を登録する用
-  resources :tasks, only: [:create, :update, :destroy]
+  resources :tasks, only: [:index, :create, :update, :destroy]
   resources :columns, only: [:index, :create, :update, :destroy]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
