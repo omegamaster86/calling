@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_16_041322) do
+ActiveRecord::Schema.define(version: 2024_05_14_113057) do
 
   create_table "attack_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "calling_start", comment: "架電開始時間"
@@ -22,6 +22,12 @@ ActiveRecord::Schema.define(version: 2024_03_16_041322) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "salesman", null: false, comment: "担当者"
     t.index ["company_id"], name: "index_attack_logs_on_company_id"
+  end
+
+  create_table "columns", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -48,6 +54,14 @@ ActiveRecord::Schema.define(version: 2024_03_16_041322) do
     t.index ["email"], name: "index_key_people_on_email", unique: true
   end
 
+  create_table "tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "column_id", null: false
+    t.text "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["column_id"], name: "index_tasks_on_column_id"
+  end
+
   create_table "todos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.text "content"
@@ -67,4 +81,5 @@ ActiveRecord::Schema.define(version: 2024_03_16_041322) do
 
   add_foreign_key "attack_logs", "companies"
   add_foreign_key "key_people", "companies"
+  add_foreign_key "tasks", "columns"
 end

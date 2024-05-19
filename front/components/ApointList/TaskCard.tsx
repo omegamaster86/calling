@@ -6,9 +6,10 @@ import { CSS } from "@dnd-kit/utilities";
 
 interface Props {
 	task: Task;
+	deleteTask: (taskId: Id) => void;
 }
 
-function TaskCard({ task }: Props) {
+function TaskCard({ task, deleteTask }: Props) {
 	const [mouseIsOver, setMouseIsOver] = useState(false);
 
 	const {
@@ -31,12 +32,19 @@ function TaskCard({ task }: Props) {
 		transform: CSS.Transform.toString(transform),
 	};
 
+	const handleDelete = () => {
+		if (confirm("Are you sure you want to delete this task?")) {
+			deleteTask(task.id);
+		}
+	};
+
 	if (isDragging) {
 		return (
 			<div
 				ref={setNodeRef}
 				style={style}
-				className="opacity-30 p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-rose-500  cursor-grab relative"/>
+				className="opacity-30 p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-rose-500  cursor-grab relative"
+			/>
 		);
 	}
 
@@ -58,16 +66,16 @@ function TaskCard({ task }: Props) {
 				{task.content}
 			</p>
 			{mouseIsOver && (
-				<button
-					type="button"
-					onClick={() => {
-					}}
-					className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded opacity-60 hover:opacity-100">
-          <LinkMark />
-				</button>
+				<div className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded opacity-60 hover:opacity-100">
+					<button type="button" onClick={handleDelete}>
+						Delete
+					</button>
+					<LinkMark />
+				</div>
 			)}
 		</div>
 	);
 }
 
 export default TaskCard;
+
