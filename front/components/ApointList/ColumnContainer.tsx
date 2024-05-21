@@ -58,8 +58,8 @@ function ColumnContainer({
       <div
         ref={setNodeRef}
         style={style}
-        className="bg-gray-100 h-[600px] min-w-[200px] rounded-md flex flex-col"
-      >
+        className="bg-gray-100 h-[600px] min-w-[200px] flex-shrink-0 rounded-md flex flex-col"
+			>
         {/* Column title */}
         <div
           {...attributes}
