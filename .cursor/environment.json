@@ -1,0 +1,21 @@
+{
+  "name": "calling",
+  "install": "pip3 install --user -r scripts/gmail-reply-check/requirements.txt",
+  "egressAllowlist": [
+    "gmail.googleapis.com",
+    "oauth2.googleapis.com",
+    "accounts.google.com",
+    "gmailmcp.googleapis.com"
+  ],
+  "mcpServerAllowlist": [
+    {
+      "name": "gmail",
+      "serverUrl": "https://gmailmcp.googleapis.com/mcp/v1",
+      "toolAllowlist": [
+        "search_threads",
+        "get_thread",
+        "list_labels"
+      ]
+    }
+  ]
+}
